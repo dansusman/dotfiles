@@ -1,0 +1,24 @@
+VIM="nvim"
+
+export GOPATH=$HOME/go
+export GIT_EDITOR=$VIM
+export DOTFILES=$HOME/.dotfiles
+
+addToPath() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$PATH:$1
+    fi
+}
+
+addToPathFront() {
+    if [[ "$PATH" != *"$1"* ]]; then
+        export PATH=$1:$PATH
+    fi
+}
+
+addToPathFront $HOME/.local/go/bin
+addToPathFront $HOME/go/bin
+
+
+export PATH=$PATH:$GOPATH/bin
+export STOW_FOLDERS="nvim,tmux,zsh"
