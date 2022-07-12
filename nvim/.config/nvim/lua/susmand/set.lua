@@ -3,7 +3,7 @@ vim.opt.mouse=a
 vim.wo.wrap = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.backspace=indent,eol,start
+vim.opt.backspace = {"indent", "eol", "start"}
 vim.opt.completeopt=menuone,noinsert,noselect
 
 vim.opt.guicursor = ""
@@ -50,3 +50,4 @@ vim.opt.shortmess:append("c")
 vim.opt.colorcolumn = "80"
 
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "

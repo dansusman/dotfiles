@@ -7,6 +7,7 @@ local nmap = Remap.nmap
 
 nnoremap("<leader>pv", ":Ex<CR>")
 nnoremap("<leader>u", ":UndotreeShow<CR>")
+nnoremap("<leader><CR>", ":so ~/.config/nvim/init.lua<CR>")
 
 vnoremap("J", ":m '>+1<CR>gv=gv")
 vnoremap("K", ":m '<-2<CR>gv=gv")
@@ -31,7 +32,6 @@ vnoremap("<leader>d", "\"_d")
 
 vnoremap("<leader>d", "\"_d")
 
--- This is going to get me cancelled
 inoremap("<C-c>", "<Esc>")
 
 nnoremap("Q", "<nop>")

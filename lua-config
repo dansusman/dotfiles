@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-rm -rf $XDG_CONFIG_HOME/nvim
+rm -rf $HOME/nvim
 if [[ -z "$1" || "$1" == "lua" ]]; then
-    stow nvim-lua
-else
     stow nvim
+    echo "using lua"
+else
+    stow nvim-old
+    echo "using vimscript"
 fi

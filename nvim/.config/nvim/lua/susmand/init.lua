@@ -2,8 +2,8 @@ local augroup = vim.api.nvim_create_augroup
 SusmanGroup = augroup('Susman', {})
 
 
-require("susmand.packer")
 require("susmand.set")
+require("susmand.packer")
 require("susmand.neogit")
 
 local autocmd = vim.api.nvim_create_autocmd
