@@ -8,7 +8,6 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- Setup nvim-cmp.
 local cmp = require("cmp")
 local source_mapping = {
-	youtube = "[Suck it YT]",
 	buffer = "[Buffer]",
 	nvim_lsp = "[LSP]",
 	nvim_lua = "[Lua]",
@@ -53,24 +52,15 @@ cmp.setup({
 	},
 
 	sources = {
-		-- tabnine completion? yayaya
-
 		{ name = "cmp_tabnine" },
 
 		{ name = "nvim_lsp" },
 
-		-- For vsnip user.
-		-- { name = 'vsnip' },
-
 		-- For luasnip user.
 		{ name = "luasnip" },
 
-		-- For ultisnips user.
-		-- { name = 'ultisnips' },
-
 		{ name = "buffer" },
 
-		{ name = "youtube" },
 	},
 })
 
@@ -116,8 +106,6 @@ require("lspconfig").ccls.setup(config())
 
 require("lspconfig").jedi_language_server.setup(config())
 
-require("lspconfig").svelte.setup(config())
-
 require("lspconfig").solang.setup(config())
 
 require("lspconfig").cssls.setup(config())
@@ -132,20 +120,6 @@ require("lspconfig").gopls.setup(config({
 			staticcheck = true,
 		},
 	},
-}))
-
--- who even uses this?
-require("lspconfig").rust_analyzer.setup(config({
-	cmd = { "rustup", "run", "nightly", "rust-analyzer" },
-	--[[
-    settings = {
-        rust = {
-            unstable_features = true,
-            build_on_save = false,
-            all_features = true,
-        },
-    }
-    --]]
 }))
 
 local opts = {

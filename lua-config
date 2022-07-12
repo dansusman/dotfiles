@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm -rf $HOME/nvim
+rm -rf $HOME/.config/nvim
 if [[ -z "$1" || "$1" == "lua" ]]; then
     stow nvim
     echo "using lua"

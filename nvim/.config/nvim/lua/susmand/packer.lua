@@ -1,3 +1,4 @@
+-- .local/share/nvim/site/pack/packer/start
 return require("packer").startup(function()
     use("wbthomason/packer.nvim")
 
@@ -10,8 +11,8 @@ return require("packer").startup(function()
     use("neovim/nvim-lspconfig")
     use("hrsh7th/cmp-nvim-lsp")
     use("hrsh7th/cmp-buffer")
-    use("hrsh7th/nvim-cmp")
-    use("tzachar/cmp-tabnine", { run = "./install.sh" })
+    use "hrsh7th/nvim-cmp" --completion
+ 	use {'tzachar/cmp-tabnine', run='./install.sh'}
     use("onsails/lspkind-nvim")
     use("nvim-lua/lsp_extensions.nvim")
     use("glepnir/lspsaga.nvim")
@@ -38,6 +39,8 @@ return require("packer").startup(function()
     use("mfussenegger/nvim-dap")
     use("rcarriga/nvim-dap-ui")
     use("theHamsta/nvim-dap-virtual-text")
+
+    use("tpope/vim-commentary")
 
 end)
 
