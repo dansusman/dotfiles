@@ -1,7 +1,7 @@
 local Remap = require("susmand.keymap")
 local nnoremap = Remap.nnoremap
 
-nnoremap("<C-p>", ":Telescope")
+nnoremap("<C-p>", ":Telescope<CR>")
 nnoremap("<leader>ps", function()
     require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})
 end)

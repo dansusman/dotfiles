@@ -140,7 +140,7 @@ alias ch="open -a 'Google Chrome'"
 alias xcode="open -a Xcode"
 function jump {
     location=$1
-    file=$2    
+    file=$2
     str="/Users/danielsusman/School/three_one/"
     str+="${location}/"
     str+="${file}"
@@ -153,6 +153,5 @@ alias gd="git diff"
 alias ga="git add -A"
 alias gcm="git commit -m"
 alias gp="git pull"
-
-
+alias rg="rg --hidden"
 
