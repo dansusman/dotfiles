@@ -1,5 +1,5 @@
 -- SETTINGS
-vim.opt.mouse=a
+vim.opt.mouse="a"
 vim.wo.wrap = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
