@@ -46,3 +46,7 @@ nnoremap("<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 nnoremap("<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 nnoremap("<leader>l", ":lua vim.diagnostic.open_float()<CR>")
+
+-- system yank and paste
+vnoremap("<leader>=", '"+y')
+vnoremap("<leader>-", '"+p')
