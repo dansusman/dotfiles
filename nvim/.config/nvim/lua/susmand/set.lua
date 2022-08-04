@@ -51,3 +51,6 @@ vim.opt.colorcolumn = "80"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+
+vim.opt.listchars:append({ space = '-' })
+vim.opt.list = true
