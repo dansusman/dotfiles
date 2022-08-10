@@ -1,3 +1,6 @@
+require("susmand.set")
+require("susmand.packer")
+require("susmand.neogit")
 local augroup = vim.api.nvim_create_augroup
 SusmanGroup = augroup('Susman', {})
 
@@ -20,13 +23,13 @@ autocmd('TextYankPost', {
     end,
 })
 
-autocmd({"BufEnter", "BufWinEnter", "TabEnter"}, {
-    group = SusmanGroup,
-    pattern = "*.rs",
-    callback = function()
-        require("lsp_extensions").inlay_hints{}
-    end
-})
+-- autocmd({"BufEnter", "BufWinEnter", "TabEnter"}, {
+--     group = SusmanGroup,
+--     pattern = "*.rs",
+--     callback = function()
+--         require("lsp_extensions").inlay_hints{}
+--     end
+-- })
 
 autocmd({"BufWritePre"}, {
     group = SusmanGroup,
