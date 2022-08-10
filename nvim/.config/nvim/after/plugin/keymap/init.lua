@@ -50,3 +50,6 @@ nnoremap("<leader>l", ":lua vim.diagnostic.open_float()<CR>")
 -- system yank and paste
 vnoremap("<leader>=", '"+y')
 vnoremap("<leader>-", '"+p')
+
+nnoremap("<leader>cr", ":! cargo run<CR>")
+nnoremap("<leader>cc", ":! cargo check<CR>")
