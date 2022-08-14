@@ -1,14 +1,10 @@
 require("susmand.set")
 require("susmand.packer")
 require("susmand.neogit")
+require("susmand.statusline")
+
 local augroup = vim.api.nvim_create_augroup
 SusmanGroup = augroup('Susman', {})
-
-
-require("susmand.set")
-require("susmand.packer")
-require("susmand.neogit")
-
 local autocmd = vim.api.nvim_create_autocmd
 local yank_group = augroup('HighlightYank', {})
 
@@ -23,13 +19,17 @@ autocmd('TextYankPost', {
     end,
 })
 
--- autocmd({"BufEnter", "BufWinEnter", "TabEnter"}, {
---     group = SusmanGroup,
---     pattern = "*.rs",
---     callback = function()
---         require("lsp_extensions").inlay_hints{}
---     end
--- })
+autocmd({"BufEnter", "BufWinEnter", "WinEnter"}, {
+    group = SusmanGroup,
+    pattern = '*',
+    command = "setlocal statusline=%!v:lua.Statusline.active()",
+})
+
+autocmd({"WinLeave", "BufLeave"}, {
+    group = SusmanGroup,
+    pattern = '*',
+    command = "setlocal statusline=%!v:lua.Statusline.inactive()",
+})
 
 autocmd({"BufWritePre"}, {
     group = SusmanGroup,
