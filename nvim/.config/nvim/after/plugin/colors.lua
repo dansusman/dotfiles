@@ -1,4 +1,4 @@
-vim.g.susmand_colorscheme = "gruvbox"
+vim.g.susmand_colorscheme = "GruberDarker"
 
 function LetThereBeColor()
     vim.g.gruvbox_contrast_dark = 'hard'

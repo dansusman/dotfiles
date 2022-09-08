@@ -28,7 +28,9 @@ return require("packer").startup(function()
     -- Colorscheme section
     use("gruvbox-community/gruvbox")
     use("folke/tokyonight.nvim")
+    use("drsooch/gruber-darker-vim")
 
+    -- Treesitter
     use("nvim-treesitter/nvim-treesitter", {
         run = ":TSUpdate"
     })
