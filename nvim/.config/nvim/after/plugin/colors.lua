@@ -26,9 +26,9 @@ function LetThereBeColor()
         bg = "None"
     })
 
-    hl("Normal", {
-        bg = "none"
-    })
+    -- hl("Normal", {
+    --     bg = "none"
+    -- })
 
     hl("LineNr", {
         fg = "#5eacd3"
@@ -36,6 +36,21 @@ function LetThereBeColor()
 
     hl("netrwDir", {
         fg = "#5eacd3"
+    })
+
+    hl("DiffAdd", {
+        fg = "#ffdd33",
+        bg = "None"
+    })
+
+    hl("DiffChange", {
+        fg = "#ffdd33",
+        bg = "None"
+    })
+
+    hl("DiffDelete", {
+        fg = "#ffdd33",
+        bg = "None"
     })
 
 end

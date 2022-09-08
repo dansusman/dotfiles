@@ -146,6 +146,7 @@ Statusline.active = function()
     "%#Statusline#",
     update_mode_colors(),
     mode(),
+    "%#Normal# ",
     git(),
     "%#Normal# ",
     filepath(),
