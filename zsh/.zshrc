@@ -154,7 +154,7 @@ alias ga="git add -A"
 alias gcm="git commit -m"
 alias gp="git pull"
 alias rg="rg --hidden"
-alias dcd=mkcdir
+alias kck=mkcdir
 
 mkcdir ()
 {
