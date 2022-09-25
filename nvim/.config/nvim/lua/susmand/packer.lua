@@ -54,6 +54,8 @@ return require("packer").startup(function()
     use("rcarriga/nvim-dap-ui")
     use("theHamsta/nvim-dap-virtual-text")
 
+    use("dkarter/bullets.vim")
+
     -- use("tpope/vim-commentary")
     use {
         'numToStr/Comment.nvim',
