@@ -154,11 +154,16 @@ alias ga="git add -A"
 alias gcm="git commit -m"
 alias gp="git pull"
 alias rg="rg --hidden"
-alias kck=mkcdir
+alias fj=mkcdir
 
 mkcdir ()
 {
-    mkdir -p -- "$1" &&
-    cd -P -- "$1"
+    if [ "$1" != "" ]
+    then
+        mkdir -p -- "$1" &&
+        cd -P -- "$1"
+    else
+        cd
+    fi
 }
 
