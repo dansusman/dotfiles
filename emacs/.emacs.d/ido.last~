@@ -1,0 +1,33 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/danielsusman/" . "foods/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/danielsusman/"
+ "/Users/danielsusman/foods/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ ".emacs"
+ "Dishes.md"
+ "fooo"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/danielsusman/" (25415 24756 522121 697000) "todo-rs/" "iA-Fonts/" "#TODO.md#" "reactFetch/" ".viminfo" ".zcompdump-Daniel’s Mac mini-5.8" ".gitconfig" "School/" ".cache/" ".python_history" "Downloads/" ".oh-my-zsh/" ".emacs.rc/" ".m2/" ".vscode/" ".mysql_history" ".gitmessage" "Documents/" ".npm/" "foods/" ".yabairc" ".Trash/" "api/" ".emacs~" "portfolio/" ".profile" "Applications/" ".emacs" ".vimrc" "Movies/" ".ssh/" ".rustup/" "-P/" "cumstains/" ".zshenv" "chatroom/" "rustcreations/" "Public/" "todoservice/" "testing/" ".p10k.zsh" ".dlv/" ".cargo/" ".node_repl_history" ".emacs.d/" "TODO" "chrome alias" ".dotfiles/" "treeStuff/" ".skhdrc" "TODO.md" ".lesshst" "Library/" "Desktop/" ".zsh_history" "PLQ.md" ".zsh_profile" "gophercises/" "challenges/" "tuiter-react-web-app/" "binarySearch/" ".zcompdump-Daniel’s Mac mini-5.8.1" "Pictures/" "gocrazy/" ".local/" "web-dev-final/" ".zshrc" "popagit/" "listStuff/" ".mozilla/" ".CFUserTextEncoding" ".yarnrc" ".tmux.conf" ".DS_Store" "go/" ".vim/" "writings/" "pl/" ".yarn/" "Music/" ".config/" "../" "./")
+
+ ("/Users/danielsusman/.emacs.rc/" (25415 24724 631763 231000) "rc.el" "../" "./")
+
+ ("/Users/danielsusman/foods/" (25392 40844 608332 694000) ".git/" "Dishes.md" "Shopping.md" "README.md" "../" "./")
+
+ ("/Users/" (25349 59515 0 0) "danielsusman/" "Shared/" ".localized" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
