@@ -1,3 +1,4 @@
+;;; .emacs main file               -*- lexical-binding: t -*-
 (package-initialize)
 
 (load "~/.emacs.rc/rc.el")
