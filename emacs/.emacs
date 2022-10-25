@@ -9,6 +9,8 @@
 (scroll-bar-mode 0)
 (column-number-mode 1)
 (show-paren-mode 1)
+(global-display-line-numbers-mode 1)
+(setq display-line-numbers-type 'relative)
 
 ;; Bell
 (setq ring-bell-function
