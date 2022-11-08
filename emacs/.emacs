@@ -2,6 +2,10 @@
 (package-initialize)
 
 (load "~/.emacs.rc/rc.el")
+(package-install 'use-package)
+(require 'use-package)
+
+(use-package general)
 
 ;; General Appearance
 (tool-bar-mode 0)
@@ -114,7 +118,7 @@
  '(custom-safe-themes
    '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
+   '(general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
 
 ;; Remaps
 (global-set-key (kbd "M-x") 'smex)
@@ -122,5 +126,37 @@
 ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+(use-package expand-region
+  :general
+  ("C-=" 'er/expand-region))
+
+;; Utilities (Utils)
+(defadvice transpose-words
+    (before my/transpose-words)
+  "Transpose last two words when at end of line"
+  (if (looking-at "$")
+      (backward-word 1)))
+
+(ad-activate 'transpose-words)
+
+(defun my/insert-line-below ()
+  "Insert an empty line below the current line."
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (open-line 1)))
+
+(global-set-key (kbd "M-o") 'my/insert-line-below)
+
+(defun my/insert-line-above ()
+  "Insert an empty line above the current line."
+  (interactive)
+  (save-excursion
+    (end-of-line 0)
+    (open-line 1)))
+
+(global-set-key (kbd "M-O") 'my/insert-line-above)
+
 ;; First Buffer
 (dired ".")
+
