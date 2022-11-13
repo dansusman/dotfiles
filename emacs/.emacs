@@ -2,6 +2,7 @@
 (package-initialize)
 
 (load "~/.emacs.rc/rc.el")
+(load "~/.emacs.rc/org-mode-rc.el")
 (package-install 'use-package)
 (require 'use-package)
 
@@ -58,9 +59,6 @@
 (setq yas-snippet-dirs '("~/.emacs.snippets/"))
 
 (yas-global-mode 1)
-
-;;; editorconfig
-(editorconfig-mode 1)
 
 ;;; evil-mode
 
