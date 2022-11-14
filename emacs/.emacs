@@ -17,6 +17,9 @@
 (global-display-line-numbers-mode 1)
 (setq display-line-numbers-type 'relative)
 
+;; macOS Annoyances
+(setq mac-pass-command-to-system nil)
+
 ;; Bell
 (setq ring-bell-function
       (lambda ()
@@ -158,3 +161,4 @@
 ;; First Buffer
 (dired ".")
 
+(put 'narrow-to-region 'disabled nil)

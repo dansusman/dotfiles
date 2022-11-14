@@ -3,6 +3,7 @@ VIM="nvim"
 export GOPATH=$HOME/go
 export GIT_EDITOR=$VIM
 export DOTFILES=$HOME/.dotfiles
+export REACT_APP_API_BASE=http://localhost:4000/api
 
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then
