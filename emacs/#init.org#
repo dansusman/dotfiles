@@ -104,6 +104,7 @@
       (push-mark isearch-other-end t 'activate)
       (setq deactivate-mark nil)
       (isearch-done))
+    
 #+END_SRC
 
 * Hungry Delete
