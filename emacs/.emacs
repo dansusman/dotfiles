@@ -1,107 +1,25 @@
-;;; .emacs main file               -*- lexical-binding: t -*-
+;;; .emacs start file               -*- lexical-binding: t -*-
+
+(setq max-lisp-eval-depth 10000)
+(setq max-specpdl-size 10000)
+(require 'package)
+(load "~/.emacs.rc/rc.el")
+
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives
+ 	     '("gnu" . "https://elpa.gnu.org/packages/"))
 (package-initialize)
 
-(load "~/.emacs.rc/rc.el")
-(load "~/.emacs.rc/org-mode-rc.el")
-(package-install 'use-package)
-(require 'use-package)
+;; Bootstrap `use-package'
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(org-babel-load-file (expand-file-name "~/.dotfiles/emacs/init.org"))
 
 (use-package general)
-
-;; General Appearance
-(tool-bar-mode 0)
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
-(column-number-mode 1)
-(show-paren-mode 1)
-(global-display-line-numbers-mode 1)
-(setq display-line-numbers-type 'relative)
-
-;; macOS Annoyances
-(setq mac-pass-command-to-system nil)
-
-;; Bell
-(setq ring-bell-function
-      (lambda ()
-        (let ((orig-fg (face-foreground 'mode-line)))
-          (set-face-foreground 'mode-line "#F2804F")
-          (run-with-idle-timer 0.1 nil
-                               (lambda (fg) (set-face-foreground 'mode-line fg))
-                               orig-fg))))
-
-;; Splash Screen OFF
-(setq-default inhibit-splash-screen t
-              make-backup-files nil
-              tab-width 4
-              indent-tabs-mode nil
-              compilation-scroll-output t
-              default-input-method "russian-computer"
-              visible-bell (equal system-type 'windows-nt))
-
-;;; ido
-(rc/require 'smex 'ido-completing-read+)
-
-(require 'ido-completing-read+)
-
-(ido-mode 1)
-(ido-everywhere 1)
-(ido-ubiquitous-mode 1)
-
-;;; Company
-(rc/require 'company)
-(require 'company)
-
-(global-company-mode)
-
-;;; yasnippet
-(rc/require 'yasnippet)
-
-(require 'yasnippet)
-
-(setq yas/triggers-in-field nil)
-(setq yas-snippet-dirs '("~/.emacs.snippets/"))
-
-(yas-global-mode 1)
-
-;;; evil-mode
-
-;; Pre-load configuration
-;; (setq evil-want-integration t)
-;; (setq evil-want-keybinding nil)
-;; (setq evil-want-C-u-scroll t)
-;; (setq evil-want-C-i-jump nil)
-;; (setq evil-respect-visual-line-mode t)
-;; (setq evil-undo-system 'undo-tree)
-
- ;; Activate 
-;; (evil-mode 1)
-
-;; (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-;; (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-
-;; ;; Use visual line motions even outside of visual-line-mode buffers
-;; (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-;; (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-
-;; (defun dw/dont-arrow-me-bro ()
-;;     (interactive)
-;;     (message "Arrow keys are bad, you know?"))
-
-;; ;; Disable arrow keys in normal and visual modes
-;; (define-key evil-normal-state-map (kbd "<left>") 'dw/dont-arrow-me-bro)
-;; (define-key evil-normal-state-map (kbd "<right>") 'dw/dont-arrow-me-bro)
-;; (define-key evil-normal-state-map (kbd "<down>") 'dw/dont-arrow-me-bro)
-;; (define-key evil-normal-state-map (kbd "<up>") 'dw/dont-arrow-me-bro)
-;; (evil-global-set-key 'motion (kbd "<left>") 'dw/dont-arrow-me-bro)
-;; (evil-global-set-key 'motion (kbd "<right>") 'dw/dont-arrow-me-bro)
-;; (evil-global-set-key 'motion (kbd "<down>") 'dw/dont-arrow-me-bro)
-;; (evil-global-set-key 'motion (kbd "<up>") 'dw/dont-arrow-me-bro)
-
-;; (evil-set-initial-state 'messages-buffer-mode 'normal)
-;; (evil-set-initial-state 'dashboard-mode 'normal)
-
-;; ;; Is this a bug in evil-collection?
-;; (setq evil-collection-company-use-tng nil)
 
 ;; Font
 (custom-set-faces
@@ -119,46 +37,8 @@
  '(custom-safe-themes
    '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
-
-;; Remaps
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-(use-package expand-region
-  :general
-  ("C-=" 'er/expand-region))
-
-;; Utilities (Utils)
-(defadvice transpose-words
-    (before my/transpose-words)
-  "Transpose last two words when at end of line"
-  (if (looking-at "$")
-      (backward-word 1)))
-
-(ad-activate 'transpose-words)
-
-(defun my/insert-line-below ()
-  "Insert an empty line below the current line."
-  (interactive)
-  (save-excursion
-    (end-of-line)
-    (open-line 1)))
-
-(global-set-key (kbd "M-o") 'my/insert-line-below)
-
-(defun my/insert-line-above ()
-  "Insert an empty line above the current line."
-  (interactive)
-  (save-excursion
-    (end-of-line 0)
-    (open-line 1)))
-
-(global-set-key (kbd "M-O") 'my/insert-line-above)
-
-;; First Buffer
-(dired ".")
+   '(isearch iedit yasnippet-snippets general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
 
 (put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)

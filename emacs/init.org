@@ -1,0 +1,147 @@
+* Interface/Appearance
+
+#+BEGIN_SRC emacs-lisp
+  (tool-bar-mode 0)
+  (menu-bar-mode 0)
+  (scroll-bar-mode 0)
+  (column-number-mode 1)
+  (show-paren-mode 1)
+  (global-display-line-numbers-mode 1)
+  (setq display-line-numbers-type 'relative)
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+* macOS Annoyances
+#+BEGIN_SRC emacs-lisp
+ (setq mac-pass-command-to-system nil)
+#+END_SRC
+
+* Bell
+#+BEGIN_SRC emacs-lisp
+  (setq ring-bell-function
+        (lambda ()
+          (let ((orig-fg (face-foreground 'mode-line)))
+            (set-face-foreground 'mode-line "#F2804F")
+            (run-with-idle-timer 0.1
+                                 nil
+                                 (lambda (fg) (set-face-foreground 'mode-line fg))
+                                 orig-fg))))
+#+END_SRC
+
+* Org Mode
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+  (setq org-log-done 'time)
+  (setq org-enforce-todo-dependencies t)
+  (setq org-agenda-start-on-weekday nil)
+  (add-to-list 'org-modules 'org-tempo t)
+#+END_SRC
+
+* Splash Screen OFF
+#+BEGIN_SRC emacs-lisp
+  (setq-default inhibit-splash-screen t
+              make-backup-files nil
+              tab-width 4
+              indent-tabs-mode nil
+              compilation-scroll-output t
+              visible-bell (equal system-type 'windows-nt))
+#+END_SRC
+
+* Ido
+#+BEGIN_SRC emacs-lisp
+  (use-package ido
+    :ensure t)
+  (ido-mode 1)
+  (ido-everywhere 1)
+#+END_SRC
+
+* Theme
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package gruber-darker
+  ;;   :ensure t)
+  ;; (load-theme 'gruber-darker t)
+#+END_SRC
+
+* YaSnippet
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+        :ensure t
+        :init
+        (yas-global-mode 1))
+  (setq yas/triggers-in-field nil)
+  (use-package yasnippet-snippets
+    :ensure t)
+#+END_SRC
+
+* Expand-region
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :config 
+    (global-set-key (kbd "C-=") 'er/expand-region))
+#+END_SRC
+
+* iEdit
+#+BEGIN_SRC emacs-lisp
+  (use-package iedit
+    :ensure t)
+#+END_SRC
+
+* iSearch
+#+BEGIN_SRC emacs-lisp
+  (use-package isearch
+    :config
+    (setq search-whitespace-regexp ".*")
+    (setq isearch-lax-whitespace t)
+    (setq isearch-regexp-lax-whitespace nil))
+#+END_SRC
+
+* Hungry Delete
+I'm not sure if I will end up keeping this...
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+    :ensure t
+    :config
+    (global-hungry-delete-mode))
+#+END_SRC
+
+* General Remaps
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; This is your old M-x.
+  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+#+END_SRC
+
+* General Utilities
+#+BEGIN_SRC emacs-lisp
+  (defadvice transpose-words
+      (before my/transpose-words)
+    "Transpose last two words when at end of line"
+    (if (looking-at "$")
+        (backward-word 1)))
+  (ad-activate 'transpose-words)
+
+  (defun my/insert-line-below ()
+    "Insert an empty line below the current line."
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (open-line 1)))
+
+  (global-set-key (kbd "M-o") 'my/insert-line-below)
+
+  (defun my/insert-line-above ()
+    "Insert an empty line above the current line."
+    (interactive)
+    (save-excursion
+      (end-of-line 0)
+      (open-line 1)))
+
+  (global-set-key (kbd "M-O") 'my/insert-line-above)
+#+END_SRC
+
