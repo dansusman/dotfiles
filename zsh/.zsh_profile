@@ -4,6 +4,8 @@ export GOPATH=$HOME/go
 export GIT_EDITOR=$VIM
 export DOTFILES=$HOME/.dotfiles
 export REACT_APP_API_BASE=http://localhost:4000/api
+export DB_CONNECTION_STRING=mongodb+srv://susman:B951zXxt3e2AqpEW@cluster0.cjawhyp.mongodb.net/\?retryWrites=true\&w=majority
+
 
 addToPath() {
     if [[ "$PATH" != *"$1"* ]]; then

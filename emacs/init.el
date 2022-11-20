@@ -64,7 +64,13 @@
   :config
   (setq search-whitespace-regexp ".*")
   (setq isearch-lax-whitespace t)
-  (setq isearch-regexp-lax-whitespace nil))
+  (setq isearch-regexp-lax-whitespace nil)
+  (defun ds/isearch-mark-and-exit ()
+    "Marks current search string intelligently."
+    (interactive)
+    (push-mark isearch-other-end t 'activate)
+    (setq deactivate-mark nil)
+    (isearch-done)))
 
 (use-package hungry-delete
   :ensure t

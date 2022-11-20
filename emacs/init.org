@@ -103,11 +103,11 @@
       (interactive)
       (push-mark isearch-other-end t 'activate)
       (setq deactivate-mark nil)
-      (isearch-done))
+      (isearch-done)))
 #+END_SRC
 
 * Hungry Delete
-I'm not sure if I will end up keeping this...
+
 #+BEGIN_SRC emacs-lisp
   (use-package hungry-delete
     :ensure t
