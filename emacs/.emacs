@@ -21,8 +21,6 @@
 
 (org-babel-load-file (expand-file-name "~/.dotfiles/emacs/init.org"))
 
-(use-package general)
-
 ;; Font
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
