@@ -48,8 +48,10 @@ nnoremap("<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 nnoremap("<leader>l", ":lua vim.diagnostic.open_float()<CR>")
 
 -- system yank and paste
-vnoremap("<leader>=", '"+y')
-vnoremap("<leader>-", '"+p')
+vnoremap("s", '"+y')
+vnoremap("t", '"+p')
 
 nnoremap("<leader>cr", ":! cargo run<CR>")
 nnoremap("<leader>cc", ":! cargo check<CR>")
+
+

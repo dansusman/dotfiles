@@ -167,3 +167,5 @@ mkcdir ()
     fi
 }
 
+# opam configuration
+[[ ! -r /Users/danielsusman/.opam/opam-init/init.zsh ]] || source /Users/danielsusman/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null

@@ -9,7 +9,9 @@
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives
- 	     '("gnu" . "https://elpa.gnu.org/packages/"))
+ 	         '("gnu" . "https://elpa.gnu.org/packages/"))
+(add-to-list 'load-path "$DIR")
+(load "/Users/danielsusman/.opam/default/share/emacs/site-lisp/tuareg-site-file")
 (package-initialize)
 
 ;; Bootstrap `use-package'
@@ -37,8 +39,9 @@
  '(custom-safe-themes
    '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(isearch iedit yasnippet-snippets general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
+   '(tuareg isearch iedit yasnippet-snippets general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
 
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+(find-file "TODO.org")

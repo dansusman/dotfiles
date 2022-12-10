@@ -150,4 +150,3 @@
 
   (global-set-key (kbd "M-O") 'my/insert-line-above)
 #+END_SRC
-
