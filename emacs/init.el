@@ -77,6 +77,9 @@
   :config
   (global-hungry-delete-mode))
 
+(require 'merlin-iedit)
+(require 'merlin-company)
+
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 ;; This is your old M-x.

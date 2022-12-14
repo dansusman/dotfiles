@@ -115,6 +115,12 @@
     (global-hungry-delete-mode))
 #+END_SRC
 
+* OCaml
+#+begin_src emacs-lisp
+  (require 'merlin-iedit)
+  (require 'merlin-company)
+#+end_src
+
 * General Remaps
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'smex)
