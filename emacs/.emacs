@@ -37,7 +37,7 @@
  '(custom-safe-themes
    '("3d2e532b010eeb2f5e09c79f0b3a277bfc268ca91a59cdda7ffd056b868a03bc" default))
  '(package-selected-packages
-   '(merlin-company merlin tuareg isearch iedit yasnippet-snippets general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
+   '(merlin-ac merlin-company merlin tuareg isearch iedit yasnippet-snippets general expand-region evil yasnippet company editorconfig multiple-cursors racket-mode go-mode magit rust-mode markdown-mode gruber-darker-theme smex)))
 
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
