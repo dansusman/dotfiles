@@ -155,6 +155,7 @@ alias gcm="git commit -m"
 alias gp="git pull"
 alias rg="rg --hidden"
 alias fj=mkcdir
+alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
 
 mkcdir ()
 {
@@ -169,3 +170,4 @@ mkcdir ()
 
 # opam configuration
 [[ ! -r /Users/danielsusman/.opam/opam-init/init.zsh ]] || source /Users/danielsusman/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
