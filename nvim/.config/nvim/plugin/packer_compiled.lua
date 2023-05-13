@@ -215,6 +215,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/danielsusman/.local/share/nvim/site/pack/packer/start/zen-mode.nvim",
     url = "https://github.com/folke/zen-mode.nvim"
+  },
+  ["zig.vim"] = {
+    loaded = true,
+    path = "/Users/danielsusman/.local/share/nvim/site/pack/packer/start/zig.vim",
+    url = "https://github.com/ziglang/zig.vim"
   }
 }
 
