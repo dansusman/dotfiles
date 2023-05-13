@@ -1,6 +1,5 @@
 require("susmand.set")
 require("susmand.packer")
-require("susmand.neogit")
 require("susmand.statusline")
 
 local augroup = vim.api.nvim_create_augroup
