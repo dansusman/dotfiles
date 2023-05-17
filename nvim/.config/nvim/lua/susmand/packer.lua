@@ -44,6 +44,13 @@ return require('packer').startup(function(use)
   use("theprimeagen/refactoring.nvim")
   use("mbbill/undotree")
   use("tpope/vim-fugitive")
+  use("tpope/vim-surround")
+  use {
+        'numToStr/Comment.nvim',
+        config = function()
+            require('Comment').setup()
+        end
+    }
   use("nvim-treesitter/nvim-treesitter-context");
 
   use {

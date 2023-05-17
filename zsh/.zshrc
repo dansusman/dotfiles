@@ -156,6 +156,7 @@ alias gp="git pull"
 alias rg="rg --hidden"
 alias fj=mkcdir
 alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
+alias ll="exa -la"
 
 mkcdir ()
 {
