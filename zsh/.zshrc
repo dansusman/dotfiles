@@ -153,6 +153,7 @@ alias gd="git diff"
 alias ga="git add -A"
 alias gcm="git commit -m"
 alias gp="git pull"
+alias gco="git checkout"
 alias rg="rg --hidden"
 alias fj=mkcdir
 alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
