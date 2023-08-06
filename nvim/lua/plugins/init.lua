@@ -8,6 +8,9 @@ return {
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
+  'dkarter/bullets.vim',
+  'tpope/vim-surround',
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -71,6 +74,13 @@ return {
     config = function()
       vim.cmd.colorscheme 'gruber-darker'
     end,
+  },
+
+  {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
   },
 
   {

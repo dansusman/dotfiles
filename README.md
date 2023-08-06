@@ -7,11 +7,11 @@ my uses, though I wish I were an Emacs guy.
 ## Tour
 - `nvim-old`: awful, old, vimscript-based dev setup using Plug package manager
 - `init.el`: Emacs stuff, not great, somewhat out of date probably
-- `nvim`: better, newer, Lua-only dev setup using Packer package manager
-- `init-lua`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
+- `nvim1`: slightly better, Lua-only dev setup using Packer package manager
+- `nvim`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
 
 ## Installation Steps
-These steps only pertain to my newest dev setup, located in `init-lua` exclusively.
+These steps only pertain to my newest dev setup, located in `nvim`, exclusively.
 
 1. Clone this repo into home directory
 2. Run `mkdir ~/.config/nvim`
