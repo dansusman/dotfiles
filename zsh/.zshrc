@@ -77,7 +77,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(xcode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -158,6 +158,9 @@ alias rg="rg --hidden"
 alias fj=mkcdir
 alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
 alias ll="exa -la"
+# alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
+alias ppp="~/githubOpen.sh $1"
+alias ss="git checkout staging && git pull && open Notability.xcworkspace"
 
 mkcdir ()
 {
@@ -173,3 +176,8 @@ mkcdir ()
 # opam configuration
 [[ ! -r /Users/danielsusman/.opam/opam-init/init.zsh ]] || source /Users/danielsusman/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
+# ruby config
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export GEM_HOME=$HOME/.gem
+export PATH=$GEM_HOME/bin:$PATH
