@@ -160,7 +160,16 @@ alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
 alias ll="exa -la"
 # alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias ppp="~/githubOpen.sh $1"
-alias ss="git checkout staging && git pull && open Notability.xcworkspace"
+alias ss="shortcut staging"
+alias css="shortcut $1"
+
+function shortcut {
+    branch=$1
+    pkill -x Xcode
+    git checkout $1
+    git pull
+    open Notability.xcworkspace
+}
 
 mkcdir ()
 {
