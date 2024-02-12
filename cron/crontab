@@ -1,0 +1,2 @@
+# Run script once a day Monday through Friday, at 9AM
+0 9 * * 1,2,3,4,5 ~/periodPull.sh
