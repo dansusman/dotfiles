@@ -162,6 +162,7 @@ alias ll="exa -la"
 alias ppp="~/githubOpen.sh $1"
 alias ss="shortcut staging"
 alias css="shortcut $1"
+alias cd="z"
 
 function shortcut {
     branch=$1
@@ -190,3 +191,4 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
+eval "$(zoxide init zsh)"
