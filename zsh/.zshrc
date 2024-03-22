@@ -160,15 +160,25 @@ alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
 alias ll="exa -la"
 # alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias ppp="~/githubOpen.sh $1"
-alias ss="shortcut staging"
+alias ss="shortcut staging ~/work/Notability"
 alias css="shortcut $1"
+alias sss="shortcut staging ~/work/staging/Notability"
+alias bt="swap"
 alias cd="z"
 
 function shortcut {
-    branch=$1
+    default="/Users/danielsusman/work/Notability"
+    \cd ${2:-$default}
     pkill -x Xcode
     git checkout $1
     git pull
+    open Notability.xcworkspace
+}
+
+function swap {
+    pkill -x Xcode
+    \cd "/Users/danielsusman/work/butler/Notability"
+    sleep 1
     open Notability.xcworkspace
 }
 
