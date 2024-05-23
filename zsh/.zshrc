@@ -165,6 +165,8 @@ alias css="shortcut $1"
 alias sss="shortcut staging ~/work/staging/Notability"
 alias bt="swap"
 alias cd="z"
+alias bk="git checkout -"
+setopt completealiases
 
 function shortcut {
     default="/Users/danielsusman/work/Notability"
