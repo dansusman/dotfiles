@@ -19,3 +19,10 @@ These steps only pertain to my newest dev setup, located in `nvim`, exclusively.
 4. Open nvim and plugins will start installing
 5. Close nvim once the plugins are installed
 6. Reopen nvim and let LSPs install
+
+## Bonus Tip for Futureself
+If you want add symbolic links to nested folders at nested folder paths, like the following user story, follow this guide.
+
+User X wants to add some `skhd` configuration in the directory `.dotfiles/skhd` and stow it in `~/.config/skhd`. X makes 
+a new directory in their clone of this repo, `skhd`, adds their `.skhdrc` file in there, and creates the symlink using:
+`stow -t ~/.config ~/.dotfiles/config`. This accounts for nesting so the file structure will match in `~/.config`.

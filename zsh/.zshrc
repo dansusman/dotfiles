@@ -164,7 +164,6 @@ alias ss="shortcut staging ~/work/Notability"
 alias css="shortcut $1"
 alias sss="shortcut staging ~/work/staging/Notability"
 alias bt="swap"
-alias cd="z"
 alias bk="git checkout -"
 setopt completealiases
 
@@ -203,4 +202,4 @@ export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
-eval "$(zoxide init zsh)"
+eval "$(zoxide init --cmd cd zsh)"
