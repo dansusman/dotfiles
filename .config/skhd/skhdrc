@@ -101,3 +101,6 @@ hyper - b : yabai --restart-service
 
 # open terminal
 hyper - 8 : open -na iTerm.app
+
+# open Safari
+hyper - 9 : open -na Safari.app
