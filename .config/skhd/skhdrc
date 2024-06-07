@@ -58,39 +58,39 @@ hyper - u : yabai -m space --toggle padding; \
 
 hyper - i : yabai -m space --toggle padding; \
 	 yabai -m space --toggle gap; \
-	 yabai -m config external_bar all:30:0;\
+	 yabai -m config external_bar off:0:0;\
 	 sketchybar --bar hidden=false;
 
 # -- Moving Windows Around --
 
 # swap windows
-shift + alt - j : yabai -m window --swap south
-shift + alt - k : yabai -m window --swap north
-shift + alt - h : yabai -m window --swap west
-shift + alt - l : yabai -m window --swap east
+shift + hyper - j : yabai -m window --swap south
+shift + hyper - k : yabai -m window --swap north
+shift + hyper - h : yabai -m window --swap west
+shift + hyper - l : yabai -m window --swap east
 
 # move window and split
-ctrl + alt - j : yabai -m window --warp south
-ctrl + alt - k : yabai -m window --warp north
-ctrl + alt - h : yabai -m window --warp west
-ctrl + alt - l : yabai -m window --warp east
+hyper + shift - u : yabai -m window --warp south
+hyper + shift - i : yabai -m window --warp north
+hyper + shift - y : yabai -m window --warp west
+hyper + shift - o : yabai -m window --warp east
 
 # move window to display left and right
-shift + alt - s : yabai -m window --display west; yabai -m display --focus west;
-shift + alt - g : yabai -m window --display east; yabai -m display --focus east;
+shift + hyper - s : yabai -m window --display west; yabai -m display --focus west;
+shift + hyper - g : yabai -m window --display east; yabai -m display --focus east;
 
 # move window to prev and next space
-shift + alt - p : yabai -m window --space prev;
-shift + alt - n : yabai -m window --space next;
+shift + hyper - p : yabai -m window --space prev;
+shift + hyper - n : yabai -m window --space next;
 
 # move window to space #
-shift + alt - 1 : yabai -m window --space 1;
-shift + alt - 2 : yabai -m window --space 2;
-shift + alt - 3 : yabai -m window --space 3;
-shift + alt - 4 : yabai -m window --space 4;
-shift + alt - 5 : yabai -m window --space 5;
-shift + alt - 6 : yabai -m window --space 6;
-shift + alt - 7 : yabai -m window --space 7;
+shift + hyper - 1 : yabai -m window --space 1;
+shift + hyper - 2 : yabai -m window --space 2;
+shift + hyper - 3 : yabai -m window --space 3;
+shift + hyper - 4 : yabai -m window --space 4;
+shift + hyper - 5 : yabai -m window --space 5;
+shift + hyper - 6 : yabai -m window --space 6;
+shift + hyper - 7 : yabai -m window --space 7;
 
 # -- Starting/Stopping/Restarting Yabai --
 
@@ -102,5 +102,5 @@ hyper - b : yabai --restart-service
 # open terminal
 hyper - 8 : open -na iTerm.app
 
-# open Safari
-hyper - 9 : open -na Safari.app
+# open Firefox
+hyper - 9 : open -na 'Firefox Developer Edition.app'

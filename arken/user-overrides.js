@@ -11,6 +11,7 @@ user_pref("network.file.disable_unc_paths", false);   // enable UNC paths
 
 // Personal
 user_pref("extensions.pocket.enabled", false);        // disable Pocket
+user_pref("browser.theme.content-theme", 2);          // force dark mode
 
 // Enable link prefetching
 user_pref("network.prefetch-next", true);             // disable link prefetching
