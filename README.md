@@ -14,11 +14,12 @@ my uses, though I wish I were an Emacs guy.
 These steps only pertain to my newest dev setup, located in `nvim`, exclusively.
 
 1. Clone this repo into home directory
-2. Run `mkdir ~/.config/nvim`
-3. Run `ln -s ~/dotfiles/nvim ~/.config/nvim`
-4. Open nvim and plugins will start installing
-5. Close nvim once the plugins are installed
-6. Reopen nvim and let LSPs install
+2. Make symlinks from any directory in this repo to your home directory (see a couple examples below)
+3. Run `mkdir ~/.config/nvim`
+4. Run `ln -s ~/dotfiles/nvim ~/.config/nvim`
+5. Open nvim and plugins will start installing
+6. Close nvim once the plugins are installed
+7. Reopen nvim and let LSPs install
 
 ## Bonus Tip for Futureself
 If you want add symbolic links to nested folders at nested folder paths, like the following user story, follow this guide.
@@ -26,3 +27,10 @@ If you want add symbolic links to nested folders at nested folder paths, like th
 User X wants to add some `skhd` configuration in the directory `.dotfiles/skhd` and stow it in `~/.config/skhd`. X makes 
 a new directory in their clone of this repo, `skhd`, adds their `.skhdrc` file in there, and creates the symlink using:
 `stow -t ~/.config ~/.dotfiles/config`. This accounts for nesting so the file structure will match in `~/.config`.
+
+## Accessing Susman Oh My Zsh Theme
+`ln -s ~/.dotfiles/zsh/susman.zsh-theme ~/.oh-my-zsh/themes`
+
+## Setting up Zsh in General
+`stow ~/.dotfiles/zsh`
+
