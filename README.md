@@ -34,3 +34,6 @@ a new directory in their clone of this repo, `skhd`, adds their `.skhdrc` file i
 ## Setting up Zsh in General
 `stow ~/.dotfiles/zsh`
 
+## Setting up Sketchybar config
+`ln -s ~/.dotfiles/sketchybar ~/.config/sketchybar`
+
