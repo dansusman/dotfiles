@@ -4,6 +4,15 @@ A much more organized repo for all my configs
 I've used Nano, Vi, Vim, nvim, Emacs, and tons of IDEs. nvim is the winner for
 my uses, though I wish I were an Emacs guy.
 
+## Current Favorite Tools
+- [yabai](https://github.com/koekeishiya/yabai): Tiling window manager
+- [skhd](https://github.com/koekeishiya/skhd): Configurable keyboard shortcuts (used to control yabai with the keyboard)
+- [borders](https://github.com/FelixKratz/JankyBorders): Borders around windows, colored differently when resizing windows via yabai
+- [Maccy](https://github.com/p0deje/Maccy): Clipboard manager
+- [homerow](https://github.com/nchudleigh/homerow): Navigate anywhere with the keyboard
+- [heynote](https://github.com/heyman/heynote): Dev scratchpad
+- [grex](https://github.com/pemistahl/grex): Slightly easier regex generation
+
 ## Tour
 - `nvim-old`: awful, old, vimscript-based dev setup using Plug package manager
 - `init.el`: Emacs stuff, not great, somewhat out of date probably
@@ -13,6 +22,7 @@ my uses, though I wish I were an Emacs guy.
 - `chrome`: Currently unused, but Firefox UI tweaking
 - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
 - `zsh`: Shell aliases, theming, utils, etc.
+- `.config`: skhd, yabai, Karabiner Elements, etc. configurations
 
 ## Installation Steps
 These steps only pertain to my newest dev setup, located in `nvim`, exclusively.
