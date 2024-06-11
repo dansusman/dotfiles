@@ -79,6 +79,7 @@ hyper - 1 : yabai -m window --space 1 --focus
 hyper - 2 : yabai -m window --space 2 --focus
 hyper - 3 : yabai -m window --space 3 --focus
 hyper - 4 : yabai -m window --space 4 --focus
+hyper - 5 : yabai -m window --space 5 --focus
 
 # ======== APPLICATION STOP/LAUNCH =========
 
