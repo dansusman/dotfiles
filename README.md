@@ -9,6 +9,10 @@ my uses, though I wish I were an Emacs guy.
 - `init.el`: Emacs stuff, not great, somewhat out of date probably
 - `nvim1`: slightly better, Lua-only dev setup using Packer package manager
 - `nvim`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
+- `arken`: Firefox Hardening via [arkenfox/user.js](https://github.com/arkenfox/user.js)
+- `chrome`: Currently unused, but Firefox UI tweaking
+- `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
+- `zsh`: Shell aliases, theming, utils, etc.
 
 ## Installation Steps
 These steps only pertain to my newest dev setup, located in `nvim`, exclusively.
