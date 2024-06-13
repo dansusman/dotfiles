@@ -160,6 +160,7 @@ alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
 alias ll="exa -la"
 # alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias ppp="~/githubOpen.sh $1"
+alias qqq="~/githubSearch.sh $*"
 alias ss="shortcut staging ~/work/Notability"
 alias css="shortcut $1"
 alias sss="shortcut staging ~/work/staging/Notability"
