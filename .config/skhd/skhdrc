@@ -89,7 +89,7 @@ hyper - n : yabai --start-service
 hyper - b : yabai --restart-service
 
 # open terminal
-hyper - 8 : open -na iTerm.app
+hyper - 8 : open -na WezTerm.app
 
 # open Firefox
 hyper - 9 : open -na 'Firefox Developer Edition.app'
