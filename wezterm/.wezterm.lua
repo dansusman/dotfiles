@@ -18,6 +18,7 @@ config.inactive_pane_hsb = {
 	saturation = 0.9,
 	brightness = 0.2,
 }
+config.default_cwd = "/Users/danielsusman/work/Notability/"
 config.enable_scroll_bar = true
 config.switch_to_last_active_tab_when_closing_tab = true
 config.leader = { key = "x", mods = mod.SUPER_REV }
@@ -46,7 +47,7 @@ config.keys = {
 		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 	-- windows
-	{ key = "w", mods = "CMD", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
+	{ key = "w",  mods = "CMD",  action = wezterm.action.CloseCurrentPane({ confirm = true }) },
 	-- debug/help
 	{ key = "F1", mods = "NONE", action = "ActivateCopyMode" },
 	{ key = "F2", mods = "NONE", action = act.ActivateCommandPalette },
@@ -81,18 +82,18 @@ config.keys = {
 -- resizing panes and font
 local key_tables = {
 	resize_font = {
-		{ key = "k", action = act.IncreaseFontSize },
-		{ key = "j", action = act.DecreaseFontSize },
-		{ key = "r", action = act.ResetFontSize },
+		{ key = "k",      action = act.IncreaseFontSize },
+		{ key = "j",      action = act.DecreaseFontSize },
+		{ key = "r",      action = act.ResetFontSize },
 		{ key = "Escape", action = "PopKeyTable" },
-		{ key = "q", action = "PopKeyTable" },
+		{ key = "q",      action = "PopKeyTable" },
 	},
 	resize_pane = {
-		{ key = "k", action = act.AdjustPaneSize({ "Up", 3 }) },
-		{ key = "j", action = act.AdjustPaneSize({ "Down", 3 }) },
-		{ key = "h", action = act.AdjustPaneSize({ "Left", 3 }) },
+		{ key = "k",      action = act.AdjustPaneSize({ "Up", 3 }) },
+		{ key = "j",      action = act.AdjustPaneSize({ "Down", 3 }) },
+		{ key = "h",      action = act.AdjustPaneSize({ "Left", 3 }) },
 		{ key = "Escape", action = "PopKeyTable" },
-		{ key = "q", action = "PopKeyTable" },
+		{ key = "q",      action = "PopKeyTable" },
 	},
 }
 

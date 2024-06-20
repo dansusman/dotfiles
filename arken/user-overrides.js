@@ -15,3 +15,13 @@ user_pref("browser.theme.content-theme", 2);          // force dark mode
 
 // Enable link prefetching
 user_pref("network.prefetch-next", true);             // disable link prefetching
+
+// Disable letterbox
+user_pref("privacy.resistFingerprinting.letterboxing", false);
+
+// Store cookies and history
+user_pref("privacy.clearOnShutdown.cookies", false);
+user_pref("privacy.clearOnShutdown.history", false);
+
+// Enable DRM and let me use netflix/spotify
+user_pref("media.eme.enabled", true); // 2022

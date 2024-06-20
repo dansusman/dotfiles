@@ -111,32 +111,10 @@ source ~/.zsh_profile
 
 ######### ALIASES ####################
 alias vim=nvim
-alias op="open -a 'Opera GX'"
-alias sys="open -a 'System Preferences'"
-alias spot="open -a Spotify"
-alias app="open -a 'App Store'"
-alias mes="open -a Messages"
-alias teams="open -a 'Microsoft Teams'"
-alias word="open -a 'Microsoft Word'"
-alias out="open -a 'Microsoft Outlook'"
 alias am="open -a 'Activity Monitor'"
-alias notes="open -a Notes"
-alias zoom="open -a zoom.us"
 alias slack="open -a Slack"
-alias photo="open -a 'Photo Booth'"
-alias discord="open -a Discord"
-alias vscode="open -a 'Visual Studio Code'"
-alias sublime="open -a 'Sublime Text'"
-alias vb="open -a 'VirtualBox'"
-alias ft="open -a FaceTime"
-alias firefox="open -a Firefox"
-alias int="open -a 'IntelliJ IDEA'"
 alias pb="open -a Paintbrush"
 alias c="clear"
-alias fig="open -a Figma"
-alias ob="open -a Obsidian"
-alias sb="cd /Users/danielsusman/Documents/second-brain"
-alias ch="open -a 'Google Chrome'"
 alias xcode="open -a Xcode"
 function jump {
     location=$1
