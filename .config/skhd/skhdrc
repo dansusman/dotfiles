@@ -92,5 +92,5 @@ hyper - b : yabai --restart-service
 # open terminal
 hyper - 8 : open -na WezTerm.app
 
-# open Firefox
-hyper - 9 : open -na 'Firefox Developer Edition.app'
+# open Firefox - broken, don't use it
+# hyper - 9 : open -a 'Firefox Developer Edition.app'
