@@ -39,6 +39,10 @@ a new directory in their clone of this repo, `skhd`, adds their `.skhdrc` file i
 ## Setting up Zsh in General
 `stow ~/.dotfiles/zsh`
 
+## Set up Git Worktrees
+`ln -s ~/.dotfiles/git/.gitignore ~/.gitignore`
+`git config --global core.excludesfile ~/.gitignore`
+
 ## Setting up Sketchybar config
 `ln -s ~/.dotfiles/sketchybar ~/.config/sketchybar`
 
