@@ -7,6 +7,7 @@ mod.SUPER = "CMD"
 mod.SUPER_REV = "CMD|CTRL"
 
 -- GENERAL
+config.hide_tab_bar_if_only_one_tab = true
 config.font = wezterm.font("Iosevka Nerd Font Mono")
 config.font_size = 20.0
 config.color_scheme = "Gruber (base16)"
@@ -18,7 +19,7 @@ config.inactive_pane_hsb = {
 	saturation = 0.9,
 	brightness = 0.2,
 }
-config.default_cwd = "/Users/danielsusman/work/Notability/"
+config.default_cwd = "/Users/danielsusman"
 config.enable_scroll_bar = true
 config.switch_to_last_active_tab_when_closing_tab = true
 config.leader = { key = "x", mods = mod.SUPER_REV }
