@@ -108,7 +108,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.zsh_profile
 
-
 ######### ALIASES ####################
 alias vim=nvim
 alias am="open -a 'Activity Monitor'"
@@ -182,3 +181,5 @@ export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
 eval "$(zoxide init --cmd cd zsh)"
+source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
