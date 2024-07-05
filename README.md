@@ -2,11 +2,14 @@
 All my config files for macOS.
 
 ## Tour
-- `.config`: skhd, yabai, Karabiner Elements, etc. configurations
 - `arken`: Firefox Hardening via [arkenfox/user.js](https://github.com/arkenfox/user.js)
 - `chrome`: Currently unused, but Firefox UI tweaking
-- `nvim`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
-- `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
+- `config/.config`: anything that expects to land in `~/.config`
+    - `karabiner`: configs for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements) with sublayering via [mxstbr](https://github.com/mxstbr/karabiner)
+    - `nvim`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
+    - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
+    - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd)
+    - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai)
 - `tmux`: tmux configuration
 - `zsh`: Shell aliases, theming, utils, etc.
 
@@ -17,14 +20,15 @@ All my config files for macOS.
 
 ## Installation Steps
 1. Clone this repo into home directory
-2. Navigate into the clone and run `./brew/install` to install most of the brew packages I care about.
-3. Run `./install` to move config files to HOME_DIR.
-4. Open nvim and plugins will start installing
-5. Close nvim once the plugins are installed
-6. Reopen nvim and let LSPs install
-7. Install the few apps listed in [Current Favorite Tools](#current-favorite-tools) that are labeled "not included in brew install script"
-8. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
-9. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
+2. Install [homebrew](https://brew.sh/) via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+3. Navigate into the clone and run `./brew/install` to install most of the brew packages I care about.
+4. Run `./install` to move config files to HOME_DIR.
+5. Open nvim and plugins will start installing
+6. Close nvim once the plugins are installed
+7. Reopen nvim and let LSPs install
+8. Install the few apps listed in [Current Favorite Tools](#current-favorite-tools) that are labeled "not included in brew install script"
+9. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
+10. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
 
 ## Current Favorite Tools
 
