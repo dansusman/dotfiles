@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+export STOW_FOLDERS="config,git,gitmux,tmux,wezterm,zsh"
 
 pushd $DOTFILES
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
@@ -7,3 +8,5 @@ do
     stow $folder
 done
 popd
+
+ln -s ~/.dotfiles/git/.gitignore ~/.gitignore

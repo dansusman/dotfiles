@@ -39,11 +39,11 @@ config.keys = {
 	},
 	{
 		key = "b",
-		mods = mod.SUPER,
+		mods = mod.SUPER_REV,
 		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
-		key = "b",
+		key = "v",
 		mods = mod.SUPER_REV,
 		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},

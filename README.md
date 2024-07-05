@@ -17,34 +17,14 @@ All my config files for macOS.
 
 ## Installation Steps
 1. Clone this repo into home directory
-2. Navigate into the clone and run `./brew/install`
-3. Make symlinks from any directory in this repo to your home directory (see a couple examples below). TODO: make an install script for this.
-4. Run `mkdir ~/.config/nvim`
-5. Run `ln -s ~/dotfiles/nvim ~/.config/nvim`
-6. Open nvim and plugins will start installing
-7. Close nvim once the plugins are installed
-8. Reopen nvim and let LSPs install
-9. Install the few apps listed in [Current Favorite Tools](#current-favorite-tools) that are labeled "not included in brew install script"
-
-### Accessing Susman Oh My Zsh Theme
-`ln -s ~/.dotfiles/zsh/susman.zsh-theme ~/.oh-my-zsh/themes`
-
-### Setting up Zsh in General
-`stow ~/.dotfiles/zsh`
-
-### Set up Git Worktrees
-`ln -s ~/.dotfiles/git/.gitignore ~/.gitignore`
-`git config --global core.excludesfile ~/.gitignore`
-
-### Setting up Sketchybar config
-`ln -s ~/.dotfiles/sketchybar ~/.config/sketchybar`
-
-### Bonus Tip for Futureself
-If you want add symbolic links to nested folders at nested folder paths, like the following user story, follow this guide.
-
-User X wants to add some `skhd` configuration in the directory `.dotfiles/skhd` and stow it in `~/.config/skhd`. X makes 
-a new directory in their clone of this repo, `skhd`, adds their `.skhdrc` file in there, and creates the symlink using:
-`stow -t ~/.config ~/.dotfiles/config`. This accounts for nesting so the file structure will match in `~/.config`.
+2. Navigate into the clone and run `./brew/install` to install most of the brew packages I care about.
+3. Run `./install` to move config files to HOME_DIR.
+4. Open nvim and plugins will start installing
+5. Close nvim once the plugins are installed
+6. Reopen nvim and let LSPs install
+7. Install the few apps listed in [Current Favorite Tools](#current-favorite-tools) that are labeled "not included in brew install script"
+8. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
+9. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
 
 ## Current Favorite Tools
 
@@ -73,5 +53,3 @@ Here's a running list of things I enjoy using right now. A lot of them are macOS
 - [1Password](https://1password.com/): Password manager
 - [homerow](https://homerow.app): Navigate anywhere with the keyboard
 
-## TODO
-1. Update install script. It might stow things correctly but I haven't tested on a new machine in years.

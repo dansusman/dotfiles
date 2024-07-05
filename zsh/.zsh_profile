@@ -24,4 +24,3 @@ addToPathFront $HOME/go/bin
 
 
 export PATH=$PATH:$GOPATH/bin
-export STOW_FOLDERS="emacs,git,nvim,tmux,zsh"
