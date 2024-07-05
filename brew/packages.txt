@@ -7,7 +7,7 @@ cleanshot
 eza
 firefox
 font-hack-nerd-font
-font-iosevka
+font-iosevka-term-nerd-font
 fzf
 gd
 gh

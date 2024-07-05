@@ -8,7 +8,7 @@ mod.SUPER_REV = "CMD|CTRL"
 
 -- GENERAL
 config.hide_tab_bar_if_only_one_tab = true
-config.font = wezterm.font("Iosevka Nerd Font Mono")
+config.font = wezterm.font("IosevkaTerm Nerd Font")
 config.font_size = 20.0
 config.color_scheme = "Gruber (base16)"
 config.tab_bar_at_bottom = true
