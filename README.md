@@ -30,6 +30,12 @@ All my config files for macOS.
 9. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
 10. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
 
+### nvim as XCode replacement
+1. Ensure `sourcekit-lsp` and `xcodebuild.nvim` are installed in your nvim setup. Ensure `xcode-build-server` is on your machine (should've been installed in brew install script).
+2. Navigate to the root directory of your XCode project/workspace.
+3. Run `xcode-build-server config -scheme <XXX> -workspace *.xcworkspace`, where `<XXX>` is the target you plan to build/run. You can be more specific than `*.xcworkspace` if you'd like.
+4. Reopen nvim and LSP/BSP should be working, `<leader>xr` should build and run your project
+
 ## Current Favorite Tools
 
 Here's a running list of things I enjoy using right now. A lot of them are macOS specific, but some are platform agnostic.

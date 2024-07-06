@@ -44,3 +44,4 @@ zoxide
 zsh-autosuggestions
 zsh-vi-mode
 wezterm
+xcode-build-server
