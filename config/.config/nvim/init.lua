@@ -146,6 +146,13 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	{
+		{
+			'windwp/nvim-autopairs',
+			event = "InsertEnter",
+			config = true
+			-- use opts = {} for passing setup options
+			-- this is equalent to setup({}) function
+		},
 		'stevearc/oil.nvim',
 		opts = {},
 		config = function()
