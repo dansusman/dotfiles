@@ -146,6 +146,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	{
+		'mg979/vim-visual-multi',
 		{
 			'windwp/nvim-autopairs',
 			event = "InsertEnter",
@@ -171,7 +172,7 @@ require("lazy").setup({
 	},
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	{
-		"blazkowolf/gruber-darker.nvim",
+		"dansusman/gruber-darker.nvim",
 		priority = 1000,
 		config = function()
 			vim.cmd.colorscheme("gruber-darker")
@@ -700,6 +701,7 @@ require("lazy").setup({
 			--  into multiple repos for maintenance purposes.
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-path',
+			'hrsh7th/cmp-cmdline',
 			'onsails/lspkind.nvim',
 		},
 		config = function()
@@ -821,7 +823,21 @@ require("lazy").setup({
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
 	},
-
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- add any options here
+		},
+		dependencies = {
+			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+			"MunifTanjim/nui.nvim",
+			-- OPTIONAL:
+			--   `nvim-notify` is only needed, if you want to use the notification view.
+			--   If not available, we use `mini` as the fallback
+			"rcarriga/nvim-notify",
+		}
+	},
 	{ -- Collection of various small independent plugins/modules
 		"echasnovski/mini.nvim",
 		config = function()
@@ -1003,9 +1019,6 @@ require("lazy").setup({
 		},
 	},
 })
-
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
 
 --- Remaps
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
