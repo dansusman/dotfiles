@@ -666,6 +666,25 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		'hrsh7th/cmp-cmdline',
+		config = function()
+			local cmp = require("cmp")
+			cmp.setup.cmdline(':', {
+				mapping = cmp.mapping.preset.cmdline(),
+				sources = cmp.config.sources({
+					{ name = 'path' }
+				}, {
+					{
+						name = 'cmdline',
+						option = {
+							ignore_cmds = { 'Man', '!' }
+						}
+					}
+				})
+			})
+		end,
+	},
 	{ -- Autocompletion
 		'hrsh7th/nvim-cmp',
 		event = 'InsertEnter',
@@ -701,7 +720,6 @@ require("lazy").setup({
 			--  into multiple repos for maintenance purposes.
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-path',
-			'hrsh7th/cmp-cmdline',
 			'onsails/lspkind.nvim',
 		},
 		config = function()
