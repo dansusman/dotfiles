@@ -1,0 +1,8 @@
+-- Copy the following settings into Vimium Firefox Extension keymap settings
+-- TODO: Might want to use Export button in Vimium settings if they get more custom
+map g1 firstTab 
+map g2 firstTab count=2
+map g3 firstTab count=3
+map g4 firstTab count=4
+map g5 firstTab count=5
+

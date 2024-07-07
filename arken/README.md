@@ -16,3 +16,17 @@ It essentially boils down to the following steps, though.
 8. Run `updater.sh` then `prefsCleaner.sh` in your Firefox profile root dir
 9. Open Firefox, navigate to `about:config`
 10. Search `_user.js.parrot`, if you see something like `SUCCESS: No no he's not dead, he's, he's restin'!`, your installation was successful
+
+## Extensions
+1. Firefox Multi-Account Container
+2. 1Password
+3. DarkReader
+4. UBlock Origin
+5. 600% Sound Volume
+6. Video Playback Speed Controller (see vpsc.txt in this folder for custom keymaps)
+7. Vimium C (see vimium.txt in this folder for custom keymaps)
+8. Switch To Previous Active Tab (opt+1, opt+2, etc. to ignore pinned tabs)
+9. Omnivore
+10. BetterTTV
+11. Consent-O-Matic
+
