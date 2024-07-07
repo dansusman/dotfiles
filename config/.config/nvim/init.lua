@@ -145,15 +145,16 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+	'godlygeek/tabular',
+	'mg979/vim-visual-multi',
 	{
-		'mg979/vim-visual-multi',
-		{
-			'windwp/nvim-autopairs',
-			event = "InsertEnter",
-			config = true
-			-- use opts = {} for passing setup options
-			-- this is equalent to setup({}) function
-		},
+		'windwp/nvim-autopairs',
+		event = "InsertEnter",
+		config = true
+		-- use opts = {} for passing setup options
+		-- this is equalent to setup({}) function
+	},
+	{
 		'stevearc/oil.nvim',
 		opts = {},
 		config = function()
