@@ -8,7 +8,21 @@ mod.SUPER_REV = "CMD|CTRL"
 
 -- GENERAL
 config.hide_tab_bar_if_only_one_tab = true
-config.font = wezterm.font("IosevkaTerm Nerd Font")
+config.font = wezterm.font_with_fallback {
+	{ family = "IosevkaTerm Nerd Font", weight = "Regular" },
+	"Iosevka Nerd Font Mono",
+}
+config.font_rules = {
+	{
+		intensity = "Normal",
+		font = wezterm.font { family = "IosevkaTerm Nerd Font", weight = "Regular" },
+	},
+	{
+		intensity = "Half",
+		font = wezterm.font { family = "IosevkaTerm Nerd Font", weight = "Regular" },
+	}
+
+}
 config.font_size = 20.0
 config.color_scheme = "Gruber (base16)"
 config.tab_bar_at_bottom = true
