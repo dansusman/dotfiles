@@ -1,23 +1,30 @@
-# Xcode tips/binds
+# Xcode settings
 
-## Fast editing
+## Xcode setup
+I haven't tested this yet, but it'd be cool to alias the dotfiles version of keybinds and theme and have Xcode load those settings instead of having
+two copies, one backing up in this repo and one actually in use by Xcode. I don't want to break all my keybinds and have to manually set them back
+up, so maybe when I'm actually setting up a new machine I can try doing it this way. And update this comment...
+
+## Xcode tips/binds
+
+### Fast editing
 - Add cursors for multi-cursor edits: `Ctrl+Shift+Click` or `Option+ArrowKey` (custom)
 - Move selection up: `Ctrl+[` (custom)
 - Move selection down: `Ctrl+]` (custom)
 
-## Compiler errors/warnings
+### Compiler errors/warnings
 - Cycle through errors: `Cmd+5` -> `Arrows` -> `Cmd+J` -> `Enter`
 - Jump to next issue: `Ctrl+'`
 - Jump to previous issue: `Ctrl+Shift+'`
 
-## Git diff
+### Git diff
 - Jump to next change: `Ctrl+\` (custom)
 - Jump to previous change: `Ctrl+Shift+\` (custom)
 - Toggle code review mode: `Ctrl+Q` (custom)
 - Side-by-side diff: `Ctrl+S` (custom)
 - Inline diff: `Ctrl+Z` (custom)
 
-## Misc
+### Misc
 - Show documentation: `Cmd+Shift+0`
 - Toggle debug area: `Cmd+Shift+Y`
 - Find selected symbol in workspace: `Cmd+Ctrl+Shift+F`
