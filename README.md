@@ -10,7 +10,12 @@ All my config files for macOS.
     - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
     - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd)
     - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai)
+- `defaults`: macOS specific settings (noTunes config, wifi toggle script, etc.)
+- `git`: Default git message, global git ignore, etc.
+- `gitmux`: tmux statusline git status config
 - `tmux`: tmux configuration
+- `wezterm`: wezterm terminal emulator settings
+- `xcode`: Xcode keybinds, theme, and cheatsheet
 - `zsh`: Shell aliases, theming, utils, etc.
 
 > :warning: The following folders are quite outdated.
