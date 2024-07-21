@@ -18,7 +18,8 @@ All my config files for macOS.
 - `xcode`: Xcode keybinds, theme, and cheatsheet
 - `zsh`: Shell aliases, theming, utils, etc.
 
-> :warning: The following folders are quite outdated.
+> [!WARNING]
+> The following folders are quite outdated.
 - `nvim-old`: awful, old, vimscript-based dev setup using Plug package manager. Don't look, don't use.
 - `init.el`: Emacs stuff, not great, somewhat out of date probably.
 - `nvim1`: slightly better, Lua-only dev setup using Packer package manager. Don't look, don't use.
