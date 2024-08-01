@@ -16,6 +16,7 @@ It essentially boils down to the following steps, though.
 8. Run `updater.sh` then `prefsCleaner.sh` in your Firefox profile root dir
 9. Open Firefox, navigate to `about:config`
 10. Search `_user.js.parrot`, if you see something like `SUCCESS: No no he's not dead, he's, he's restin'!`, your installation was successful
+11. Search `full-screen-api.macos-native-full-screen` and set to `false` (disable macOS fullscreening so spaces work better)
 
 ## Extensions
 1. Firefox Multi-Account Container
