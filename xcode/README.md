@@ -28,3 +28,5 @@ up, so maybe when I'm actually setting up a new machine I can try doing it this 
 - Show documentation: `Cmd+Shift+0`
 - Toggle debug area: `Cmd+Shift+Y`
 - Find selected symbol in workspace: `Cmd+Ctrl+Shift+F`
+- Jump to definition: `gr`
+- Jump to references: `Ctrl+R` (custom)
