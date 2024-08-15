@@ -1,0 +1,55 @@
+#!/bin/sh
+#
+# A hook script to prepare the commit log message.
+# Called by "git commit" with the name of the file that has the
+# commit message, followed by the description of the commit
+# message's source.  The hook's purpose is to edit the commit
+# message file.  If the hook fails with a non-zero status,
+# the commit is aborted.
+#
+# To enable this hook, rename this file to "prepare-commit-msg" and
+# place it in .git/hooks.
+#
+# To enable this for all git projects use the global configuration
+# 'init.templatedir'. Create a directory for git templates and a 
+# subdirectory for hooks.
+# > mkdir -p ~/.git_template/hooks
+# AM
+# Use the following command to configure this as your git templates 
+# directory.
+# > git config --global init.templatedir '~/.git_template'
+# Place all global git hooks in '~/.git_template/hooks/'. 
+# In this instance it should be '~/.git_template/hooks/prepare-commit-msg'
+# Give the git hooks the execute premission so they may run. 
+# > chmod +x ~/.git_template/hooks/prepare-commit-msg
+#
+# Now when you init a new git repo, the hook directory along with
+# any hooks will automatically be placed in the new project git
+# repo.
+#
+# You can also run 'git init' on an existing repo to have the
+# reinitialized with new templates. To replace existing hooks, they must be removed from the repo before 'git init'.
+#
+# Exit status of non zero will lead to a failed commit.
+
+# Get the name of the branch in the current working tree.
+# Path to the file where the issue number is stored
+ISSUE_FILE=~/.gitnum_env
+
+# Check if the issue file exists and is not empty
+if [ -f "$ISSUE_FILE" ] && [ -s "$ISSUE_FILE" ]; then
+   # Read the issue number
+   issue_number=$(cat "$ISSUE_FILE")
+
+   # Check the branch name for a 3 to 9 digit number (an issue number).
+   ISSUE_NUMBER=`echo "$issue_number" | egrep -o '[0-9]{3,9}'`
+
+   # If branch contains a match for an issue number prepend the commit
+   # message with '#<issue_number> <commit message>.
+   if [ -n "$ISSUE_NUMBER" ] 
+   then
+      # echo "#$ISSUE_NUMBER\n\n" $(cat "$1") > "$1"
+      sed -i.bak -e "1s/^/#$ISSUE_NUMBER: \n /" "$GIT_DIR/COMMIT_EDITMSG"
+   fi
+fi
+
