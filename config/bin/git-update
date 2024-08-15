@@ -1,10 +1,86 @@
+#!/bin/bash
+
+# Function to display help message
+function usage() {
+    echo "Usage: $0 <branch_name> [upstream_branch_name] [git_flag] -- [issue_number]"
+    echo
+    echo "Arguments:"
+    echo "  <branch_name>         The branch name to switch to."
+    echo "  [git_flag]            Optional. Additional git flags."
+    echo "  [upstream_branch_name] Optional. The upstream branch to track."
+    echo "  -- [issue_number]     Optional. An integer issue number after '--'."
+}
+
+# Check if at least branch_name is provided
+if [ $# -lt 1 ]; then
+    echo "Error: branch_name is required."
+    usage
+    exit 1
+fi
+
+# Initialize variables
+branch_name=$1
+upstream_branch_name=""
+git_flag=""
+issue_number=""
+
+# Shift past the required branch_name argument
+shift
+
+# Parse remaining arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --)
+            shift
+            if [[ $# -gt 0 ]]; then
+                issue_number=$1
+                shift
+            fi
+            break
+            ;;
+        -*)
+            git_flag=$1
+            shift
+            ;;
+        *)
+            if [ -z "$upstream_branch_name" ]; then
+                upstream_branch_name=$1
+            else
+                echo "Error: Unknown argument $1"
+                usage
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Build the git switch command
+cmd="git switch "
+
+if [ -n "$git_flag" ]; then
+    cmd+="$git_flag "
+fi
+
+cmd+="$branch_name "
+
+if [ -n "$upstream_branch_name" ]; then
+    cmd+="$upstream_branch_name "
+fi
+
+# Run the git switch command
+echo "Executing: $cmd"
+eval $cmd
+
 update_gitnum() {
     local new_value="$1"
     echo "export GITNUM=\"$new_value\"" > ~/.gitnum_env
     source ~/.gitnum_env
 }
 
-# Handle arguments
-branch_name="$1"
-git switch "$branch_name"
-update_gitnum "$2"
+# Print issue number if provided
+if [ -n "$issue_number" ]; then
+    echo "Issue number: $issue_number"
+    update_gitnum "$issue_number"
+fi
+

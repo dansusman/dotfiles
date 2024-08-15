@@ -37,4 +37,4 @@
 	apply = stash apply
 	rl = reflog
 	fs = !git fetch && git switch
-	sw = "!f() { git-update \"$1\" \"$2\"; }; f"
+	sw = !git-update
