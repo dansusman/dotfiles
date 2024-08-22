@@ -11,6 +11,9 @@ up, so maybe when I'm actually setting up a new machine I can try doing it this 
 - Add cursors for multi-cursor edits: `Ctrl+Shift+Click` or `Option+ArrowKey` (custom)
 - Move selection up: `Ctrl+[` (custom)
 - Move selection down: `Ctrl+]` (custom)
+- Delete word backward: `Ctrl+W` (custom)
+- Go Forward: `Ctrl+O` (custom)
+- Go Back: `Ctrl+I` (custom)
 
 ### Compiler errors/warnings
 - Cycle through errors: `Cmd+5` -> `Arrows` -> `Cmd+J` -> `Enter`
@@ -30,3 +33,6 @@ up, so maybe when I'm actually setting up a new machine I can try doing it this 
 - Find selected symbol in workspace: `Cmd+Ctrl+Shift+F`
 - Jump to definition: `gr`
 - Jump to references: `Ctrl+R` (custom)
+- Next placeholder: `Ctrl+.` (custom)
+- Previous placeholder: `Ctrl+,` (custom)
+- Show Document items (marks and TODOs and such): `Ctrl+_` (custom)

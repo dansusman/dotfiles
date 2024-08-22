@@ -8,46 +8,6 @@
 		<array>
 			<dict>
 				<key>Action</key>
-				<string>dvt_closeActiveEditorTab:</string>
-				<key>Alternate</key>
-				<string>NO</string>
-				<key>CommandID</key>
-				<string>Xcode.IDEKit.CmdDefinition.CloseEditorTab</string>
-				<key>Group</key>
-				<string>File Menu</string>
-				<key>GroupID</key>
-				<string>Xcode.IDEKit.MenuDefinition.Main</string>
-				<key>GroupedAlternate</key>
-				<string>NO</string>
-				<key>Keyboard Shortcut</key>
-				<string>^w</string>
-				<key>Navigation</key>
-				<string>NO</string>
-				<key>Title</key>
-				<string>Close Tab</string>
-			</dict>
-			<dict>
-				<key>Action</key>
-				<string>_closeOtherEditorTabs:</string>
-				<key>Alternate</key>
-				<string>YES</string>
-				<key>CommandID</key>
-				<string>Xcode.IDEKit.CmdDefinition.CloseOtherEditorTabs</string>
-				<key>Group</key>
-				<string>File Menu</string>
-				<key>GroupID</key>
-				<string>Xcode.IDEKit.MenuDefinition.Main</string>
-				<key>GroupedAlternate</key>
-				<string>NO</string>
-				<key>Keyboard Shortcut</key>
-				<string>^~w</string>
-				<key>Navigation</key>
-				<string>NO</string>
-				<key>Title</key>
-				<string>Close Other Tabs</string>
-			</dict>
-			<dict>
-				<key>Action</key>
 				<string>commitCommand:</string>
 				<key>Alternate</key>
 				<string>NO</string>
@@ -286,6 +246,24 @@
 			</dict>
 			<dict>
 				<key>Action</key>
+				<string>productsWindow_reload:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>Xcode.IDEKit.CmdDefinition.Products.Reload</string>
+				<key>Group</key>
+				<string>View Menu</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEKit.MenuDefinition.Main</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Title</key>
+				<string>Reload Organizer</string>
+			</dict>
+			<dict>
+				<key>Action</key>
 				<string>selectAllFindMatches:</string>
 				<key>Alternate</key>
 				<string>NO</string>
@@ -303,6 +281,28 @@
 				<string>NO</string>
 				<key>Title</key>
 				<string>Select All Find Matches</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>showDocumentItemsMenu:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>Xcode.IDEKit.CmdDefinition.ShowDocumentItemsMenu</string>
+				<key>Group</key>
+				<string>View Menu</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEKit.MenuDefinition.Main</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^_</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Editor</string>
+				<key>Title</key>
+				<string>Show Document Items</string>
 			</dict>
 			<dict>
 				<key>Action</key>
@@ -655,6 +655,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^.</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -675,6 +677,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^.</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -695,6 +699,8 @@
 				<string>Xcode.IDEPlaygroundEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^.</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -715,6 +721,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^.</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -867,6 +875,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^,</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -887,6 +897,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^,</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -907,6 +919,8 @@
 				<string>Xcode.IDEPlaygroundEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^,</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -927,6 +941,8 @@
 				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Navigate</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>^,</string>
 				<key>Navigation</key>
 				<string>NO</string>
 				<key>Title</key>
@@ -1235,6 +1251,26 @@
 				<string>Selection</string>
 				<key>Title</key>
 				<string>Select Column Up</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>jumpToCallers:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>Xcode.IDEPegasusSourceEditor.CmdDefinition.ShowCallers</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>~r</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Title</key>
+				<string>Show Callers…</string>
 			</dict>
 			<dict>
 				<key>Action</key>
@@ -1361,6 +1397,7 @@
 				<string>scrollPageDown:</string>
 				<string>scrollPageUp:</string>
 				<string>deleteToMark:</string>
+				<string>nextCompletion:</string>
 				<string>insertDoubleQuoteIgnoringSubstitution:</string>
 				<string>insertSingleQuoteIgnoringSubstitution:</string>
 				<string>insertTab:</string>
@@ -1382,6 +1419,12 @@
 			<string>moveToBeginningOfDocumentAndModifySelection:</string>
 			<key>$</key>
 			<string>moveToEndOfDocumentAndModifySelection:</string>
+			<key>^w</key>
+			<string>deleteWordBackward:</string>
+			<key>^~</key>
+			<string>deleteWordBackward:</string>
+			<key>~</key>
+			<string>deleteWordBackward:</string>
 		</dict>
 		<key>Version</key>
 		<integer>3</integer>
