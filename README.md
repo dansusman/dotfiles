@@ -67,5 +67,4 @@ Here's a running list of things I enjoy using right now. A lot of them are macOS
 - [Cleanshot X](https://cleanshot.com/): Better screenshotting
 - [Choosy Browser](https://choosy.app/): Send certain links to certain browsers
 - [1Password](https://1password.com/): Password manager
-- [homerow](https://homerow.app): Navigate anywhere with the keyboard
 

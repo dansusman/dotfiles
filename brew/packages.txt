@@ -19,11 +19,13 @@ gitmux
 gitu
 grex
 grila
+hiddenbar
 karabiner-elements
 keycastr
 lunar
 maccy
 malwarebytes
+mediamate
 ncurses
 neovim
 node
@@ -32,6 +34,7 @@ ocaml
 opam
 python
 ripgrep
+scoot
 sketchybar
 skhd
 slack
