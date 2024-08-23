@@ -25,7 +25,6 @@ keycastr
 lunar
 maccy
 malwarebytes
-mediamate
 ncurses
 neovim
 node
