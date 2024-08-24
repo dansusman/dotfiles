@@ -81,17 +81,20 @@ sketchybar --add item chevron left \
 
 sketchybar --add item clock right \
            --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
+           --add item weather right \
+           --set weather update_freq=1800 \
+           --set weather script="$PLUGIN_DIR/weather.sh" \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
+           --add item battery right \
+           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+           --subscribe battery system_woke power_source_change \
            --add item net right                  \
            --set net script="$PLUGIN_DIR/net.sh" \
                      updates=on                  \
                      label.drawing=off           \
            --subscribe net wifi_change \
-           --add item battery right \
-           --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
-           --subscribe battery system_woke power_source_change \
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
