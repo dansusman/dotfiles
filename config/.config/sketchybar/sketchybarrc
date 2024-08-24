@@ -83,7 +83,7 @@ sketchybar --add item clock right \
            --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
            --add item weather right \
            --set weather update_freq=1800 \
-           --set weather script="$PLUGIN_DIR/weather.sh" \
+           --set weather script="$PLUGIN_DIR/weather.sh" updates=on \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" \
            --subscribe volume volume_change \
