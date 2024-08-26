@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+source ~/secrets
 API_KEY=$TOMORROW_API
 CITY="$(curl -s ipinfo.io/city)"
 
