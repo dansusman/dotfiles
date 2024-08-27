@@ -36,3 +36,4 @@ up, so maybe when I'm actually setting up a new machine I can try doing it this 
 - Next placeholder: `Ctrl+.` (custom)
 - Previous placeholder: `Ctrl+,` (custom)
 - Show Document items (marks and TODOs and such): `Ctrl+_` (custom)
+- Clear all breakpoints: `Hyper+0` (custom)
