@@ -28,6 +28,10 @@ up, so maybe when I'm actually setting up a new machine I can try doing it this 
 - Inline diff: `Ctrl+Z` (custom)
 
 ### Misc
+- Fold all code: `Cmd+Opt+Shift+LeftArrow`
+- Unfold all code: `Cmd+Opt+Shift+RightArrow`
+- Fold current block: `Cmd+Opt+LeftArrow`
+- Unfold current block: `Cmd+Opt+RightArrow`
 - Show documentation: `Cmd+Shift+0`
 - Toggle debug area: `Cmd+Shift+Y`
 - Find selected symbol in workspace: `Cmd+Ctrl+Shift+F`
