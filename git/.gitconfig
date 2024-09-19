@@ -38,3 +38,4 @@
 	rl = reflog
 	fs = !git fetch && git switch
 	sw = !git-update
+	li = !git log -n 1 --pretty=format:%s
