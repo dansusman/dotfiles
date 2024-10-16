@@ -194,3 +194,5 @@ export PATH=$GEM_HOME/bin:$PATH
 eval "$(zoxide init --cmd cd zsh)"
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+export PATH=$PATH:~/Developer/notability/staging/Tools/SwiftLint
