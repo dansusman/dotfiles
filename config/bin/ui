@@ -1,0 +1,1 @@
+xcrun simctl listapps booted | sed -n 's/.*"group.com.apple.FileProvider.LocalStorage" = "\([^"]*\)".*/\1/p' | sed 's|^file://||'
