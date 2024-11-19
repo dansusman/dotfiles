@@ -39,3 +39,6 @@
 	fs = !git fetch && git switch
 	sw = !git-update
 	li = !git log -n 1 --pretty=format:%s
+[user]
+	name = Dan Susman
+	email = frenchminister@gmail.com
