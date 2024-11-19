@@ -90,7 +90,7 @@ hyper - n : yabai --start-service
 hyper - b : yabai --restart-service
 
 # open terminal
-hyper - 8 : open -na WezTerm.app
+hyper - 8 : open -na Ghostty.app
 
 # open Firefox - broken, don't use it
 # hyper - 9 : open -a 'Firefox Developer Edition.app'
