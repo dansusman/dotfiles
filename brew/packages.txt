@@ -42,6 +42,7 @@ stow
 swiftformat
 swiftlint
 tmux
+tpm
 yabai
 zoxide
 zsh-autosuggestions
