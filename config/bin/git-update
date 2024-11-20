@@ -66,6 +66,7 @@ cmd+="$branch_name "
 
 if [ -n "$upstream_branch_name" ]; then
     cmd+="$upstream_branch_name "
+    cmd+="&& git pull origin $upstream_branch_name "
 fi
 
 # Run the git switch command
