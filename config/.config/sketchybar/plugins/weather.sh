@@ -4,6 +4,12 @@ source ~/secrets
 API_KEY=$TOMORROW_API
 CITY="$(curl -s ipinfo.io/city)"
 
+case "$CITY" in
+    "Red Oaks Mill")
+        CITY="Poughkeepsie"
+        ;;
+esac
+
 # first comment is description, second is icon number
 weather_icons_day=(
     [1000]=  # Sunny/113
