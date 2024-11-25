@@ -4,7 +4,7 @@
 # chmod +x ~/.config/sketchybar/plugins/aerospace.sh
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-    sketchybar --set $NAME background.drawing=on
+    sketchybar -m --set $NAME icon.highlight=on background.drawing=on background.border_width=1
 else
-    sketchybar --set $NAME background.drawing=off
+    sketchybar -m --set $NAME icon.highlight=off background.drawing=off background.border_width=0
 fi
