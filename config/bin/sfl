@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+xcrun simctl listapps booted | grep "group.com.apple.FileProvider.LocalStorage"
