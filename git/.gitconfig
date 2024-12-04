@@ -5,6 +5,7 @@
 	smudge = git-lfs smudge -- %f
 [push]
 	autoSetupRemote = true
+	default = current
 [core]
 	excludesfile = /Users/danielsusman/.gitignore
 	commentchar = ";"
