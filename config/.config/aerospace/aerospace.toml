@@ -198,3 +198,11 @@ run = 'move-node-to-workspace 5' # Slack always on workspace 5
 if.app-id = 'com.apple.dt.Xcode'
 run = 'move-node-to-workspace 2' # Xcode always on workspace 2
 
+[[on-window-detected]]
+if.app-id = 'com.apple.iphonesimulator'
+run = 'move-node-to-workspace 2' # Simulators always on workspace 2
+
+[[on-window-detected]]
+if.app-id = 'com.gingerlabs.Notability'
+run = 'layout floating' # Notability always float
+
