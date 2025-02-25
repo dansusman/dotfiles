@@ -901,12 +901,28 @@
                                         "value": 1
                                     }
                                 ],
-                                "description": "Open https://tinyurl.com/2vu5nm7b",
+                                "description": "Open Native Apps project board",
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "shell_command": "open https://tinyurl.com/2vu5nm7b" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "name": "hyper_sublayer_b",
+                                        "type": "variable_if",
+                                        "value": 1
+                                    }
+                                ],
+                                "description": "Open Server project board",
+                                "from": {
+                                    "key_code": "s",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [{ "shell_command": "open https://tinyurl.com/2k6dp94r" }],
                                 "type": "basic"
                             }
                         ]
