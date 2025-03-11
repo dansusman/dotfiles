@@ -199,6 +199,14 @@ if.app-id = 'com.apple.dt.Xcode'
 run = 'move-node-to-workspace 2' # Xcode always on workspace 2
 
 [[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 4' # Chrome always on workspace 4
+
+[[on-window-detected]]
+if.app-id = 'com.sindresorhus.Dato'
+run = 'move-node-to-workspace 4' # Dato always on workspace 4
+
+[[on-window-detected]]
 if.app-id = 'com.apple.iphonesimulator'
 run = 'move-node-to-workspace 2' # Simulators always on workspace 2
 
