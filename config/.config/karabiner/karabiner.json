@@ -901,12 +901,12 @@
                                         "value": 1
                                     }
                                 ],
-                                "description": "Open Native Apps project board",
+                                "description": "Open Collab project board",
                                 "from": {
                                     "key_code": "m",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://tinyurl.com/2vu5nm7b" }],
+                                "to": [{ "shell_command": "open https://tinyurl.com/3ze2ufam" }],
                                 "type": "basic"
                             },
                             {
