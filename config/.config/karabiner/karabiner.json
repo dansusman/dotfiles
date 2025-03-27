@@ -853,12 +853,12 @@
                                         "value": 1
                                     }
                                 ],
-                                "description": "Open https://github.com",
+                                "description": "Open GitHub Pull Requests",
                                 "from": {
                                     "key_code": "g",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://github.com" }],
+                                "to": [{ "shell_command": "open https://github.com/pulls" }],
                                 "type": "basic"
                             },
                             {
