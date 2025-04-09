@@ -858,7 +858,7 @@
                                     "key_code": "g",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://github.com/pulls" }],
+                                "to": [{ "shell_command": "open https://github.com/pulls/review-requested" }],
                                 "type": "basic"
                             },
                             {
