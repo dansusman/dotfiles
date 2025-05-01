@@ -154,6 +154,7 @@ alias sss="shortcut staging ~/work/staging/Notability"
 alias bt="swap"
 alias bk="git checkout -"
 alias qu="~/quick.sh $1"
+alias q="qu Notability.xcworkspace"
 setopt completealiases
 
 function shortcut {
