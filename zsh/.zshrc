@@ -155,6 +155,7 @@ alias bt="swap"
 alias bk="git checkout -"
 alias qu="~/quick.sh $1"
 alias q="qu Notability.xcworkspace"
+alias ghp="gh pr checkout"
 setopt completealiases
 
 function shortcut {
