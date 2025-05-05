@@ -16,11 +16,21 @@ This directory holds my settings for Karabiner Elements. The general workflow is
 
 My keyboard remaps are set up in logic sublayers.
 
-- `Fn + {key}`: Use `skhd` settings to control yabai windows
+- `Fn + {key}`: Use `aerospace` settings to control windows
+    - See `../aerospace/aerospace.toml` for more information
 - `Caps + {key}`: Use `karabiner` settings to control various things:
     - `b`: *B*rowse (open links in browser)
     - `o`: *O*pen applications
     - `s`: *S*ystem controls (volume, brightness, etc.)
     - `v`: mo*V*e: Remap hjkl to arrows, page down/up, etc.
     - `c`: musi*C*: Play/pause, forward, rewind
+- `d`: Mouse key mode sublayer
+    - `f`: Fast mode
+    - `hjkl`: Move mouse left, down, up, left
+    - `v`: Left click
+    - `b`: Middle click
+    - `n`: Right click
+    - `s`: Scroll mode
+    - `g`: Slow mode
+    - See more at https://ke-complex-modifications.pqrs.org/#mouse_keys_mode_v4
 
