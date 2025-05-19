@@ -1,0 +1,55 @@
+{
+  "actions" : [
+    {
+      "actions" : [
+        {
+          "key" : "f",
+          "label" : "Firefox",
+          "type" : "application",
+          "value" : "/Applications/Firefox Developer Edition.app"
+        },
+        {
+          "key" : "s",
+          "label" : "Slack",
+          "type" : "application",
+          "value" : "/Applications/Slack.app"
+        }
+      ],
+      "key" : "o",
+      "label" : "Open",
+      "type" : "group"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "g",
+          "label" : "GitHub",
+          "type" : "url",
+          "value" : "https://github.com/pulls/review-requested"
+        },
+        {
+          "key" : "c",
+          "label" : "Calendar",
+          "type" : "url",
+          "value" : "https://calendar.google.com"
+        },
+        {
+          "key" : "m",
+          "label" : "Collab Board",
+          "type" : "url",
+          "value" : "https://tinyurl.com/3ze2ufam"
+        },
+        {
+          "key" : "s",
+          "label" : "Server Board",
+          "type" : "url",
+          "value" : "https://tinyurl.com/2k6dp94r"
+        }
+      ],
+      "key" : "b",
+      "label" : "Browse",
+      "type" : "group"
+    }
+  ],
+  "type" : "group"
+}
