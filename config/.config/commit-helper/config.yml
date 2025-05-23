@@ -1,0 +1,20 @@
+types:
+  feat: ✨ A new feature
+  fix: 🐛 A bug fix
+  docs: 📝 Documentation update
+  refactor: ♻️ Code refactor
+  perf: ⚡ Performance improvement
+  test: ✅ Tests
+  build: 🛠️ Build system changes
+  ci: 👷 CI changes
+  chore: 🔧 Miscellaneous tasks
+  revert: ⏪ Reverting a previous commit
+
+scopes:
+  core: Core application logic
+  api: External API handling
+  ui: User Interface
+  docs: Documentation
+  config: Project configuration
+  deps: Dependencies
+  tests: Test files and setup
