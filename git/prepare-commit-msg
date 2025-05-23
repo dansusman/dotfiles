@@ -80,7 +80,7 @@ while true; do
       # ----- Step 2: Commit scope -----
       SCOPE_MENU=$(build_menu scopes)
       PREVIEW=$(build_preview)
-      SCOPE_RESULT=$( (echo "$SCOPE_MENU"; echo "<none> = No scope"; echo "<back> = Go back") \
+      SCOPE_RESULT=$( (echo "$SCOPE_MENU"; echo "<none> = No scope") \
         | fzf --prompt="$PREVIEW 📦 Scope (Ctrl+Y to force input): " --height=50% --reverse --with-nth=1,2 --delimiter== --select-1 --expect=ctrl-y --print-query)
       if [[ $? -ne 0 ]]; then
         CURRENT_STAGE=1
@@ -97,10 +97,7 @@ while true; do
       else
         SCOPE_KEY=$(echo "$SCOPE_SELECTION" | cut -d= -f1 | xargs)
       fi
-      if [[ "$SCOPE_KEY" == "<back>" ]]; then
-        CURRENT_STAGE=1
-        continue
-      elif [[ "$SCOPE_KEY" == "<none>" || -z "$SCOPE_KEY" ]]; then
+      if [[ "$SCOPE_KEY" == "<none>" || -z "$SCOPE_KEY" ]]; then
         SCOPE_FMT=""
       else
         SCOPE_FMT="($SCOPE_KEY)"
@@ -111,13 +108,8 @@ while true; do
     3)
       # ----- Step 3: Breaking change -----
       PREVIEW=$(build_preview)
-      IS_BREAKING=$(printf "No\nYes\n<back>" | fzf --prompt="$PREVIEW 🚨 Breaking? " --height=30% --reverse --select-1)
+      IS_BREAKING=$(printf "No\nYes" | fzf --prompt="$PREVIEW 🚨 Breaking? " --height=30% --reverse --select-1)
       if [[ $? -ne 0 ]]; then
-        CURRENT_STAGE=2
-        continue
-      fi
-      
-      if [[ "$IS_BREAKING" == "<back>" ]]; then
         CURRENT_STAGE=2
         continue
       fi
@@ -186,7 +178,7 @@ while true; do
       PREVIEW=$(build_preview)
       ISSUE_RESULT=$(gh issue list --limit 100 --state open --json number,title \
         | jq -r '.[] | "\(.number): \(.title)"' \
-        | (echo "<none> = No issue"; cat; echo "<back> = Go back") \
+        | (echo "<none> = No issue"; cat) \
         | fzf --prompt="$PREVIEW 🔗 Issue (Ctrl+Y to force input): " --height=50% --reverse --select-1 --expect=ctrl-y --print-query)
       if [[ $? -ne 0 ]]; then
         CURRENT_STAGE=6
@@ -202,11 +194,6 @@ while true; do
         ISSUE_NUM="$ISSUE_QUERY"
       else
         SELECTED="$ISSUE_SELECTION"
-        if [[ "$SELECTED" == "<back> = Go back" ]]; then
-          CURRENT_STAGE=6
-          continue
-        fi
-        
         if [[ "$SELECTED" == "<none> = No issue" ]]; then
           ISSUE_NUM=""
         else
