@@ -25,7 +25,7 @@ fi
 
 # ----- Helper Functions -----
 build_menu() {
-  yq e ".$1" "$CONFIG_FILE" | sed 's/^/ /' | awk -F: '{printf "%s = %s\n", $1, $2}' | sed 's/^ *//'
+  yq e ".$1" "$CONFIG_FILE" | sed 's/^/ /' | awk -F: '{printf "%s = %s\n", $1, $2}' | sed 's/^ *//' | sed 's/\\U\([0-9A-F]\{8\}\)/\&#x\1;/g' | perl -C -pe 's/&#x([0-9A-F]{8});/chr(hex($1))/ge' | sed 's/= *"/= /' | sed 's/"$//'
 }
 
 build_preview() {
