@@ -1040,3 +1040,14 @@ require("lazy").setup({
 vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Word swap remaps
+local swap = require("ds.swap")
+vim.keymap.set("n", "<leader>gw", function() swap.swap_words(1, "first") end,
+	{ desc = "Swap current word with next, cursor on first" })
+vim.keymap.set("n", "<leader>gW", function() swap.swap_words(-1, "second") end,
+	{ desc = "Swap current word with previous, cursor on second" })
+vim.keymap.set("n", "<leader>gs", function() swap.swap_words(1, "second") end,
+	{ desc = "Swap current word with next, cursor on second" })
+vim.keymap.set("n", "<leader>gS", function() swap.swap_words(-1, "first") end,
+	{ desc = "Swap current word with previous, cursor on first" })
