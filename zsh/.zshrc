@@ -158,6 +158,7 @@ alias q="qu Notability.xcworkspace"
 alias ghp="gh pr checkout"
 alias g="gitu"
 alias checkout="gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\1/' | xargs gh pr checkout"
+alias re="gh dash"
 setopt completealiases
 
 function shortcut {
