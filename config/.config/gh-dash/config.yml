@@ -64,7 +64,12 @@ defaults:
 keybindings:
   universal: []
   issues: []
-  prs: []
+  prs: [
+    {
+    "key": "C",
+    "command": "tmux split-window -h -c {{.RepoPath}} 'gh pr checkout {{.PrNumber}} && nvim -c \":Octo pr edit {{.PrNumber}}\"'"
+    },
+  ]
   branches: []
 repoPaths: 
   "Ginger-Labs/Notability": "~/Developer/notability/review/"
@@ -75,7 +80,7 @@ theme:
       showSeparator: true
       compact: false
 pager:
-  diff: ""
+  diff: delta
 confirmQuit: false
 showAuthorIcons: true
 smartFilteringAtLaunch: true
