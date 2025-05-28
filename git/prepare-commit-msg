@@ -8,8 +8,13 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 GLOBAL_CONFIG="$CONFIG_DIR/commit-helper/config.yml"
 CONFIG_FILE="$LOCAL_CONFIG"
 
-# Skip merge/squash/amend commits
+# Skip merge/squash/amend/rebase commits
 if [[ "$2" == "merge" || "$2" == "squash" || "$2" == "commit" ]]; then
+  exit 0
+fi
+
+# Skip during rebase operations
+if [[ -d ".git/rebase-merge" || -d ".git/rebase-apply" || -f ".git/REBASE_HEAD" ]]; then
   exit 0
 fi
 
