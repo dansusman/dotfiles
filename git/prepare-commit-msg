@@ -8,6 +8,18 @@ CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
 GLOBAL_CONFIG="$CONFIG_DIR/commit-helper/config.yml"
 CONFIG_FILE="$LOCAL_CONFIG"
 
+BRANCH_NAME=$(git branch | grep '*' | sed 's/* //') 
+
+if [[ $BRANCH_NAME == *"no branch"* ]]; then
+  echo 'pre-commit hook skipped' 1>&2
+  exit 0
+fi
+
+if [ "$NO_VERIFY" ]; then
+    echo 'pre-commit hook skipped' 1>&2
+    exit 0
+fi
+
 # Skip merge/squash/amend/rebase commits
 if [[ "$2" == "merge" || "$2" == "squash" || "$2" == "commit" ]]; then
   exit 0
