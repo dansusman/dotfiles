@@ -57,9 +57,13 @@ while true; do
       TYPE_MENU=$(build_menu types)
       PREVIEW=$(build_preview)
       TYPE_RESULT=$(echo "$TYPE_MENU" | fzf --prompt="$PREVIEW 🔧 Type (Ctrl+Y to force input): " --height=50% --reverse --with-nth=1,2 --delimiter== --select-1 --expect=ctrl-y --print-query)
-      if [[ $? -ne 0 ]]; then
-        echo "❌ Cancelled by user." >&2
-        exit 1
+      FZF_EXIT_CODE=$?
+      if [[ $FZF_EXIT_CODE -ne 0 ]]; then
+        # Check if we have any output (meaning Ctrl+Y was pressed)
+        if [[ -z "$TYPE_RESULT" ]]; then
+          echo "❌ Cancelled by user." >&2
+          exit 1
+        fi
       fi
       
       # Parse result: first line is query, second is key pressed, third is selection
@@ -82,9 +86,13 @@ while true; do
       PREVIEW=$(build_preview)
       SCOPE_RESULT=$( (echo "$SCOPE_MENU"; echo "<none> = No scope") \
         | fzf --prompt="$PREVIEW 📦 Scope (Ctrl+Y to force input): " --height=50% --reverse --with-nth=1,2 --delimiter== --select-1 --expect=ctrl-y --print-query)
-      if [[ $? -ne 0 ]]; then
-        CURRENT_STAGE=1
-        continue
+      FZF_EXIT_CODE=$?
+      if [[ $FZF_EXIT_CODE -ne 0 ]]; then
+        # Check if we have any output (meaning Ctrl+Y was pressed)
+        if [[ -z "$SCOPE_RESULT" ]]; then
+          CURRENT_STAGE=1
+          continue
+        fi
       fi
       
       # Parse result: first line is query, second is key pressed, third is selection
@@ -180,9 +188,13 @@ while true; do
         | jq -r '.[] | "\(.number): \(.title)"' \
         | (echo "<none> = No issue"; cat) \
         | fzf --prompt="$PREVIEW 🔗 Issue (Ctrl+Y to force input): " --height=50% --reverse --select-1 --expect=ctrl-y --print-query)
-      if [[ $? -ne 0 ]]; then
-        CURRENT_STAGE=6
-        continue
+      FZF_EXIT_CODE=$?
+      if [[ $FZF_EXIT_CODE -ne 0 ]]; then
+        # Check if we have any output (meaning Ctrl+Y was pressed)
+        if [[ -z "$ISSUE_RESULT" ]]; then
+          CURRENT_STAGE=6
+          continue
+        fi
       fi
       
       # Parse result: first line is query, second is key pressed, third is selection
