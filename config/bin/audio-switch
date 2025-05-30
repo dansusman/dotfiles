@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ "$1" == "headphone" ]]; then
+	/opt/homebrew/bin/SwitchAudioSource -u BuiltInHeadphoneOutputDevice
+else
+	/opt/homebrew/bin/SwitchAudioSource -s "LG UltraFine Display Audio"
+fi

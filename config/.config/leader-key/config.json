@@ -49,6 +49,16 @@
       "key" : "b",
       "label" : "Browse",
       "type" : "group"
+    },
+    {
+      "key" : "h",
+      "type" : "command",
+      "value" : "zsh ~/bin/audio-switch headphone"
+    },
+    {
+      "key" : "e",
+      "type" : "command",
+      "value" : "zsh ~/bin/audio-switch"
     }
   ],
   "type" : "group"
