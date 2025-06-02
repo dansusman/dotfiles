@@ -148,9 +148,6 @@ alias ll="eza -la"
 # alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 alias ppp="~/githubOpen.sh $1"
 alias qqq="~/githubSearch.sh $*"
-alias ss="shortcut staging ~/work/Notability"
-alias css="shortcut $1"
-alias sss="shortcut staging ~/work/staging/Notability"
 alias bt="swap"
 alias bk="git checkout -"
 alias qu="~/quick.sh $1"
@@ -160,6 +157,23 @@ alias g="gitu"
 alias checkout="gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\1/' | xargs gh pr checkout"
 alias re="gh dash"
 setopt completealiases
+
+function sesh-sessions() {
+  {
+    exec </dev/tty
+    exec <&1
+    local session
+    session=$(sesh list -i | gum filter --limit 1 --no-sort --fuzzy --placeholder "Pick a sesh" --height 50 --prompt='⚡')
+    zle reset-prompt > /dev/null 2>&1 || true
+    [[ -z "$session" ]] && return
+    sesh connect $session
+  }
+}
+
+zle     -N             sesh-sessions
+bindkey -M emacs '\es' sesh-sessions
+bindkey -M vicmd '\es' sesh-sessions
+bindkey -M viins '\es' sesh-sessions
 
 function shortcut {
     default="/Users/danielsusman/work/Notability"

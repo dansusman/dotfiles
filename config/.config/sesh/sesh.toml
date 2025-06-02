@@ -1,0 +1,55 @@
+sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
+
+# default
+
+[default_session]
+startup_command = "nvim +GoToFile"
+preview_command = "eza --all --git --icons --color=always {}"
+
+# misc
+
+[[session]]
+name = "Downloads"
+path = "~/Downloads"
+startup_command = "yazi"
+
+# general development
+
+[[session]]
+name = "pick worktree"
+path = "~/Developer/notability"
+startup_command = "sesh connect $(find . -maxdepth 1 -type d | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
+
+[[session]]
+name = "new worktree"
+path = "~/Developer/notability"
+startup_command = "nu_new_worktree"
+
+[[session]]
+name = "review prs"
+path = "~/Developer/notability/review"
+startup_command = "gh dash"
+
+# config shortcuts
+
+[[session]]
+name = "dotfiles"
+path = "~/.dotfiles"
+
+[[session]]
+name = "tmux config"
+path = "~/.dotfiles/tmux"
+startup_command = "nvim .tmux.conf"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/tmux/tmux.conf"
+
+[[session]]
+name = "sesh config"
+path = "~/.dotfiles/config/.config/sesh"
+startup_command = "nvim sesh.toml"
+preview_command = "bat --language=toml --style=snip --color=always ~/.dotfiles/config/.config/sesh"
+
+# windows
+
+[[window]]
+name = "git"
+startup_script = "git pull && lazygit"

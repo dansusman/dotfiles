@@ -1,3 +1,12 @@
 theme = gruber-darker
 font-family = Iosevka Term
 font-size = 18
+
+# CMD+SHIFT+K = show sesh picker (Ctrl+A -> Shift+K)
+keybind = super+shift+k=text:\x01\x4b
+
+# CMD+SHIFT+R = show sesh root picker (Ctrl+A -> Shift+R)
+keybind = super+shift+r=text:\x01\x52
+
+# CMD+J = sesh entrypoint from outside tmux (Escape -> S)
+keybind = super+j=text:\x1b\x73
