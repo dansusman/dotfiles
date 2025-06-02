@@ -265,7 +265,20 @@ require("lazy").setup({
 				end,
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
-
+			{
+				"danielfalk/smart-open.nvim",
+				branch = "0.2.x",
+				config = function()
+					require("telescope").load_extension("smart_open")
+				end,
+				dependencies = {
+					"kkharji/sqlite.lua",
+					-- Only required if using match_algorithm fzf
+					{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+					-- Optional.  If installed, native fzy will be used when match_algorithm is fzy
+					{ "nvim-telescope/telescope-fzy-native.nvim" },
+				},
+			},
 			-- Useful for getting pretty icons, but requires a Nerd Font.
 			{ "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
 		},
@@ -858,3 +871,6 @@ vim.keymap.set("n", "<leader>gs", function() swap.swap_words(1, "second") end,
 	{ desc = "Swap current word with next, cursor on second" })
 vim.keymap.set("n", "<leader>gS", function() swap.swap_words(-1, "first") end,
 	{ desc = "Swap current word with previous, cursor on first" })
+
+-- Commands
+require "ds.commands"
