@@ -215,3 +215,16 @@ source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 export PATH=$PATH:~/Developer/notability/staging/Tools/SwiftLint
+
+# Load environment variables from .env file
+if [[ -f ~/.dotfiles/zsh/.env ]]; then
+  source ~/.dotfiles/zsh/.env
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Created by `pipx` on 2025-05-17 15:11:37
+export PATH="$PATH:/Users/danielsusman/.local/bin"
+export PATH="$PATH:/Users/danielsusman/.cargo/bin"
