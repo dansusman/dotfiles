@@ -228,3 +228,4 @@ export NVM_DIR="$HOME/.nvm"
 # Created by `pipx` on 2025-05-17 15:11:37
 export PATH="$PATH:/Users/danielsusman/.local/bin"
 export PATH="$PATH:/Users/danielsusman/.cargo/bin"
+export XDG_CONFIG_HOME="$HOME/.config"

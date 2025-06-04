@@ -1,0 +1,308 @@
+#!/bin/bash
+# install-claude-commit.sh
+# Complete installer for Claude AI commit integration
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LAZYGIT_CONFIG_DIR="$HOME/.config/lazygit"
+COMMIT_PROMPT_PATH="$HOME/.config/claude/COMMIT.md"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_header() {
+    echo -e "${BLUE}"
+    echo "╔════════════════════════════════════════╗"
+    echo "║        Claude AI Commit Setup          ║"
+    echo "║    Conventional Commits with AI        ║"
+    echo "╚════════════════════════════════════════╝"
+    echo -e "${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ️  $1${NC}"
+}
+
+check_dependencies() {
+    print_info "Checking dependencies..."
+    
+    local missing_deps=()
+    
+    if ! command -v git &> /dev/null; then
+        missing_deps+=("git")
+    fi
+    
+    if ! command -v claude &> /dev/null; then
+        missing_deps+=("claude")
+    fi
+    
+    if ! command -v lazygit &> /dev/null; then
+        print_warning "Lazygit not found. Install with: brew install lazygit"
+        print_info "Lazygit integration will be available after installation."
+    fi
+    
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        print_error "Missing required dependencies: ${missing_deps[*]}"
+        echo
+        echo "Please install:"
+        for dep in "${missing_deps[@]}"; do
+            case $dep in
+                "git")
+                    echo "  - Git: https://git-scm.com/downloads"
+                    ;;
+                "claude")
+                    echo "  - Claude Code CLI: https://docs.anthropic.com"
+                    ;;
+            esac
+        done
+        exit 1
+    fi
+    
+    print_success "All required dependencies found!"
+}
+
+setup_directories() {
+    print_info "Setting up configuration directories..."
+    mkdir -p "$LAZYGIT_CONFIG_DIR"
+    print_success "Created $LAZYGIT_CONFIG_DIR"
+}
+
+install_commit_prompt() {
+    print_info "Installing commit prompt..."
+    
+    mkdir -p "$(dirname "$COMMIT_PROMPT_PATH")"
+    
+    if [[ -f "$COMMIT_PROMPT_PATH" ]]; then
+        print_warning "COMMIT.md already exists. Creating backup..."
+        cp "$COMMIT_PROMPT_PATH" "$COMMIT_PROMPT_PATH.backup.$(date +%Y%m%d_%H%M%S)"
+    fi
+    
+    if [[ -f "$SCRIPT_DIR/COMMIT.md" ]]; then
+        cp "$SCRIPT_DIR/COMMIT.md" "$COMMIT_PROMPT_PATH"
+        print_success "Installed commit prompt to $COMMIT_PROMPT_PATH"
+    else
+        print_info "COMMIT.md not found in script directory"
+    fi
+}
+
+setup_lazygit_integration() {
+    if ! command -v lazygit &> /dev/null; then
+        print_warning "Skipping Lazygit integration (not installed)"
+        return
+    fi
+    
+    print_info "Setting up Lazygit integration..."
+    
+    local config_path="$LAZYGIT_CONFIG_DIR/config.yml"
+    local source_config="$SCRIPT_DIR/config.yml"
+    
+    if [[ ! -f "$source_config" ]]; then
+        print_error "config.yml not found in script directory"
+        print_info "Please ensure config.yml is in the same directory as this installer"
+        return
+    fi
+    
+    if [[ -f "$config_path" ]]; then
+        print_warning "Lazygit config exists. Creating backup..."
+        cp "$config_path" "$config_path.backup.$(date +%Y%m%d_%H%M%S)"
+        
+        if grep -q "customCommands:" "$config_path"; then
+            print_warning "Custom commands already exist in config."
+            print_info "Please manually merge the Claude AI commands from $source_config"
+            print_info "Or replace your config entirely (backup was created)."
+        else
+            # Extract just the customCommands section from source config
+            if grep -q "customCommands:" "$source_config"; then
+                echo "" >> "$config_path"
+                sed -n '/^customCommands:/,/^[^[:space:]]/p' "$source_config" | sed '$d' >> "$config_path"
+                print_success "Added Claude AI commands to existing Lazygit config"
+            else
+                print_error "No customCommands section found in source config"
+            fi
+        fi
+    else
+        cp "$source_config" "$config_path"
+        print_success "Installed Lazygit config with Claude AI integration"
+    fi
+}
+
+setup_git_hook_option() {
+    print_info "Setting up git hook option..."
+    
+    local hook_script='#!/bin/bash
+# prepare-commit-msg hook for Claude AI commits
+# Auto-generates conventional commit messages
+
+case "$2" in
+    merge|squash|commit) exit 0 ;;
+esac
+
+if [ -n "$2" ]; then exit 0; fi
+
+if ! git diff --cached --quiet; then
+    echo "🤖 Generating AI commit message..." >&2
+    
+    COMMIT_PROMPT="$COMMIT_PROMPT_PATH"
+    
+    if [ ! -f "$COMMIT_PROMPT" ]; then
+        echo "❌ COMMIT.md not found" >&2
+        exit 1
+    fi
+    
+    if command -v claude >/dev/null 2>&1; then
+        GENERATED_MSG=$(claude --prompt-file "$COMMIT_PROMPT" 2>/dev/null)
+        
+        if [ $? -eq 0 ] && [ -n "$GENERATED_MSG" ]; then
+            echo "$GENERATED_MSG" > "$1"
+            echo "✅ AI commit message generated!" >&2
+        else
+            echo "⚠️  Failed to generate AI commit message" >&2
+        fi
+    else
+        echo "⚠️  claude CLI not found" >&2
+    fi
+fi
+
+exit 0'
+
+    # Create a template hook script
+    local hook_template_path="$LAZYGIT_CONFIG_DIR/prepare-commit-msg-hook"
+    echo "$hook_script" > "$hook_template_path"
+    chmod +x "$hook_template_path"
+    
+    print_success "Created git hook template at $hook_template_path"
+    print_info "To enable in a repository, run: install-git-hook [repo-path]"
+}
+
+create_helper_scripts() {
+    print_info "Creating helper scripts..."
+    
+    # Create git hook installer script
+    cat > "$LAZYGIT_CONFIG_DIR/install-git-hook" << 'EOF'
+#!/bin/bash
+# Install Claude AI commit hook in a git repository
+
+REPO_PATH="${1:-.}"
+HOOK_TEMPLATE="$HOME/.config/lazygit/prepare-commit-msg-hook"
+HOOK_PATH="$REPO_PATH/.git/hooks/prepare-commit-msg"
+
+if [ ! -d "$REPO_PATH/.git" ]; then
+    echo "❌ Not a git repository: $REPO_PATH"
+    exit 1
+fi
+
+if [ ! -f "$HOOK_TEMPLATE" ]; then
+    echo "❌ Hook template not found. Please run the main installer first."
+    exit 1
+fi
+
+if [ -f "$HOOK_PATH" ]; then
+    echo "⚠️  Hook already exists. Creating backup..."
+    cp "$HOOK_PATH" "$HOOK_PATH.backup.$(date +%Y%m%d_%H%M%S)"
+fi
+
+cp "$HOOK_TEMPLATE" "$HOOK_PATH"
+chmod +x "$HOOK_PATH"
+
+echo "✅ Claude AI commit hook installed in $REPO_PATH"
+echo "   Now all commits in this repo will use AI-generated messages!"
+EOF
+
+    chmod +x "$LAZYGIT_CONFIG_DIR/install-git-hook"
+    
+    # Add to PATH if possible
+    if [[ ":$PATH:" != *":$LAZYGIT_CONFIG_DIR:"* ]]; then
+        print_info "Add $LAZYGIT_CONFIG_DIR to your PATH to use 'install-git-hook' globally"
+    fi
+    
+    print_success "Created helper script: install-git-hook"
+}
+
+print_usage_instructions() {
+    echo
+    echo -e "${GREEN}🎉 Installation complete!${NC}"
+    echo
+    echo -e "${BLUE}📖 Usage Options:${NC}"
+    echo
+    echo "1. ${YELLOW}Lazygit Integration${NC} (if Lazygit is installed):"
+    echo "   • Open any git repo with: lazygit"
+    echo "   • Stage your changes"
+    echo "   • Press Ctrl+A to generate AI commit message"
+    echo "   • Review and commit as usual"
+    echo
+    echo "2. ${YELLOW}Git Hook Integration${NC} (automatic for all commits):"
+    echo "   • In any git repository, run: install-git-hook"
+    echo "   • Or: install-git-hook /path/to/repo"
+    echo "   • All commits will automatically get AI-generated messages"
+    echo
+    echo "3. ${YELLOW}Manual Usage${NC}:"
+    echo "   • claude --prompt-file ~/.config/claude/COMMIT.md"
+    echo
+    echo -e "${BLUE}📁 Configuration Files:${NC}"
+    echo "   • Commit prompt: $COMMIT_PROMPT_PATH"
+    echo "   • Lazygit config: ~/.config/lazygit/config.yml"
+    echo "   • Git hook template: ~/.config/lazygit/prepare-commit-msg-hook"
+    echo
+    echo -e "${BLUE}🔧 Customization:${NC}"
+    echo "   • Edit $COMMIT_PROMPT_PATH to customize AI behavior"
+    echo "   • Edit ~/.config/lazygit/config.yml to modify Lazygit integration"
+    echo "   • Modify types, scopes, and rules as needed"
+    echo
+    echo -e "${BLUE}📦 Required Files for Installation:${NC}"
+    echo "   • COMMIT.md (Claude AI prompt)"
+    echo "   • config.yml (Lazygit configuration)"
+    echo "   • install-claude-commit.sh (this installer)"
+    echo
+    print_success "Happy committing with AI! 🚀"
+}
+
+# Main installation flow
+main() {
+    print_header
+    check_dependencies
+    setup_directories
+    install_commit_prompt
+    setup_lazygit_integration
+    setup_git_hook_option
+    create_helper_scripts
+    print_usage_instructions
+}
+
+# Handle command line arguments
+case "${1:-}" in
+    "--help" | "-h")
+        echo "Claude AI Commit Installer"
+        echo
+        echo "Usage: $0 [options]"
+        echo
+        echo "Options:"
+        echo "  --help, -h    Show this help message"
+        echo "  --check       Check dependencies only"
+        echo
+        exit 0
+        ;;
+    "--check")
+        check_dependencies
+        exit 0
+        ;;
+    *)
+        main "$@"
+        ;;
+esac
