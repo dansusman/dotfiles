@@ -874,3 +874,28 @@ vim.keymap.set("n", "<leader>gS", function() swap.swap_words(-1, "first") end,
 
 -- Commands
 require "ds.commands"
+
+-- Function to open Xcode in current working directory
+local function open_xcode()
+	local cwd = vim.fn.getcwd()
+	-- Use zsh to ensure your shell script "q" is available
+	local cmd = string.format("zsh -c 'cd %s && open %s'", vim.fn.shellescape(cwd), "Notability.xcworkspace")
+
+	-- Get current git branch
+	local branch = vim.fn.system("git branch --show-current 2>/dev/null"):gsub("\n", "")
+	local branch_info = ""
+	if branch ~= "" then
+		branch_info = " [" .. branch .. "]"
+	end
+
+	-- Run the command in the background
+	vim.fn.system(cmd .. " &")
+
+	-- Print confirmation message with branch info
+	print("Opening Xcode in: " .. cwd .. branch_info)
+end
+-- Set up the keybinding
+vim.keymap.set('n', '<leader>ox', open_xcode, {
+	desc = 'Open Xcode in current working directory',
+	silent = true
+})
