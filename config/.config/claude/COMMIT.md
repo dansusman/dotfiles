@@ -21,14 +21,24 @@ You are an expert at generating conventional commit messages following the Conve
    [optional footer(s)]
    ```
 
-4. **Check for related issues/PRs**: If `gh` CLI is available, search comprehensively:
-   - Check current branch name and any associated PRs: `gh pr list --head $(git branch --show-current)`
-   - Search open issues using keywords from the changes: `gh issue list --state open --search "keyword1 keyword2"`
-   - Extract key terms from file names, function names, and change descriptions to use as search terms
-   - For config files, search for terms like "config", "configuration", "setup", plus any tool names (e.g., "lazygit", "git", "commit")
-   - For new features, search using the feature name and related functionality
-   - If matches found, add ONLY numeric GitHub issue/PR references like "Closes #123", "Fixes #456", or "Refs #789"
-   - NEVER use non-numeric references like "#ai-git-workflow" or descriptive tags
+4. **Check for related issues/PRs**: If `gh` CLI is available, search systematically:
+   - Get current git user: `git config user.name` or `gh auth status`
+   - Fetch all open issues: `gh issue list --state open --json assignees,body,title,number,labels | jq -r '.[] | "\(.number): \(.title) \(.body) \(.assignees[]?.login) \(.labels[]?.name)"'`
+   - Fetch all open PRs: `gh pr list --state open --json assignees,body,title,number,labels | jq -r '.[] | "\(.number): \(.title) \(.body) \(.assignees[]?.login) \(.labels[]?.name)"'`
+   - Search the formatted results for matches using these keywords (in priority order):
+     * Exact file names from git diff (e.g., "package.json", "index.js", "README.md")
+     * Tool/component names from file paths (e.g., "api", "client", "server", "utils")
+     * Directory names from changes (e.g., "src", "lib", "components", "tests")
+     * Specific technical terms from code changes (function names, variable names, etc.)
+     * Related functionality terms (e.g., "authentication", "validation", "routing", "database")
+   - Prioritize issues/PRs assigned to the current git user
+   - CRITICAL: When you find matching issues/PRs, you MUST reference them using the ACTUAL issue number from the search results:
+     * Use "Closes #[actual_number]" if the commit fully resolves the issue/PR (e.g., "Closes #2", "Closes #15")
+     * Use "Fixes #[actual_number]" if the commit fixes a bug described in the issue/PR (e.g., "Fixes #1", "Fixes #23")
+     * Use "Refs #[actual_number]" if the commit is related but doesn't fully close the issue/PR (e.g., "Refs #5", "Refs #12")
+     * Replace [actual_number] with the real issue number from your search results - DO NOT use "N" or placeholder text
+   - ABSOLUTELY FORBIDDEN: Do NOT create fake hashtag references like "#user-auth", "#api-refactor", or any descriptive tags
+   - Example: If the jq output shows "2: Add user authentication to login page" and you're modifying login components, use "Closes #2" NOT "#auth-feature" or "Closes #N"
 
 ## Commit Message Rules
 
@@ -72,7 +82,7 @@ Choose the most appropriate type:
 Common scopes (adapt based on your project structure):
 
 - **api**: API related changes
-- **ui**: User interface changes
+- **ui**: User interface changes  
 - **db**: Database related changes
 - **auth**: Authentication/authorization
 - **config**: Configuration changes
@@ -85,6 +95,15 @@ Common scopes (adapt based on your project structure):
 - **deploy**: Deployment related
 - **perf**: Performance improvements
 - **security**: Security related changes
+- **components**: React/Vue/Angular components
+- **services**: Service layer changes
+- **models**: Data model changes
+- **routes**: Routing changes
+- **middleware**: Middleware changes
+- **cli**: Command line interface
+- **mobile**: Mobile app specific
+- **web**: Web app specific
+- **desktop**: Desktop app specific
 
 ## Examples
 
@@ -93,9 +112,34 @@ Common scopes (adapt based on your project structure):
 feat(auth): add OAuth2 login support
 ```
 
-### Bug fix with scope
+### Bug fix with scope  
 ```
 fix(api): resolve null pointer exception in user validation
+```
+
+### Performance improvement
+```
+perf(db): optimize user query with indexing
+```
+
+### Documentation update
+```
+docs(api): add examples for webhook endpoints
+```
+
+### Test addition
+```
+test(components): add unit tests for button component
+```
+
+### Dependency update
+```
+build(deps): upgrade react from 17.0.2 to 18.2.0
+```
+
+### Configuration change
+```
+chore(config): update eslint rules for typescript
 ```
 
 ### Breaking change with exclamation
@@ -113,29 +157,46 @@ Introduce a request id and a reference to latest request. Dismiss
 incoming responses other than from latest request.
 
 Closes #123
-Reviewed-by: johndoe
 ```
 
-### Multiple footers
+### Multiple changes
 ```
-feat(lang): add Polish language support
+feat(ui): add dark mode theme support
+
+Implement theme switching with CSS variables and local storage persistence.
+Add toggle component to settings page.
 
 Closes #456
-Co-authored-by: contributor@example.com
+Fixes #789
+```
+
+### Refactoring
+```
+refactor(services): extract common API logic into base service
+
+Move shared request/response handling and error management to BaseApiService.
+Update all existing services to extend the base class.
 ```
 
 ## Output Instructions
 
-1. Analyze the git diff carefully
-2. Choose the most appropriate type and scope
-3. Write a clear, concise description
-4. Add body only if additional context is needed
-5. Include footers for breaking changes and ONLY numeric GitHub issue/PR references (e.g., "Closes #1", never "#ai-git-workflow")
-6. IMPORTANT: Use `gh` CLI to thoroughly search for related issues using multiple keyword combinations from the changes before finalizing the commit message
-7. Output ONLY the raw commit message (no code blocks, no explanations)
-8. The commit message should be ready to pipe directly into git commit or other tools
-9. Do not attach any information about auto-generated or co-authored by Claude
-10. CRITICAL: Format the output with explicit newlines. The first line should contain ONLY the short commit message (type(scope): description). Then add a blank line, then any additional body text, then another blank line, then any footers like "Closes #123". Use literal \n characters in your output to ensure proper git commit formatting.
+1. **Analyze staged changes**: First run `git diff --cached` to examine what will be committed
+2. **Choose commit type**: Select the most appropriate type from the list above
+3. **Determine scope**: Pick a relevant scope if applicable, or omit if change is global
+4. **Write description**: Create a clear, concise description (lowercase, no period)
+5. **Add body if needed**: Include additional context only when necessary for understanding
+6. **Search for related issues**: Use `gh` CLI to find matching issues/PRs and include ONLY real numeric references
+7. **Format correctly**: Output raw commit message ready for `git commit -m` or similar tools
+8. **Use proper line breaks**: Format with actual newlines, not "\n" text - first line for summary, blank line, body, blank line, footers
+9. **No metadata**: Do not include explanations, code blocks, or co-authorship information
+
+### Critical Formatting Requirements for Claude Code:
+- **First line only**: `type(scope): description` 
+- **Blank line**: Always separate sections with actual blank lines
+- **Body paragraphs**: Additional context if needed
+- **Blank line**: Before footers
+- **Footers**: Issue references like `Closes #123`
+- **No literal \n**: Use actual line breaks in your response
 
 ## Error Handling
 
