@@ -1,0 +1,35 @@
+#!/bin/bash
+# prepare-commit-msg hook for Claude AI commits
+# Auto-generates conventional commit messages
+
+case "$2" in
+    merge|squash|commit) exit 0 ;;
+esac
+
+if [ -n "$2" ]; then exit 0; fi
+
+if ! git diff --cached --quiet; then
+    echo "🤖 Generating AI commit message..." >&2
+    
+    COMMIT_PROMPT="$COMMIT_PROMPT_PATH"
+    
+    if [ ! -f "$COMMIT_PROMPT" ]; then
+        echo "❌ COMMIT.md not found" >&2
+        exit 1
+    fi
+    
+    if command -v claude >/dev/null 2>&1; then
+        GENERATED_MSG=$(claude --prompt-file "$COMMIT_PROMPT" 2>/dev/null)
+        
+        if [ $? -eq 0 ] && [ -n "$GENERATED_MSG" ]; then
+            echo "$GENERATED_MSG" > "$1"
+            echo "✅ AI commit message generated!" >&2
+        else
+            echo "⚠️  Failed to generate AI commit message" >&2
+        fi
+    else
+        echo "⚠️  claude CLI not found" >&2
+    fi
+fi
+
+exit 0

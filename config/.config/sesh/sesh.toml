@@ -43,6 +43,12 @@ startup_command = "nvim .tmux.conf"
 preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/tmux/tmux.conf"
 
 [[session]]
+name = "lazygit config"
+path = "~/.dotfiles/config/.config/lazygit"
+startup_command = "nvim config.yml"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/.config/lazygit/config.yml"
+
+[[session]]
 name = "sesh config"
 path = "~/.dotfiles/config/.config/sesh"
 startup_command = "nvim sesh.toml"

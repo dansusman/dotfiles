@@ -1,0 +1,27 @@
+#!/bin/bash
+# Install Claude AI commit hook in a git repository
+
+REPO_PATH="${1:-.}"
+HOOK_TEMPLATE="$HOME/.config/lazygit/prepare-commit-msg-hook"
+HOOK_PATH="$REPO_PATH/.git/hooks/prepare-commit-msg"
+
+if [ ! -d "$REPO_PATH/.git" ]; then
+    echo "❌ Not a git repository: $REPO_PATH"
+    exit 1
+fi
+
+if [ ! -f "$HOOK_TEMPLATE" ]; then
+    echo "❌ Hook template not found. Please run the main installer first."
+    exit 1
+fi
+
+if [ -f "$HOOK_PATH" ]; then
+    echo "⚠️  Hook already exists. Creating backup..."
+    cp "$HOOK_PATH" "$HOOK_PATH.backup.$(date +%Y%m%d_%H%M%S)"
+fi
+
+cp "$HOOK_TEMPLATE" "$HOOK_PATH"
+chmod +x "$HOOK_PATH"
+
+echo "✅ Claude AI commit hook installed in $REPO_PATH"
+echo "   Now all commits in this repo will use AI-generated messages!"

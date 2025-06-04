@@ -4,7 +4,7 @@ customCommands:
   - key: '<c-k>' # Ctrl+K for AI commit
     context: 'global'
     description: 'Generate AI commit message'
-    command: 'cat ~/.config/claude/COMMIT.md | claude --allowedTools gh --model claude-3-5-haiku-20241022 -p "Return the generated commit message only, including the whole description and any metadata." | git commit -F -'
+    command: 'cat ~/.config/claude/COMMIT.md | claude --allowedTools gh --model claude-3-5-haiku-20241022 -p "Return the generated commit message only, including the whole description and any footers/issue/PR numbers. ABSOLUTELY NEVER include phrases like Based on your changes or other messaging from Claude. ONLY output the commit information so it can be DIRECTLY passed to git commit." | git commit -F -'
     loadingText: 'Generating commit message with Claude...'
     output: log
 # Optional: Configure git editor to use the generated message
