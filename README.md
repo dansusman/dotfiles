@@ -35,6 +35,7 @@ All my config files for macOS.
 8. Install the few apps listed in [Current Favorite Tools](#current-favorite-tools) that are labeled "not included in brew install script"
 9. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
 10. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
+11. Run `ln -s ~/.dotfiles/config/.config/claude/settings.json ~/.claude/settings.json` to setup user settings for Claude Code
 
 ### nvim as XCode replacement
 1. Ensure `sourcekit-lsp` and `xcodebuild.nvim` are installed in your nvim setup. Ensure `xcode-build-server` is on your machine (should've been installed in brew install script).
