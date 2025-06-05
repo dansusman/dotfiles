@@ -1,0 +1,260 @@
+#!/bin/bash
+
+# Automated Conventional Commit Generator with Claude CLI
+# Usage: ./generate-commit.sh > commit.txt && git commit -F commit.txt
+# Or: ./generate-commit.sh | git commit -F -
+
+set -e
+
+# Suppress all output except the final commit message
+exec 2>/dev/null
+
+# Check if required tools are installed
+check_dependencies() {
+    command -v git >/dev/null 2>&1 || exit 1
+    command -v gh >/dev/null 2>&1 || exit 1
+    command -v claude >/dev/null 2>&1 || exit 1
+}
+
+# Check if we're in a git repository
+check_git_repo() {
+    git rev-parse --git-dir >/dev/null 2>&1 || exit 1
+}
+
+# Check if there are staged changes
+check_staged_changes() {
+    if git diff --cached --quiet; then
+        git add . 2>/dev/null || true
+        git diff --cached --quiet && exit 1
+    fi
+}
+
+# Get git diff of staged changes
+get_git_diff() {
+    git diff --cached
+}
+
+# Get current branch name
+get_current_branch() {
+    git branch --show-current
+}
+
+# Get project structure for scope inference
+get_project_structure() {
+    find . -type f -name "*.json" -o -name "*.yaml" -o -name "*.yml" -o -name "Dockerfile" -o -name "*.md" | head -20 | while read -r file; do
+        echo "File: $file"
+    done
+    
+    find . -type d -name src -o -name lib -o -name components -o -name pages -o -name api -o -name utils -o -name config -o -name tests -o -name docs | head -10 | while read -r dir; do
+        echo "Directory: $dir"
+    done
+}
+
+# Load config from yaml file if it exists
+load_config() {
+    local config_file="$HOME/.config/commit-helper/config.yml"
+    if [[ -f "$config_file" ]]; then
+        cat "$config_file"
+    else
+        cat << 'EOF'
+# Default configuration - create commit-config.yaml to customize
+types:
+  - feat      # New feature
+  - fix       # Bug fix
+  - docs      # Documentation changes
+  - style     # Code style changes (formatting, etc)
+  - refactor  # Code refactoring
+  - test      # Adding or updating tests
+  - chore     # Maintenance tasks
+  - ci        # CI/CD changes
+  - build     # Build system changes
+  - perf      # Performance improvements
+
+scopes:
+  - api       # API related changes
+  - ui        # User interface changes
+  - auth      # Authentication/authorization
+  - db        # Database related changes
+  - config    # Configuration changes
+  - deps      # Dependency updates
+  - core      # Core functionality
+  - utils     # Utility functions
+  - docs      # Documentation
+  - tests     # Test related changes
+EOF
+    fi
+}
+
+# Get GitHub issues
+get_github_issues() {
+    gh issue list --json number,title,body,labels,assignees,author --limit 30 2>/dev/null || echo "[]"
+}
+
+# Get GitHub PRs
+get_github_prs() {
+    gh pr list --json number,title,body,labels,assignees,author --limit 15 2>/dev/null || echo "[]"
+}
+
+# Get current user info
+get_current_user() {
+    gh api user --jq '.login' 2>/dev/null || git config user.name 2>/dev/null || echo "unknown"
+}
+
+# Get recent commit messages for context
+get_recent_commits() {
+    git log --oneline -10 --format="%s" 2>/dev/null || echo ""
+}
+
+# Generate commit message using Claude
+generate_commit_message() {
+    local git_diff="$1"
+    local issues="$2"
+    local prs="$3"
+    local current_user="$4"
+    local current_branch="$5"
+    local config="$6"
+    local project_structure="$7"
+    local recent_commits="$8"
+    
+    local prompt="You are an expert at writing conventional commit messages. Analyze the git diff and generate a complete conventional commit message that can be piped directly to 'git commit -F -'.
+
+OUTPUT FORMAT REQUIREMENTS:
+- Line 1: Conventional commit subject line (type(scope): short description OR type(scope)!: short description if breaking)
+- Line 2: Empty line
+- Lines 3+: Detailed description explaining what changed and why
+- Only add footers if they apply (see examples below)
+
+CONVENTIONAL COMMIT RULES:
+- Subject line must be under 50 characters
+- Use imperative mood (\"add feature\" not \"added feature\")
+- No period at end of subject line
+- Add '!' after scope ONLY if there are actual breaking changes
+- Choose appropriate type and scope from config (but infer if none fit well)
+
+BREAKING CHANGES RULE:
+- Add '!' to subject line (after scope) ONLY if there are breaking changes
+- Include 'BREAKING CHANGE:' footer ONLY if there are breaking changes
+- Breaking changes = API changes, removed features, changed interfaces, incompatible updates
+
+FOOTER RULES:
+- Only include footers that actually apply to this commit
+- Use actual issue/PR numbers (e.g., #4, #15) not placeholder text
+- Only reference issues/PRs if the changes are directly related
+
+VALID COMMIT EXAMPLES:
+
+Example 1 - Simple feature (no footers needed):
+feat(auth): add password reset functionality
+
+Implement password reset flow with email verification.
+Users can now request password reset links that expire
+after 24 hours for security.
+
+Example 2 - Bug fix with issue reference:
+fix(api): resolve memory leak in user sessions
+
+Fix session cleanup that was causing memory to accumulate
+over time in production environments.
+
+Fixes #127
+
+Example 3 - Breaking change:
+feat(api)!: restructure user authentication endpoints
+
+Replace /auth/login and /auth/register with new /v2/auth/*
+endpoints that use JWT tokens instead of session cookies.
+
+BREAKING CHANGE: All authentication endpoints have moved
+to /v2/auth/* and now require JWT tokens
+
+Example 4 - Chore with dependency update:
+chore(deps): update React to v18.2.0
+
+Upgrade React and related packages to latest stable versions
+for improved performance and security patches.
+
+Example 5 - Documentation update:
+docs(readme): add installation instructions
+
+Include step-by-step setup guide for new contributors
+with prerequisites and common troubleshooting tips.
+
+Example 6 - Refactor with multiple references:
+refactor(ui): simplify component state management
+
+Extract shared state logic into custom hooks to reduce
+code duplication across form components.
+
+Refs #89
+Closes #134
+
+CONFIGURATION:
+$config
+
+PROJECT CONTEXT:
+Branch: $current_branch
+User: $current_user
+
+PROJECT STRUCTURE:
+$project_structure
+
+RECENT COMMITS (for style consistency):
+$recent_commits
+
+AVAILABLE ISSUES:
+$issues
+
+AVAILABLE PRS:
+$prs
+
+GIT DIFF TO ANALYZE:
+$git_diff
+
+ANALYSIS INSTRUCTIONS:
+1. Identify the primary change type (feat/fix/refactor/etc.)
+2. Determine the most appropriate scope based on files changed and project structure
+3. Look for breaking changes (API changes, removed features, changed interfaces)
+4. Check if changes relate to any open issues or PRs by matching:
+   - File paths mentioned in issue/PR descriptions
+   - Keywords in titles that match the changes
+   - Author/assignee if it matches current user
+5. Write a clear, informative description of what changed and why
+6. Only add footers if they genuinely apply - don't force them
+
+CRITICAL REMINDERS:
+- Use '!' in subject line ONLY if there are actual breaking changes
+- Use actual issue numbers like #4, #15 (not #issue-number)
+- Only include footers that apply to this specific commit
+- Follow the exact format shown in examples above
+
+OUTPUT ONLY THE COMMIT MESSAGE - NO EXPLANATIONS OR ADDITIONAL TEXT."
+
+    echo "$prompt" | claude -p "Output the git commit message you generate"
+}
+
+# Main execution
+main() {
+    # Run checks silently
+    check_dependencies
+    check_git_repo  
+    check_staged_changes
+    
+    # Gather all information
+    local git_diff current_branch current_user issues prs config project_structure recent_commits
+    
+    git_diff=$(get_git_diff)
+    [[ -z "$git_diff" ]] && exit 1
+    
+    current_branch=$(get_current_branch)
+    current_user=$(get_current_user)
+    issues=$(get_github_issues)
+    prs=$(get_github_prs)
+    config=$(load_config)
+    project_structure=$(get_project_structure)
+    recent_commits=$(get_recent_commits)
+    
+    # Generate and output commit message
+    generate_commit_message "$git_diff" "$issues" "$prs" "$current_user" "$current_branch" "$config" "$project_structure" "$recent_commits"
+}
+
+main "$@"
