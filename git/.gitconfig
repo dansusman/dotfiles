@@ -9,7 +9,6 @@
 [core]
 	excludesfile = /Users/danielsusman/.gitignore
 	commentchar = ";"
-	pager = delta
 [alias]
 	bld = "!f() { git fetch -p && git branch -vv | awk \"/: gone]/{print \\$1}\" | xargs git branch -D; }; f"
 	co = checkout
@@ -56,9 +55,5 @@
 	email = frenchminister@gmail.com
 [pull]
 	rebase = true
-[interactive]
-	diffFilter = delta --color-only
-[delta]
-	navigate = true
 [merge]
 	conflictStyle = zdiff3
