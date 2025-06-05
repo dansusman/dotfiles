@@ -10,3 +10,6 @@ keybind = super+shift+r=text:\x01\x52
 
 # CMD+J = sesh entrypoint from outside tmux (Escape -> S)
 keybind = super+j=text:\x1b\x73
+
+# CMD+G = lazygit in new tmux window (Ctrl+A -> g)
+keybind = super+g=text:\x01\x67
