@@ -50,6 +50,7 @@
 	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
 	pr = "!gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\\1/' | xargs gh pr checkout"
 	w = restore .
+	up = reset --hard @{upstream}
 [user]
 	name = Dan Susman
 	email = frenchminister@gmail.com
