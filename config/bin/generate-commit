@@ -226,6 +226,7 @@ CRITICAL REMINDERS:
 - Use actual issue numbers like #4, #15 (not #issue-number)
 - Only include footers that apply to this specific commit
 - Follow the exact format shown in examples above
+- NEVER include any co-author information or attribution to Claude Code/AI tools
 
 OUTPUT ONLY THE COMMIT MESSAGE - NO EXPLANATIONS OR ADDITIONAL TEXT."
 
