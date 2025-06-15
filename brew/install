@@ -1,2 +1,0 @@
-brew tap FelixKratz/formulae
-brew install $(<packages.txt)
