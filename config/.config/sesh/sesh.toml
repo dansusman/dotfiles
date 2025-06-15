@@ -3,7 +3,6 @@ sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
 # default
 
 [default_session]
-startup_command = "nvim +GoToFile"
 preview_command = "eza --all --git --icons --color=always {}"
 
 # misc
@@ -16,14 +15,14 @@ startup_command = "yazi"
 # general development
 
 [[session]]
-name = "pick worktree"
-path = "~/Developer/notability"
-startup_command = "sesh connect $(find . -maxdepth 1 -type d | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
-
-[[session]]
 name = "new worktree"
 path = "~/Developer/notability"
-startup_command = "nu_new_worktree"
+startup_command = "git worktree add $(gum input --placeholder 'Enter new worktree name')"
+
+[[session]]
+name = "pick worktree"
+path = "~/Developer/notability/"
+startup_command = "sesh connect $(find . -maxdepth 1 -type d | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
 
 [[session]]
 name = "review prs"
