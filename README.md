@@ -5,11 +5,12 @@ All my config files for macOS.
 - `arken`: Firefox Hardening via [arkenfox/user.js](https://github.com/arkenfox/user.js)
 - `chrome`: Currently unused, but Firefox UI tweaking
 - `config/.config`: anything that expects to land in `~/.config`
+    - `aerospace`: config for aerospace window manager
+    - `commit-helper`: config options for `generate-commit` script (Claude-powered conventional commit generator)
     - `karabiner`: configs for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements) with sublayering via [mxstbr](https://github.com/mxstbr/karabiner)
-    - `nvim`: one-file, newest, Lua-only, simple dev setup via [`kickstart.nvim`](https://github.com/nvim-lua/kickstart.nvim)
     - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
-    - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd)
-    - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai)
+    - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd) - OUTDATED, not in use
+    - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai) - OUTDATED, not in use
 - `defaults`: macOS specific settings (noTunes config, wifi toggle script, etc.)
 - `git`: Default git message, global git ignore, etc.
 - `gitmux`: tmux statusline git status config
@@ -27,7 +28,7 @@ All my config files for macOS.
 ## Installation Steps
 1. Clone this repo into home directory
 2. Install [homebrew](https://brew.sh/) via `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-3. Navigate into the clone and run `./brew/install` to install most of the brew packages I care about.
+3. `brew bundle install --file ./brew/Brewfile`
 4. Run `./install` to move config files to HOME_DIR.
 5. Open nvim and plugins will start installing
 6. Close nvim once the plugins are installed
@@ -48,21 +49,20 @@ All my config files for macOS.
 Here's a running list of things I enjoy using right now. A lot of them are macOS specific, but some are platform agnostic.
 
 ### Open Source ✅
+- [ghostty](https://github.com/ghostty-org/ghostty): fast terminal emulator, written by Mitchell Hashimoto
+- [lazygit](https://github.com/jesseduffield/lazygit): incredibly powerful git TUI
+- [aerospace](https://github.com/nikitabobko/AeroSpace): i3-like tiling window manager for macOS
+- [sesh](https://github.com/joshmedeski/sesh): tmux session manager
+- [Leader Key](https://github.com/mikker/LeaderKey.app): app/url launcher with prefix key and breadcrumbs
+- [gh-dash](https://github.com/dlvhdr/gh-dash): GitHub dashboard TUI
 - [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements): Remap Fn to Hyper, Ctrl+P/Ctrl+n to Arrow Up/Down, mnemonic sublayering for media control, movement, opening browser links, opening applications, etc.
-- [yabai](https://github.com/koekeishiya/yabai): Tiling window manager
-- [skhd](https://github.com/koekeishiya/skhd): Configurable keyboard shortcuts (used to control yabai with the keyboard)
-- [borders](https://github.com/FelixKratz/JankyBorders): Borders around windows, colored differently when resizing windows via yabai
-- [gitu](https://github.com/altsem/gitu) - TUI git client inspired by Magit
 - [Maccy](https://github.com/p0deje/Maccy): Clipboard manager
 - [Gifski](https://github.com/sindresorhus/Gifski): Video to Gif converter
-- [Lunar](https://github.com/alin23/Lunar): Display brightness controller
 - [noTunes](https://github.com/tombonez/noTunes): Prevent Apple Music from launching
-- [BreakTimer](https://github.com/tom-james-watson/breaktimer-app): Reminder to take an eye break every hour
 - [zoxide](https://github.com/ajeetdsouza/zoxide): Smarter `cd`
 - [ripgrep](https://github.com/BurntSushi/eipgrep): More powerful `grep`
 - [Firefox Dev Edition](https://www.mozilla.org/en-US/firefox/developer/): Hopefully self explanatory at this point, source code [here](https://hg.mozilla.org/mozilla-central/)
-- [Omnivore](https://github.com/omnivore-app/omnivore) - read-it-later list of links (NOT INCLUDED IN BREW INSTALL SCRIPT)
-- [TinkerTool](https://www.bresink.com/osx/0TinkerTool/download.php) - Sane macOS defaults, set them once and never open the app again. (NOT INCLUDED IN BREW INSTALL SCRIPT)
+- [TinkerTool](https://www.bresink.com/osx/0TinkerTool/download.php): Sane macOS defaults, set them once and never open the app again. (NOT INCLUDED IN BREW INSTALL SCRIPT)
 
 ### Proprietary ❌
 - [Cleanshot X](https://cleanshot.com/): Better screenshotting
