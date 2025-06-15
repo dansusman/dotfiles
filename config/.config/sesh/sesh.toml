@@ -5,19 +5,12 @@ sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
 [default_session]
 preview_command = "eza --all --git --icons --color=always {}"
 
-# misc
-
-[[session]]
-name = "Downloads"
-path = "~/Downloads"
-startup_command = "yazi"
-
 # general development
 
 [[session]]
 name = "new worktree"
 path = "~/Developer/notability"
-startup_command = "git worktree add $(gum input --placeholder 'Enter new worktree name')"
+startup_command = "ntb_new_worktree"
 
 [[session]]
 name = "pick worktree"
@@ -52,6 +45,13 @@ name = "sesh config"
 path = "~/.dotfiles/config/.config/sesh"
 startup_command = "nvim sesh.toml"
 preview_command = "bat --language=toml --style=snip --color=always ~/.dotfiles/config/.config/sesh"
+
+# misc
+
+[[session]]
+name = "Downloads"
+path = "~/Downloads"
+startup_command = "yazi"
 
 # windows
 

@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+cd ~/Developer/notability/ || return
+
+# Fetch assigned issues using gh cli
+echo "📋 Fetching assigned issues..."
+ISSUES=$(gh issue list --assignee @me --state open --json number,title --template '{{range .}}{{.number}}|{{.title}}{{"\n"}}{{end}}')
+
+if [ -z "$ISSUES" ]; then
+  echo "❌ No assigned issues found"
+  exit 1
+fi
+
+# Use gum to select an issue
+SELECTED_ISSUE=$(echo "$ISSUES" | gum choose --header "Select an issue to work on:")
+
+if [ -z "$SELECTED_ISSUE" ]; then
+  echo "❌ No issue selected"
+  exit 1
+fi
+
+# Extract issue number and title
+ISSUE_NUMBER=$(echo "$SELECTED_ISSUE" | cut -d'|' -f1)
+ISSUE_TITLE=$(echo "$SELECTED_ISSUE" | cut -d'|' -f2)
+
+echo "🎯 Selected issue #$ISSUE_NUMBER: $ISSUE_TITLE"
+
+# Generate branch name using claude -p
+echo "🤖 Generating branch name..."
+BRANCH=$(claude -p "Create a brief git branch name for the issue: $ISSUE_TITLE. Output only the branch name. Maximum 3 words. No prefix like fix, etc.")
+
+# Clean up the branch name (remove any extra whitespace/newlines)
+BRANCH=$(echo "$BRANCH" | tr -d '\n' | xargs)
+BRANCH=${BRANCH#susman/}
+echo "🌳 Using branch 'susman/$BRANCH'"
+
+# Fetch latest from remote to ensure we have up-to-date branch info
+echo "📡 Fetching latest from remote..."
+git fetch origin
+
+REMOTE_BRANCH=$(git ls-remote --heads origin "susman/$BRANCH" | wc -l)
+LOCAL_BRANCH=$(git branch --list "susman/$BRANCH" | wc -l)
+
+if [ "$REMOTE_BRANCH" -eq 0 ]; then
+  echo "☁️ Branch 'susman/$BRANCH' does not exist on remote, creating it"
+  if [ "$LOCAL_BRANCH" -eq 0 ]; then
+    git worktree add "susman/$BRANCH" -b "susman/$BRANCH" origin/staging
+  else
+    git worktree add "susman/$BRANCH" "susman/$BRANCH"
+  fi
+  cd "susman/$BRANCH" || exit
+  git push -u origin "susman/$BRANCH"
+else
+  echo "☁️ Branch 'susman/$BRANCH' exists on remote, using it"
+  if [ "$LOCAL_BRANCH" -eq 0 ]; then
+    git worktree add "susman/$BRANCH" -b "susman/$BRANCH" origin/"susman/$BRANCH"
+  else
+    git worktree add "susman/$BRANCH" "susman/$BRANCH"
+  fi
+  cd "susman/$BRANCH" || exit
+fi
+sesh connect .
+tmux kill-session -t "new worktree"
