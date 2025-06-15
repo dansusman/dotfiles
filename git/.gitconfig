@@ -71,10 +71,11 @@
 	    SELECTION=$(git worktree list | gum choose); \
 	    WT=$(echo \"$SELECTION\" | awk '{print $1}'); \
 	    BRANCH=$(echo \"$SELECTION\" | sed -n 's/.*\\[\\(.*\\)\\].*/\\1/p'); \
-	    TMUX_SESSION=$(basename $WT); \
+	    BRANCH_NAME=$(basename \"$BRANCH\"); \
 	    git worktree remove $WT; \
 	    git branch --delete $BRANCH; \
-	    tmux has-session -t $TMUX_SESSION 2>/dev/null && tmux kill-session -t $TMUX_SESSION; \
+	    TMUX_SESSION=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep \"$BRANCH_NAME\" | head -1); \
+	    [ -n \"$TMUX_SESSION\" ] && tmux kill-session -t \"$TMUX_SESSION\"; \
 	}; f"
 	wl = "!git worktree list | gum format"
 	# Branch a worktree from a non main/master branch
