@@ -10,47 +10,113 @@
 	excludesfile = /Users/danielsusman/.gitignore
 	commentchar = ";"
 [alias]
-	bld = "!f() { git fetch -p && git branch -vv | awk \"/: gone]/{print \\$1}\" | xargs git branch -D; }; f"
-	co = checkout
-	cob = checkout -b
-	coo = !git fetch && git checkout
-	br = branch
-	brd = branch -d
-	st = status
-	aa = add -A .
+	# ----------- INFO -----------
+	b = branch
+	d = diff
+	s = status
+	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+	# What commits have been created by the last command e.g. after a pull
+	new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
+	# ----------- RESET -----------
+	st = stash
+	sp = stash pop
 	unstage = reset --soft HEAD^
-	cm = commit -m
+	w = restore .
+	up = reset --hard @{upstream}
+	pullf = "!sh -c 'git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)'"
+        # Purge merged branches
+	pm = "!f() { \
+	    git branch --merged | grep -v -E \"master|main|develop|staging|beta^\\+\" | xargs git branch -d; \
+	}; f"
+	# delete local branches that were deleted upstream
+	bld = "!f() { git fetch -p && git branch -vv | awk \"/: gone]/{print \\$1}\" | xargs git branch -D; }; f"
+	# ----------- COMMIT -----------
 	amend = commit --amend -m
 	# quick amend: Amend my staged changes to the last commit, keeping the same commit message
 	qa = commit --amend -C HEAD
 	fix = commit --fixup
 	undo = reset HEAD~1
-	rv = revert
-	cp = cherry-pick
-	pu = !git push origin `git branch --show-current`
-	fush = push -f
-	mg = merge --no-ff
+	fush = push --force-with-lease
 	# forced pull: You have a local branch (e.g. for reviewing), but someone else did a forced push
 	#              update on the remote branch. A regular git pull will fail, but this will just set
 	#              the local branch to match the remote branch. BEWARE: this will overwrite any local
 	#              commits you have made on this branch that haven't been pushed.
-	pullf = !sh -c \"git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)\"
-
+	# ----------- REBASE -----------
 	# rebase with the tracking branch even if I have uncommitted changes
 	rb = !git-rebase
-
 	# fetch latest, rebase interactive
 	rbu = !git fetch && git rebase -i origin/staging --autosquash
-
 	# fetch latest, interactive rebase onto latest staging the given commit and anything after
 	rbou = "!f() { git fetch && git rebase -i --onto origin/staging HEAD~1; }; f"
-
+	# ----------- CHECKOUT -----------
 	fs = !git fetch && git switch
 	sw = !git-update
-	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
 	pr = "!gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\\1/' | xargs gh pr checkout"
-	w = restore .
-	up = reset --hard @{upstream}
+	# ----------- WORKTREE ----------- 
+	# Add a worktree and open a new tmux session for that worktree
+	# $1 is the new worktree
+	wa = "!f() { \
+	    BRANCH=${1:-$(gum input --prompt='Branch name: ')}; \
+	    git worktree add -b susman/$BRANCH ../$BRANCH $2; \
+	    if [ -n \"$TMUX\" ]; then \
+	        TMUX= tmux new-session -d -s $BRANCH -c $(realpath ../$BRANCH) >/dev/null 2>&1; \
+	        tmux switch-client -t $BRANCH; \
+	    else \
+	        tmux new-session -s $BRANCH -c $(realpath ../$BRANCH) >/dev/null 2>&1; \
+	    fi; \
+	}; f"
+	# Remove a worktree and associated branch
+	# Must be run from a worktree other than the one being deleted
+	wr = "!f() { \
+	    SELECTION=$(git worktree list | gum choose); \
+	    WT=$(echo \"$SELECTION\" | awk '{print $1}'); \
+	    BRANCH=$(echo \"$SELECTION\" | sed -n 's/.*\\[\\(.*\\)\\].*/\\1/p'); \
+	    TMUX_SESSION=$(basename $WT); \
+	    git worktree remove $WT; \
+	    git branch --delete $BRANCH; \
+	    tmux has-session -t $TMUX_SESSION 2>/dev/null && tmux kill-session -t $TMUX_SESSION; \
+	}; f"
+	wl = "!git worktree list | gum format"
+	# Branch a worktree from a non main/master branch
+	# $1 is the new branch
+	# $2 is the source branch
+	wb = "!f() { \
+	    BRANCH=${1:-$(gum input --prompt='Branch name: ')}; \
+	    SOURCE=${2:-$(gum input --prompt='Source branch: ')}; \
+	    git worktree add -b susman/$BRANCH ../$BRANCH origin/$SOURCE >/dev/null 2>&1; \
+	    if [ -n \"$TMUX\" ]; then \
+	        TMUX= tmux new-session -d -s $BRANCH -c $(realpath ../$BRANCH) >/dev/null 2>&1; \
+	        tmux switch-client -t $BRANCH; \
+	    else \
+	        tmux new-session -s $BRANCH -c $(realpath ../$BRANCH) >/dev/null 2>&1; \
+	    fi; \
+	}; f"
+	# Checkout a branch into a worktree, for e.g. code reviews, open kitty tab for worktree
+	# $1 is the branch to checkout
+	wco = "!f() { \
+	    git worktree add -b $1 ../$1 origin/$1; \
+	    tmux new-session -s $1 -c $(realpath ../$1); \
+	}; f"
+	# Switch to an existing worktree, find open tmux session or create new one
+	wf = "!f() { \
+	    SELECTION=$(git worktree list | gum choose); \
+	    WT=$(echo \"$SELECTION\" | awk '{print $1}'); \
+	    TMUX_SESSION=$(basename $WT); \
+	    if tmux has-session -t $TMUX_SESSION 2>/dev/null; then \
+	        if [ -n \"$TMUX\" ]; then \
+	            tmux switch-client -t $TMUX_SESSION; \
+	        else \
+	            tmux attach-session -t $TMUX_SESSION; \
+	        fi; \
+	    else \
+	        if [ -n \"$TMUX\" ]; then \
+	            TMUX= tmux new-session -d -s $TMUX_SESSION -c $WT >/dev/null 2>&1; \
+	            tmux switch-client -t $TMUX_SESSION; \
+	        else \
+	            tmux new-session -s $TMUX_SESSION -c $WT; \
+	        fi; \
+	    fi; \
+	}; f"
 [user]
 	name = Dan Susman
 	email = frenchminister@gmail.com
