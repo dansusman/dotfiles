@@ -1,4 +1,4 @@
-sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
+sort_order = ["config", "tmux", "tmuxinator", "zoxide"]
 
 # default
 
@@ -15,7 +15,7 @@ startup_command = "ntb_new_worktree"
 [[session]]
 name = "pick worktree"
 path = "~/Developer/notability/"
-startup_command = "sesh connect $(find . -maxdepth 1 -type d | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
+startup_command = "sesh connect $(git worktree list | awk '{print $1}' | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
 
 [[session]]
 name = "review prs"
