@@ -3,7 +3,7 @@ sort_order = ["config", "tmux", "tmuxinator", "zoxide"]
 # default
 
 [default_session]
-preview_command = "eza --all --git --icons --color=always {}"
+preview_command = "eza --all --git-ignore --tree --icons=always --color=always --level=1 {}"
 
 # general development
 
@@ -11,16 +11,27 @@ preview_command = "eza --all --git --icons --color=always {}"
 name = "new worktree"
 path = "~/Developer/notability"
 startup_command = "ntb_new_worktree"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_new_worktree"
 
 [[session]]
 name = "pick worktree"
 path = "~/Developer/notability/"
 startup_command = "sesh connect $(git worktree list | awk '{print $1}' | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
+preview_command = "git -C ~/Developer/notability/ worktree list"
 
 [[session]]
 name = "review prs"
 path = "~/Developer/notability/review"
 startup_command = "gh dash"
+
+[[session]]
+name = "staging"
+path = "~/Developer/notability/staging"
+startup_command = "open Notability.xcworkspace"
+
+[[session]]
+name = "scratch"
+path = "~/Developer/notability/scratch"
 
 # config shortcuts
 
@@ -32,7 +43,7 @@ path = "~/.dotfiles"
 name = "tmux config"
 path = "~/.dotfiles/tmux"
 startup_command = "nvim .tmux.conf"
-preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/tmux/tmux.conf"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/tmux/.tmux.conf"
 
 [[session]]
 name = "lazygit config"
