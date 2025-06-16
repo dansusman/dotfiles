@@ -69,6 +69,10 @@ keybindings:
     "key": "C",
     "command": "tmux split-window -h -c {{.RepoPath}} 'gh pr checkout {{.PrNumber}} && nvim -c \":Octo pr edit {{.PrNumber}}\"'"
     },
+    {
+    "key": "O",
+    "command": "gh pr checkout {{.PrNumber}} && open Notability.xcworkspace"
+    },
   ]
   branches: []
 repoPaths: 
