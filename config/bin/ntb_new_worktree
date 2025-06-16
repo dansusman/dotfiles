@@ -1,8 +1,32 @@
 #!/usr/bin/env bash
 cd ~/Developer/notability/ || return
 
-# Fetch assigned issues using gh cli
-echo "📋 Fetching assigned issues..."
+# Step 1: Choose workflow
+echo "🚀 Choose workflow:"
+WORKFLOW=$(echo -e "New branch from issue\nExisting/custom branch" | gum choose --header "Select workflow:")
+
+if [ -z "$WORKFLOW" ]; then
+  echo "❌ No workflow selected"
+  exit 1
+fi
+
+if [ "$WORKFLOW" = "Existing/custom branch" ]; then
+  # Custom branch path - skip issue selection
+  echo "🌳 Enter custom branch name (without susman/ prefix):"
+  CUSTOM_BRANCH=$(gum input --placeholder "my-custom-branch")
+  
+  if [ -z "$CUSTOM_BRANCH" ]; then
+    echo "❌ No branch name provided"
+    exit 1
+  fi
+  
+  BRANCH="$CUSTOM_BRANCH"
+  echo "🎯 Using custom branch: susman/$BRANCH"
+  
+  # Skip to worktree creation logic
+else
+  # Original workflow - fetch issues and generate branch name
+  echo "📋 Fetching assigned issues..."
 ISSUES=$(gh issue list --assignee @me --state open --json number,title --template '{{range .}}{{.number}}|{{.title}}{{"\n"}}{{end}}')
 
 if [ -z "$ISSUES" ]; then
@@ -32,6 +56,7 @@ BRANCH=$(claude -p "Create a brief git branch name for the issue: $ISSUE_TITLE. 
 BRANCH=$(echo "$BRANCH" | tr -d '\n' | xargs)
 BRANCH=${BRANCH#susman/}
 echo "🌳 Using branch 'susman/$BRANCH'"
+fi
 
 # Fetch latest from remote to ensure we have up-to-date branch info
 echo "📡 Fetching latest from remote..."
