@@ -2,3 +2,4 @@
 config/.config/gh/
 config/.config/github-copilot/
 zsh/.env
+config/.config/swiftpm

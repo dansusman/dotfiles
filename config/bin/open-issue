@@ -1,0 +1,3 @@
+#!/bin/bash
+clipboard_content=$(pbpaste)
+~/githubOpen.sh $clipboard_content

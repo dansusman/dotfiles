@@ -64,6 +64,11 @@
       "key" : "e",
       "type" : "command",
       "value" : "zsh ~/bin/audio-switch"
+    },
+    {
+      "key" : "i",
+      "type" : "command",
+      "value" : "zsh ~/bin/open-issue"
     }
   ],
   "type" : "group"
