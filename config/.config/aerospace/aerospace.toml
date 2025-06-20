@@ -161,7 +161,7 @@ alt-shift-cmd-ctrl-e = 'move-node-to-workspace E --focus-follows-window'
 alt-shift-cmd-ctrl-f = 'move-node-to-workspace F --focus-follows-window'
 alt-shift-cmd-ctrl-g = [ "move-node-to-monitor --wrap-around next", "focus-monitor --wrap-around next" ]
 alt-shift-cmd-ctrl-s = [ "move-node-to-monitor --wrap-around next", "focus-monitor --wrap-around next" ]
-alt-shift-cmd-ctrl-8 = 'exec-and-forget open -na Ghostty.app'
+alt-shift-cmd-ctrl-8 = 'exec-and-forget open -a Ghostty.app'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 # ctrl-alt-shift-cmd-tab = 'workspace-back-and-forth'
