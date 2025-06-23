@@ -3,3 +3,5 @@ config/.config/gh/
 config/.config/github-copilot/
 zsh/.env
 config/.config/swiftpm
+config/.config/claude/stats*
+config/.config/claude/todo*
