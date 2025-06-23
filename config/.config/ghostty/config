@@ -13,3 +13,6 @@ keybind = super+j=text:\x1b\x73
 
 # CMD+G = lazygit in new tmux window (Ctrl+A -> g)
 keybind = super+g=text:\x01\x67
+
+# SHIFT+ENTER = new line in Claude Code
+keybind = shift+enter=text:\n
