@@ -1,4 +1,4 @@
-sort_order = ["config", "tmux", "tmuxinator", "zoxide"]
+sort_order = ["tmux", "config", "tmuxinator", "zoxide"]
 
 # default
 
