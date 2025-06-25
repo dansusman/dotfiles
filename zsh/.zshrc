@@ -231,3 +231,9 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="$PATH:/Users/danielsusman/.local/bin"
 export PATH="$PATH:/Users/danielsusman/.cargo/bin"
 export XDG_CONFIG_HOME="$HOME/.config"
+
+autoload -U compinit
+compinit
+source <(jj util completion zsh)
+
+export EDITOR=nvim
