@@ -12,6 +12,8 @@ git:
   paging:
     colorArg: always
     pager: delta --dark --paging=never
+  commit:
+    autoWrapCommitMessage: false
 gui:
   showIcons: true
   sidePanelWidth: 0.3333
