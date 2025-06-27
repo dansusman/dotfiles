@@ -29,10 +29,6 @@ name = "staging"
 path = "~/Developer/notability/staging"
 startup_command = "git pull && open Notability.xcworkspace"
 
-[[session]]
-name = "scratch"
-path = "~/Developer/notability/scratch"
-
 # config shortcuts
 
 [[session]]
@@ -58,6 +54,9 @@ startup_command = "nvim sesh.toml"
 preview_command = "bat --language=toml --style=snip --color=always ~/.dotfiles/config/.config/sesh"
 
 # misc
+[[session]]
+name = "default"
+path = "~"
 
 [[session]]
 name = "Downloads"

@@ -5,21 +5,15 @@ name = "Dan Susman"
 email = "frenchminister@gmail.com"
 
 [ui]
-default-command = ["log", "--reversed"]
 editor = "nvim"
-
-template-aliases.'format_timestamp(timestamp)' = 'timestamp.ago()'
+default-command = "log"
 
 [colors]
 "diff token" = { reverse = true, underline = false }
 
-# disable pagination for `jj status`, use `delta` for `jj diff` and `jj show`
+# disable pagination for `jj status`
 [[--scope]]
---when.commands = ["status"]
+--when.commands = ["status", "log"]
 [--scope.ui]
 paginate = "never"
-[[--scope]]
---when.commands = ["diff", "show"]
-[--scope.ui]
-pager = "delta"
 

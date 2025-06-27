@@ -158,6 +158,7 @@ alias checkout="gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\1/' | xargs gh pr
 alias re="gh dash"
 alias cdr='cd "$(git rev-parse --show-toplevel)"'
 alias gsm="generate-slack-msg"
+alias js="jj st"
 setopt completealiases
 
 function sesh-sessions() {
@@ -237,3 +238,9 @@ compinit
 source <(jj util completion zsh)
 
 export EDITOR=nvim
+
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+source <(carapace _carapace)
+
