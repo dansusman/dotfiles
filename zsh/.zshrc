@@ -244,3 +244,11 @@ zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 source <(carapace _carapace)
 
+claude() {
+    # Run the original claude command
+    command claude "$@"
+    
+    # When claude exits (including via Ctrl+C), run the usage command
+    npx ccusage@latest daily
+}
+
