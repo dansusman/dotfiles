@@ -1,0 +1,42 @@
+{
+	"name": "Vimium C",
+	"@time": "7/4/2025, 8:49:47 AM",
+	"time": 1751633387296,
+	"environment": {
+		"extension": "2.12.3",
+		"platform": "mac",
+		"firefox": 141
+	},
+	"exclusionRules": [
+		{
+			"passKeys": "",
+			"pattern": ":https://mail.google.com/"
+		},
+		{
+			"passKeys": "d z ",
+			"pattern": ":https://www.youtube.com/"
+		},
+		{
+			"passKeys": "a b c d e i m n o p q s t u v w x y z ",
+			"pattern": ":https://github.com/"
+		},
+		{
+			"passKeys": "d e f s ",
+			"pattern": ":https://www.netflix.com/"
+		}
+	],
+	"keyLayout": 2,
+	"keyMappings": [
+		"#!no-check",
+		"map g1 firstTab ",
+		"map g2 firstTab count=2",
+		"map g3 firstTab count=3",
+		"map g4 firstTab count=4",
+		"map g5 firstTab count=5",
+		"map <a-]> passNextKey",
+		"mapKey f F",
+		"mapKey F f",
+		""
+	],
+	"vimSync": true
+}
