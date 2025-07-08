@@ -1,0 +1,9 @@
+#!/bin/bash
+TERMINAL="ghostty"
+
+ACTIVE=$(osascript -e 'tell app "System Events" to return name of first process whose frontmost is true')
+
+if [ "$ACTIVE" != "$TERMINAL" ]; then
+    osascript -e 'display alert "Claude Code" message "Agent has finished the task!"'
+fi
+

@@ -1,8 +1,26 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(gh:*)",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "claude-notify"
+          }
+        ]
+      }
     ],
-    "deny": []
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "claude-stop"
+          }
+        ]
+      }
+    ]
   }
 }

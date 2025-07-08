@@ -1,0 +1,2 @@
+#!/bin/bash
+osascript -e 'display alert "Claude Code" message "Agent needs user input!"'
