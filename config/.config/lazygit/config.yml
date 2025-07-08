@@ -1,6 +1,10 @@
 # Lazygit configuration with Claude AI commit integration
 
 customCommands:
+  - key: R
+    context: commits
+    command: git commit --allow-empty --amend --no-verify
+    output: terminal
   - key: '<c-k>' # Ctrl+K for AI commit
     context: 'global'
     description: 'Generate AI commit message'
@@ -17,4 +21,3 @@ git:
 gui:
   showIcons: true
   sidePanelWidth: 0.3333
-
