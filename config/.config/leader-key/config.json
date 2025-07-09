@@ -74,6 +74,11 @@
       "key" : "i",
       "type" : "command",
       "value" : "zsh ~/bin/open-issue"
+    },
+    {
+      "key" : "a",
+      "type" : "command",
+      "value" : "zsh ~/bin/airdrop"
     }
   ],
   "type" : "group"
