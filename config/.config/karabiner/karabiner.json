@@ -2239,7 +2239,7 @@
                                     "key_code": "w",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "osascript ~/.dotfiles/defaults/togglewifi.applescript" }],
+                                "to": [{ "shell_command": "~/bin/togglewifi" }],
                                 "type": "basic"
                             },
                             {
