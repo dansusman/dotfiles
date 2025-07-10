@@ -5,6 +5,15 @@ I haven't tested this yet, but it'd be cool to alias the dotfiles version of key
 two copies, one backing up in this repo and one actually in use by Xcode. I don't want to break all my keybinds and have to manually set them back
 up, so maybe when I'm actually setting up a new machine I can try doing it this way. And update this comment...
 
+## `write.py` script
+
+I've written a custom LLDB python script to copy breakpoints to the clipboard. Usage is as follows:
+
+```
+(lldb) command script import ~/.dotfiles/xcode/write.py
+(lldb) write br list
+```
+
 ## Xcode tips/binds
 
 ### Fast editing
