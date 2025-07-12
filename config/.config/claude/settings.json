@@ -6,30 +6,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": ""
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
             "command": "claude-notify Notification"
           }
         ]
       }
     ],
     "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": ""
-          }
-        ]
-      },
       {
         "matcher": "",
         "hooks": [
