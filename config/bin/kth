@@ -1,0 +1,85 @@
+#!/bin/bash
+# Convert key names to ASCII hex codes for Ghostty keybinds
+# Usage: key-to-hex "ctrl+a" "E" -> \x01\x45
+
+key_to_hex() {
+    local key="$1"
+    local lower_key=$(echo "$key" | tr '[:upper:]' '[:lower:]')
+    
+    case "$lower_key" in
+        "ctrl+a") echo -n "\\x01" ;;
+        "ctrl+b") echo -n "\\x02" ;;
+        "ctrl+c") echo -n "\\x03" ;;
+        "ctrl+d") echo -n "\\x04" ;;
+        "ctrl+e") echo -n "\\x05" ;;
+        "ctrl+f") echo -n "\\x06" ;;
+        "ctrl+g") echo -n "\\x07" ;;
+        "ctrl+h") echo -n "\\x08" ;;
+        "ctrl+i") echo -n "\\x09" ;;
+        "ctrl+j") echo -n "\\x0a" ;;
+        "ctrl+k") echo -n "\\x0b" ;;
+        "ctrl+l") echo -n "\\x0c" ;;
+        "ctrl+m") echo -n "\\x0d" ;;
+        "ctrl+n") echo -n "\\x0e" ;;
+        "ctrl+o") echo -n "\\x0f" ;;
+        "ctrl+p") echo -n "\\x10" ;;
+        "ctrl+q") echo -n "\\x11" ;;
+        "ctrl+r") echo -n "\\x12" ;;
+        "ctrl+s") echo -n "\\x13" ;;
+        "ctrl+t") echo -n "\\x14" ;;
+        "ctrl+u") echo -n "\\x15" ;;
+        "ctrl+v") echo -n "\\x16" ;;
+        "ctrl+w") echo -n "\\x17" ;;
+        "ctrl+x") echo -n "\\x18" ;;
+        "ctrl+y") echo -n "\\x19" ;;
+        "ctrl+z") echo -n "\\x1a" ;;
+        "escape"|"esc") echo -n "\\x1b" ;;
+        "tab") echo -n "\\x09" ;;
+        "enter"|"return") echo -n "\\x0d" ;;
+        "backspace") echo -n "\\x08" ;;
+        "delete") echo -n "\\x7f" ;;
+        "space") echo -n "\\x20" ;;
+        "newline") echo -n "\\x0a" ;;
+        "vtab"|"vertical-tab") echo -n "\\x0b" ;;
+        *)
+            # Handle single characters
+            if [[ ${#key} -eq 1 ]]; then
+                printf "\\\\x%02x" $(printf '%d' "'$key")
+            else
+                echo "Warning: Could not parse key '$key'" >&2
+                printf "\\\\x%02x" $(printf '%d' "'${key:0:1}")
+            fi
+            ;;
+    esac
+}
+
+usage() {
+    cat << EOF
+Usage: kth [OPTIONS] key1 [key2 ...]
+
+Convert key names to ASCII hex codes for Ghostty keybinds.
+
+OPTIONS:
+  -h, --help    Show this help message
+
+EXAMPLES:
+  kth ctrl+a E                   # Output: \\x01\\x45
+  kth escape s                   # Output: \\x1b\\x73
+  kth vtab                       # Output: \\x0b
+
+SUPPORTED KEYS:
+  ctrl+a through ctrl+z, escape/esc, tab, enter/return, backspace,
+  delete, space, newline, vtab/vertical-tab, and single characters
+
+EOF
+}
+
+if [[ $# -eq 0 ]] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    usage
+    exit 0
+fi
+
+for key in "$@"; do
+    key_to_hex "$key"
+done
+echo
