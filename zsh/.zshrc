@@ -246,7 +246,8 @@ zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 source <(carapace _carapace)
 
-claude() {
+# trace claude conversation
+claudette() {
     local open_html=false
     local args=()
     
