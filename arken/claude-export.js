@@ -14,7 +14,7 @@
     // Add export button to page
     const button = document.createElement('button');
     button.textContent = 'Export Conversation';
-    button.style.cssText = 'position:fixed;top:10px;right:10px;z-index:9999;padding:5px 10px;';
+    button.style.cssText = 'position:fixed;top:50px;right:10px;z-index:9999;padding:5px 10px;';
     document.body.appendChild(button);
     
     button.onclick = function() {
