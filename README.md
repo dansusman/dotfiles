@@ -18,6 +18,7 @@ All my config files for macOS.
 - `wezterm`: wezterm terminal emulator settings
 - `xcode`: Xcode keybinds, theme, and cheatsheet
 - `zsh`: Shell aliases, theming, utils, etc.
+- `tests`: Unit tests for dotfiles using bats-core testing framework (see `tests/README.md` for setup and usage)
 
 > [!WARNING]
 > The following folders are quite outdated.

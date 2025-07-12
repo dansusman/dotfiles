@@ -1,5 +1,14 @@
 #!/bin/bash
 
-~/bin/togglewifi
-
-open -a Airdrop.app
+# Mock mode for testing - writes to temp file instead of changing system
+if [[ "${AIRDROP_MOCK:-}" == "1" ]]; then
+    MOCK_FILE="${AIRDROP_MOCK_FILE:-/tmp/airdrop_actions}"
+    
+    echo "togglewifi called" > "$MOCK_FILE"
+    echo "Airdrop.app opened" >> "$MOCK_FILE"
+    echo "AirDrop launched (mock mode)"
+else
+    # Normal mode - actually toggle wifi and open AirDrop
+    ~/bin/togglewifi
+    open -a Airdrop.app
+fi

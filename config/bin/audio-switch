@@ -1,7 +1,21 @@
 #!/bin/bash
 
-if [[ "$1" == "headphone" ]]; then
-	/opt/homebrew/bin/SwitchAudioSource -u BuiltInHeadphoneOutputDevice
+# Mock mode for testing - writes to temp file instead of changing system
+if [[ "${AUDIO_SWITCH_MOCK:-}" == "1" ]]; then
+    MOCK_FILE="${AUDIO_SWITCH_MOCK_FILE:-/tmp/audio_switch_state}"
+    
+    if [[ "$1" == "headphone" ]]; then
+        echo "BuiltInHeadphoneOutputDevice" > "$MOCK_FILE"
+        echo "Audio switched to headphones (mock mode)"
+    else
+        echo "LG UltraFine Display Audio" > "$MOCK_FILE"
+        echo "Audio switched to LG display (mock mode)"
+    fi
 else
-	/opt/homebrew/bin/SwitchAudioSource -s "LG UltraFine Display Audio"
+    # Normal mode - actually switch audio
+    if [[ "$1" == "headphone" ]]; then
+        /opt/homebrew/bin/SwitchAudioSource -u BuiltInHeadphoneOutputDevice
+    else
+        /opt/homebrew/bin/SwitchAudioSource -s "LG UltraFine Display Audio"
+    fi
 fi

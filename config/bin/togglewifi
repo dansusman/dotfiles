@@ -1,10 +1,32 @@
 #!/bin/bash
 
-osascript -e '
-set status to do shell script "networksetup -getairportpower en0"
-if status ends with "On" then
-  do shell script "networksetup -setairportpower en0 off"
+# Mock mode for testing - writes to temp file instead of changing system
+if [[ "${TOGGLEWIFI_MOCK:-}" == "1" ]]; then
+    MOCK_FILE="${TOGGLEWIFI_MOCK_FILE:-/tmp/togglewifi_state}"
+    
+    # Read current state or default to "off"
+    if [[ -f "$MOCK_FILE" ]]; then
+        current_state=$(cat "$MOCK_FILE")
+    else
+        current_state="off"
+    fi
+    
+    # Toggle state
+    if [[ "$current_state" == "on" ]]; then
+        echo "off" > "$MOCK_FILE"
+        echo "WiFi turned off (mock mode)"
+    else
+        echo "on" > "$MOCK_FILE"
+        echo "WiFi turned on (mock mode)"
+    fi
 else
-  do shell script "networksetup -setairportpower en0 on"
-end if
-'
+    # Normal mode - actually toggle WiFi
+    osascript -e '
+    set status to do shell script "networksetup -getairportpower en0"
+    if status ends with "On" then
+      do shell script "networksetup -setairportpower en0 off"
+    else
+      do shell script "networksetup -setairportpower en0 on"
+    end if
+    '
+fi
