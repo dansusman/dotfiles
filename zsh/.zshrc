@@ -246,7 +246,7 @@ source <(carapace _carapace)
 
 claude() {
     # Run the original claude command
-    command claude "$@"
+    command claude-trace --run-with "$@"
     
     # When claude exits (including via Ctrl+C), run the usage command
     npx ccusage@latest daily

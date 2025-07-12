@@ -1,3 +1,4 @@
 .worktrees/*
 buildServer.json
 .nvim/*
+.claude-trace/*
