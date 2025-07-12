@@ -247,10 +247,31 @@ zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'exter
 source <(carapace _carapace)
 
 claude() {
-    # Run the original claude command
-    command claude-trace --run-with "$@"
+    local open_html=false
+    local args=()
+    
+    # Parse arguments to check for -o flag
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -o)
+                open_html=true
+                shift
+                ;;
+            *)
+                args+=("$1")
+                shift
+                ;;
+        esac
+    done
+    
+    # Run the original claude command with appropriate flags
+    if [[ "$open_html" == true ]]; then
+        command claude-trace --run-with "${args[@]}"
+    else
+        command claude-trace --no-open --run-with "${args[@]}"
+    fi
     
     # When claude exits (including via Ctrl+C), run the usage command
-    npx ccusage@latest daily
+    # npx ccusage@latest daily
 }
 
