@@ -159,6 +159,8 @@ alias re="gh dash"
 alias cdr='cd "$(git rev-parse --show-toplevel)"'
 alias gsm="generate-slack-msg"
 alias js="jj st"
+# launch claude-notify daemon
+alias da="~/claude-notify/dist/ClaudeNotifyDaemon.app/Contents/MacOS/ClaudeNotifyDaemon"
 setopt completealiases
 
 function sesh-sessions() {
