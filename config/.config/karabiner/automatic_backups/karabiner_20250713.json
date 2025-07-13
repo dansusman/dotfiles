@@ -5,25 +5,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Map Tab to f13 when held",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "tab",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to_if_alone": [{ "key_code": "tab" }],
-                                "to_if_held_down": [
-                                    {
-                                        "key_code": "f13",
-                                        "modifiers": []
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "available_since": "13.6.0",
                         "description": "Mouse Keys Mode v4 (rev 3)",
                         "manipulators": [
