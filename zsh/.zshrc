@@ -118,49 +118,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.zsh_profile
 
-######### ALIASES ####################
-alias vim=nvim
-alias am="open -a 'Activity Monitor'"
-alias slack="open -a Slack"
-alias pb="open -a Paintbrush"
-alias c="clear"
-alias xcode="open -a Xcode"
-function jump {
-    location=$1
-    file=$2
-    str="/Users/danielsusman/School/three_one/"
-    str+="${location}/"
-    str+="${file}"
-    echo $str
-    code $str
-}
-
-alias gs="git status"
-alias gd="git diff"
-alias ga="git add -A"
-alias gcm="git commit -m"
-alias gp="git pull"
-alias gco="git checkout"
-alias rg="rg --hidden"
-alias fj=mkcdir
-alias zig=/Users/danielsusman/util/zig/zig/build/stage3/bin/zig
-alias ll="eza -la"
-# alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
-alias ppp="~/githubOpen.sh $1"
-alias qqq="~/githubSearch.sh $*"
-alias bt="swap"
-alias bk="git checkout -"
-alias qu="~/quick.sh $1"
-alias q="qu Notability.xcworkspace"
-alias ghp="gh pr checkout"
-alias g="lazygit"
-alias checkout="gh pr ls -L 100 | fzf | sed -E 's/^([0-9]+).*/\1/' | xargs gh pr checkout"
-alias re="gh dash"
-alias cdr='cd "$(git rev-parse --show-toplevel)"'
-alias gsm="generate-slack-msg"
-alias js="jj st"
-# launch claude-notify daemon
-alias da="~/claude-notify/dist/ClaudeNotifyDaemon.app/Contents/MacOS/ClaudeNotifyDaemon"
+# Source aliases
+source ~/.zsh_aliases
 setopt completealiases
 
 function sesh-sessions() {
