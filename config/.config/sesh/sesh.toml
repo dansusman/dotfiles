@@ -29,6 +29,10 @@ name = "staging"
 path = "~/Developer/notability/staging"
 startup_command = "git pull && open Notability.xcworkspace"
 
+[[session]]
+name = "short"
+path = "~/Developer/notability/short"
+
 # config shortcuts
 
 [[session]]
