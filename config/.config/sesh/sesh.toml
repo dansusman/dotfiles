@@ -33,6 +33,11 @@ startup_command = "git pull && open Notability.xcworkspace"
 name = "short"
 path = "~/Developer/notability/short"
 
+[[session]]
+name = "curious"
+path = "~/scratch"
+startup_command = "claude --dangerously-skip-permissions"
+
 # config shortcuts
 
 [[session]]
