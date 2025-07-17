@@ -84,6 +84,11 @@
       "key" : "s",
       "type" : "command",
       "value" : "pmset sleepnow"
+    },
+    {
+      "key" : "l",
+      "type" : "command",
+      "value" : "source ~/.dotfiles/zsh/.env && zsh ~/.dotfiles/config/bin/slack-convert --pasteboard"
     }
   ],
   "type" : "group"

@@ -1,0 +1,200 @@
+#!/bin/zsh
+
+# Slack URL Converter - Converts https://workspace.slack.com links to slack:// protocol
+# Usage: slack-convert [--open] [--pasteboard] "https://glabs.slack.com/archives/C091M31SKMX/p1752268845005209"
+# 
+# Environment Variables:
+#   SLACK_TEAM_ID - Your Slack team ID (required, starts with T)
+#
+# To set the environment variable:
+#   export SLACK_TEAM_ID="T1234567890"
+#   Or add it to your shell configuration (~/.zshrc, ~/.bashrc, etc.)
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_error() {
+    echo -e "${RED}Error: $1${NC}" >&2
+}
+
+print_success() {
+    echo -e "${GREEN}$1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}Warning: $1${NC}"
+}
+
+# Get team ID from environment variable
+get_team_id() {
+    if [[ -z "$SLACK_TEAM_ID" ]]; then
+        print_error "SLACK_TEAM_ID environment variable is not set."
+        echo "Please set your Slack team ID (starts with T) as an environment variable:"
+        echo "  export SLACK_TEAM_ID=\"T1234567890\""
+        echo ""
+        echo "To make it permanent, add it to your shell configuration:"
+        echo "  echo 'export SLACK_TEAM_ID=\"T1234567890\"' >> ~/.zshrc"
+        echo "  source ~/.zshrc"
+        exit 1
+    fi
+    
+    echo "$SLACK_TEAM_ID"
+}
+
+# Parse Slack URL and extract components
+parse_slack_url() {
+    local url="$1"
+    
+    # Check if it's a valid Slack URL and extract components
+    if echo "$url" | grep -qE '^https://[^/]+\.slack\.com/archives/([^/]+)/p([0-9]+)(\?.*)?$'; then
+        local channel_id=$(echo "$url" | sed -E 's|^https://[^/]+\.slack\.com/archives/([^/]+)/p([0-9]+)(\?.*)?$|\1|')
+        local message_id=$(echo "$url" | sed -E 's|^https://[^/]+\.slack\.com/archives/([^/]+)/p([0-9]+)(\?.*)?$|\2|')
+        local query_params=$(echo "$url" | sed -E 's|^https://[^/]+\.slack\.com/archives/([^/]+)/p([0-9]+)(\?.*)?$|\3|')
+        
+        # Extract thread_ts if present
+        local thread_ts=""
+        if [[ -n "$query_params" && "$query_params" =~ "thread_ts=([^&]+)" ]]; then
+            thread_ts="${match[1]}"
+        fi
+    else
+        print_error "Invalid Slack URL format."
+        echo "Expected format: https://workspace.slack.com/archives/CHANNEL_ID/pMESSAGE_ID"
+        echo "Example: https://mycompany.slack.com/archives/{channelId}/p{messageTimestamp}"
+        exit 1
+    fi
+    
+    echo "$channel_id $message_id $thread_ts"
+}
+
+# Convert URL to slack:// format
+convert_url() {
+    local url="$1"
+    
+    # Parse the URL
+    local parsed
+    parsed=$(parse_slack_url "$url")
+    
+    local channel_id=$(echo "$parsed" | cut -d' ' -f1)
+    local message_id=$(echo "$parsed" | cut -d' ' -f2)
+    local thread_ts=$(echo "$parsed" | cut -d' ' -f3)
+    
+    # Get team ID from environment variable
+    local team_id
+    team_id=$(get_team_id)
+    
+    # Construct slack:// URL
+    local slack_url="slack://channel?team=${team_id}&id=${channel_id}&message=${message_id}"
+    
+    echo "$slack_url"
+}
+
+# Main function
+main() {
+    local auto_open=false
+    local use_pasteboard=false
+    local input_url=""
+    
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --open)
+                auto_open=true
+                shift
+                ;;
+            --pasteboard)
+                use_pasteboard=true
+                auto_open=true
+                shift
+                ;;
+            -*)
+                print_error "Unknown option: $1"
+                exit 1
+                ;;
+            *)
+                input_url="$1"
+                shift
+                ;;
+        esac
+    done
+    
+    # Handle pasteboard input
+    if [[ "$use_pasteboard" == true ]]; then
+        if ! command -v pbpaste &> /dev/null; then
+            print_error "pbpaste is not available. This feature requires macOS."
+            exit 1
+        fi
+        input_url=$(pbpaste)
+        if [[ -z "$input_url" ]]; then
+            print_error "Pasteboard is empty."
+            exit 1
+        fi
+        print_success "Read from pasteboard: $input_url"
+    fi
+    
+    if [[ -z "$input_url" ]]; then
+        echo "Usage: $0 [--open] [--pasteboard] <slack-url>"
+        echo ""
+        echo "Convert https://workspace.slack.com URLs to slack:// protocol URLs"
+        echo ""
+        echo "Options:"
+        echo "  --open        Automatically open the converted URL in Slack app"
+        echo "  --pasteboard  Read URL from pasteboard and auto-open"
+        echo ""
+        echo "Example:"
+        echo "  $0 'https://{workspace}.slack.com/archives/{channelId}/p{messageTimestamp}'"
+        echo "  $0 --open 'https://{workspace}.slack.com/archives/{channelId}/p{messageTimestamp}'"
+        echo "  $0 --pasteboard"
+        echo ""
+        echo "Environment Variables:"
+        echo "  SLACK_TEAM_ID - Your Slack team ID (required, starts with T)"
+        echo ""
+        echo "Setup:"
+        echo "  1. Find your team ID: Go to Slack → About This Workspace → Team ID"
+        echo "  2. Set environment variable: export SLACK_TEAM_ID=\"T1234567890\""
+        echo "  3. Make permanent: echo 'export SLACK_TEAM_ID=\"T1234567890\"' >> ~/.zshrc"
+        echo "  4. Reload shell: source ~/.zshrc"
+        echo ""
+        echo "Dependencies:"
+        echo "  - pbcopy/pbpaste (for clipboard): Available on macOS"
+        echo "  - open (for auto-opening): Available on macOS"
+        exit 1
+    fi
+    
+    # Convert URL
+    local converted_url
+    converted_url=$(convert_url "$input_url")
+    
+    # Output the result
+    print_success "Converted URL:"
+    echo "$converted_url"
+    
+    # Copy to clipboard if pbcopy is available (but not when auto-opening)
+    if command -v pbcopy &> /dev/null && [[ "$auto_open" != true ]]; then
+        echo "$converted_url" | pbcopy
+        print_success "Copied to clipboard!"
+    fi
+    
+    # Try to open the URL directly
+    if command -v open &> /dev/null; then
+        if [[ "$auto_open" == true ]]; then
+            open "$converted_url"
+            print_success "Opened in Slack app!"
+        else
+            echo ""
+            read -p "Open in Slack app now? (y/n): " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                open "$converted_url"
+            fi
+        fi
+    fi
+}
+
+# Run main function with all arguments
+main "$@"
