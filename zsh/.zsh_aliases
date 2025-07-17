@@ -30,5 +30,19 @@ alias gsm="generate-slack-msg"
 alias js="jj st"
 # launch claude-notify daemon
 alias da="~/claude-notify/dist/ClaudeNotifyDaemon.app/Contents/MacOS/ClaudeNotifyDaemon"
-alias red='red() { if [ -z "$1" ]; then echo "Usage: red <branch_name>"; return 1; fi; git sw susman/$1 -c staging; }; red'
+red() {
+  if [ -z "$1" ]; then
+    echo "Usage: red <branch_name>"
+    return 1
+  fi
+  
+  case "$1" in
+    susman/*)
+      git sw "$1" -c staging
+      ;;
+    *)
+      git sw "susman/$1" -c staging
+      ;;
+  esac
+}
 
