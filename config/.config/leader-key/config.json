@@ -79,6 +79,11 @@
       "key" : "a",
       "type" : "command",
       "value" : "zsh ~/bin/airdrop"
+    },
+    {
+      "key" : "s",
+      "type" : "command",
+      "value" : "pmset sleepnow"
     }
   ],
   "type" : "group"
