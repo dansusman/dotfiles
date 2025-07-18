@@ -23,7 +23,7 @@
       "actions" : [
         {
           "key" : "g",
-          "label" : "GitHub",
+          "label" : "PRs",
           "type" : "url",
           "value" : "https://github.com/pulls/review-requested"
         },
@@ -41,17 +41,19 @@
         },
         {
           "key" : "s",
-          "label" : "Server Board",
+          "label" : "Server Board (main)",
           "type" : "url",
           "value" : "https://tinyurl.com/2k6dp94r"
         },
         {
           "key" : "t",
+          "label" : "Server Board (current)",
           "type" : "url",
           "value" : "https://tinyurl.com/4ej3fbe4"
         },
         {
           "key" : "n",
+          "label" : "NB",
           "type" : "url",
           "value" : "https://github.com/Ginger-Labs/Notability"
         }
@@ -62,31 +64,37 @@
     },
     {
       "key" : "h",
+      "label" : "Headphones",
       "type" : "command",
       "value" : "zsh ~/bin/audio-switch headphone"
     },
     {
       "key" : "e",
+      "label" : "External Audio",
       "type" : "command",
       "value" : "zsh ~/bin/audio-switch"
     },
     {
       "key" : "i",
+      "label" : "Open Issue (pasteboard)",
       "type" : "command",
       "value" : "zsh ~/bin/open-issue"
     },
     {
       "key" : "a",
+      "label" : "Airdrop",
       "type" : "command",
       "value" : "zsh ~/bin/airdrop"
     },
     {
       "key" : "s",
+      "label" : "Sleep",
       "type" : "command",
       "value" : "pmset sleepnow"
     },
     {
       "key" : "l",
+      "label" : "Open Slack (pasteboard)",
       "type" : "command",
       "value" : "source ~/.dotfiles/zsh/.env && zsh ~/.dotfiles/config/bin/slack-convert --pasteboard"
     }
