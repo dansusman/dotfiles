@@ -56,23 +56,17 @@
           "label" : "NB",
           "type" : "url",
           "value" : "https://github.com/Ginger-Labs/Notability"
+        },
+        {
+          "key" : "d",
+          "label" : "Data Loss Board",
+          "type" : "url",
+          "value" : "https://tinyurl.com/3ubzms92"
         }
       ],
       "key" : "b",
       "label" : "Browse",
       "type" : "group"
-    },
-    {
-      "key" : "h",
-      "label" : "Headphones",
-      "type" : "command",
-      "value" : "zsh ~/bin/audio-switch headphone"
-    },
-    {
-      "key" : "e",
-      "label" : "External Audio",
-      "type" : "command",
-      "value" : "zsh ~/bin/audio-switch"
     },
     {
       "key" : "i",
@@ -97,6 +91,31 @@
       "label" : "Open Slack (pasteboard)",
       "type" : "command",
       "value" : "source ~/.dotfiles/zsh/.env && zsh ~/.dotfiles/config/bin/slack-convert --pasteboard"
+    },
+    {
+      "actions" : [
+        {
+          "key" : "h",
+          "label" : "Headphones",
+          "type" : "command",
+          "value" : "zsh ~/bin/audio-switch headphone"
+        },
+        {
+          "key" : "e",
+          "label" : "External Audio",
+          "type" : "command",
+          "value" : "zsh ~/bin/audio-switch"
+        },
+        {
+          "key" : "i",
+          "label" : "Input Device",
+          "type" : "command",
+          "value" : "zsh ~/bin/audio-switch -i"
+        }
+      ],
+      "key" : "u",
+      "label" : "Audio",
+      "type" : "group"
     }
   ],
   "type" : "group"

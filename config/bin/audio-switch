@@ -1,10 +1,28 @@
 #!/bin/bash
 
+# Parse command line arguments
+INPUT_FLAG=false
+while getopts "i" opt; do
+    case $opt in
+        i)
+            INPUT_FLAG=true
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
 # Mock mode for testing - writes to temp file instead of changing system
 if [[ "${AUDIO_SWITCH_MOCK:-}" == "1" ]]; then
     MOCK_FILE="${AUDIO_SWITCH_MOCK_FILE:-/tmp/audio_switch_state}"
     
-    if [[ "$1" == "headphone" ]]; then
+    if [[ "$INPUT_FLAG" == true ]]; then
+        echo "LG UltraFine Display Audio (input)" > "$MOCK_FILE"
+        echo "Audio input switched to LG display (mock mode)"
+    elif [[ "$1" == "headphone" ]]; then
         echo "BuiltInHeadphoneOutputDevice" > "$MOCK_FILE"
         echo "Audio switched to headphones (mock mode)"
     else
@@ -13,7 +31,9 @@ if [[ "${AUDIO_SWITCH_MOCK:-}" == "1" ]]; then
     fi
 else
     # Normal mode - actually switch audio
-    if [[ "$1" == "headphone" ]]; then
+    if [[ "$INPUT_FLAG" == true ]]; then
+        /opt/homebrew/bin/SwitchAudioSource -t input -s "LG UltraFine Display Audio"
+    elif [[ "$1" == "headphone" ]]; then
         /opt/homebrew/bin/SwitchAudioSource -u BuiltInHeadphoneOutputDevice
     else
         /opt/homebrew/bin/SwitchAudioSource -s "LG UltraFine Display Audio"
