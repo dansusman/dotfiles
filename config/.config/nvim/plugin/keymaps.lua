@@ -35,3 +35,10 @@ vim.keymap.set('n', '<leader>ox', open_xcode, {
 	desc = 'Open Xcode in current working directory',
 	silent = true
 })
+
+-- Keybinding to insert current date in ISO 8601 format
+vim.keymap.set('n', '<leader>d', function()
+  local date = os.date('%Y-%m-%dT%H:%M:%S%z')
+  date = date:gsub('(%d%d)$', ':%1')
+  vim.api.nvim_put({date}, 'c', true, true)
+end, { desc = 'Insert current date in ISO 8601 format' })
