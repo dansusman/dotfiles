@@ -50,7 +50,7 @@ echo "🎯 Selected issue #$ISSUE_NUMBER: $ISSUE_TITLE"
 
 # Generate branch name using claude -p
 echo "🤖 Generating branch name..."
-BRANCH=$(claude -p "Create a brief git branch name for the issue: $ISSUE_TITLE. Output only the branch name. Maximum 3 words. No prefix like fix, etc.")
+BRANCH=$(claude -p "Create a brief git branch name for the issue: $ISSUE_TITLE. Output only the branch name. Maximum 3 words. Prefer 2 words! No prefix like fix, etc.")
 
 # Clean up the branch name (remove any extra whitespace/newlines)
 BRANCH=$(echo "$BRANCH" | tr -d '\n' | xargs)
