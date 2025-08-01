@@ -1,0 +1,132 @@
+#!/bin/bash
+
+# gcod: Git Cleanup Old Branches
+# Script to clean up old local git branches
+# Highlights susman/ branches and asks for confirmation
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Calculate date 6 months ago
+SIX_MONTHS_AGO=$(date -v-6m +%Y-%m-%d 2>/dev/null || date -d '6 months ago' +%Y-%m-%d)
+
+echo "Searching for local branches older than $SIX_MONTHS_AGO..."
+echo
+
+# Get current branch to avoid deleting it
+CURRENT_BRANCH=$(git branch --show-current)
+
+# Find old branches
+OLD_BRANCHES=$(git for-each-ref --sort=committerdate --format='%(committerdate:short) %(refname:short)' refs/heads | awk -v date="$SIX_MONTHS_AGO" '$1 < date {print $2}')
+
+if [ -z "$OLD_BRANCHES" ]; then
+    echo "No branches older than 6 months found!"
+    exit 0
+fi
+
+# Separate susman branches
+SUSMAN_BRANCHES=$(echo "$OLD_BRANCHES" | grep '^susman/' || true)
+OTHER_BRANCHES=$(echo "$OLD_BRANCHES" | grep -v '^susman/' || true)
+
+# Count branches
+TOTAL_COUNT=$(echo "$OLD_BRANCHES" | wc -l | tr -d ' ')
+SUSMAN_COUNT=$(echo "$SUSMAN_BRANCHES" | grep -c . || echo 0)
+
+echo "Found $TOTAL_COUNT branches older than 6 months"
+echo
+
+# Step 1: Show susman branches if any
+if [ -n "$SUSMAN_BRANCHES" ] && [ "$SUSMAN_COUNT" -gt 0 ]; then
+    echo -e "${YELLOW}Your branches (susman/):${NC}"
+    echo "$SUSMAN_BRANCHES" | while read -r branch; do
+        LAST_COMMIT=$(git log -1 --format="%cd - %s" --date=short "$branch" 2>/dev/null || echo "unknown")
+        echo -e "  ${RED}$branch${NC}"
+        echo "    Last commit: $LAST_COMMIT"
+    done
+    echo
+fi
+
+# Show count of other branches
+OTHER_COUNT=$((TOTAL_COUNT - SUSMAN_COUNT))
+if [ $OTHER_COUNT -gt 0 ]; then
+    echo "Also found $OTHER_COUNT other old branches"
+    echo
+fi
+
+# Step 2: Confirm deletion
+echo -e "${YELLOW}Do you want to delete these branches?${NC}"
+echo "1) Delete all $TOTAL_COUNT branches"
+echo "2) Delete only non-susman branches ($OTHER_COUNT branches)"
+echo "3) Review each branch individually"
+echo "4) Cancel"
+echo
+read -p "Choose an option [1-4]: " choice
+
+case $choice in
+    1)
+        echo "Deleting all old branches..."
+        BRANCHES_TO_DELETE="$OLD_BRANCHES"
+        ;;
+    2)
+        if [ -z "$OTHER_BRANCHES" ]; then
+            echo "No non-susman branches to delete!"
+            exit 0
+        fi
+        echo "Deleting only non-susman branches..."
+        BRANCHES_TO_DELETE="$OTHER_BRANCHES"
+        ;;
+    3)
+        # Interactive mode
+        BRANCHES_TO_DELETE=""
+        echo "$OLD_BRANCHES" | while read -r branch; do
+            if [ "$branch" = "$CURRENT_BRANCH" ]; then
+                echo -e "${YELLOW}Skipping current branch: $branch${NC}"
+                continue
+            fi
+            
+            LAST_COMMIT=$(git log -1 --format="%cd - %s" --date=short "$branch" 2>/dev/null || echo "unknown")
+            echo
+            echo -e "Branch: ${RED}$branch${NC}"
+            echo "Last commit: $LAST_COMMIT"
+            read -p "Delete this branch? [y/N] " -n 1 -r
+            echo
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
+                git branch -D "$branch" && echo -e "${GREEN}Deleted: $branch${NC}" || echo -e "${RED}Failed to delete: $branch${NC}"
+            fi
+        done
+        exit 0
+        ;;
+    *)
+        echo "Cancelled!"
+        exit 0
+        ;;
+esac
+
+# Step 3: Delete branches
+if [ -n "$BRANCHES_TO_DELETE" ]; then
+    SUCCESS_COUNT=0
+    FAIL_COUNT=0
+    
+    echo "$BRANCHES_TO_DELETE" | while read -r branch; do
+        if [ "$branch" = "$CURRENT_BRANCH" ]; then
+            echo -e "${YELLOW}Skipping current branch: $branch${NC}"
+            continue
+        fi
+        
+        if git branch -D "$branch" 2>/dev/null; then
+            echo -e "${GREEN}Deleted: $branch${NC}"
+            ((SUCCESS_COUNT++)) || true
+        else
+            echo -e "${RED}Failed to delete: $branch${NC}"
+            ((FAIL_COUNT++)) || true
+        fi
+    done
+    
+    echo
+    echo "Cleanup complete!"
+fi
