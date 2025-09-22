@@ -71,7 +71,7 @@ keybindings:
     },
     {
     "key": "O",
-    "command": "gh pr checkout {{.PrNumber}} && open Notability.xcworkspace"
+    "command": "gh pr checkout {{.PrNumber}} && open ios/Notability.xcworkspace"
     },
   ]
   branches: []

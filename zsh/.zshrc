@@ -139,22 +139,6 @@ bindkey -M emacs '\es' sesh-sessions
 bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
 
-function shortcut {
-    default="/Users/danielsusman/work/Notability"
-    \cd ${2:-$default}
-    pkill -x Xcode
-    git checkout $1
-    git pull
-    open Notability.xcworkspace
-}
-
-function swap {
-    pkill -x Xcode
-    \cd "/Users/danielsusman/work/butler/Notability"
-    sleep 1
-    open Notability.xcworkspace
-}
-
 mkcdir ()
 {
     if [ "$1" != "" ]
