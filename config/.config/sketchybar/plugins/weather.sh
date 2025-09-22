@@ -113,7 +113,8 @@ weather_icons_night=(
     [1282]=  # Moderate or heavy snow with thunder/395
 )
 
-url="https://api.tomorrow.io/v4/weather/realtime?location=$CITY&apikey=$API_KEY&units=imperial"
+ENCODED_CITY=$(printf '%s\n' "$CITY" | jq -sRr @uri)
+url="https://api.tomorrow.io/v4/weather/realtime?location=$ENCODED_CITY&apikey=$API_KEY&units=imperial"
 data=$(curl -s --request GET --url $url)
 temp=$(echo $data | jq -r '.data.values.temperature')
 conditions=$(echo $data | jq -r '.data.values.weatherCode')
