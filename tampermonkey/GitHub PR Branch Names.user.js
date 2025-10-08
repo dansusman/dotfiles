@@ -51,18 +51,19 @@
             if (titleElement) {
                 // Create branch badge
                 const branchBadge = document.createElement('span');
-                branchBadge.className = 'IssueLabel ml-1';
+                branchBadge.className = 'ml-1';
                 branchBadge.style.cssText = `
-                    background-color: #0969da;
-                    color: white;
+                    border: 1px solid #3E444C;
                     padding: 2px 7px;
-                    border-radius: 12px;
+                    border-radius: 6px;
                     font-size: 12px;
                     font-weight: 500;
+                    color: #9398A0;
                     display: inline-block;
                     vertical-align: middle;
+                    background-color: transparent;
                 `;
-                branchBadge.textContent = `🌿 ${branchName}`;
+                branchBadge.textContent = `${branchName}`;
                 branchBadge.title = `Branch: ${branchName}`;
 
                 // Insert after the title link
