@@ -85,6 +85,9 @@ sketchybar --add item clock right \
            --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            --subscribe battery system_woke power_source_change \
+           --add item bt_battery right \
+           --set bt_battery update_freq=600 script="$PLUGIN_DIR/bt_battery.sh" \
+           --subscribe bt_battery system_woke \
            --add item net right                  \
            --set net script="$PLUGIN_DIR/net.sh" \
                      updates=on                  \
