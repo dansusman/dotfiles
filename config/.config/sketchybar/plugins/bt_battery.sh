@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Get battery level for Nothing Headphones
-BT_INFO="$(system_profiler SPBluetoothDataType 2>/dev/null | grep -A 5 "Nothing Headphone")"
-PERCENTAGE="$(echo "$BT_INFO" | grep "Battery Level" | sed 's/.*Battery Level: \([0-9]*\)%.*/\1/')"
+# Get battery level for Nothing Headphones using helper
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PERCENTAGE="$("$SCRIPT_DIR/bt_battery_helper" "Nothing Headphone" 2>/dev/null)"
 
-# Check if headphones are connected
-if [ "$PERCENTAGE" = "" ]; then
-  # Headphones not connected, don't show anything
+# Check if headphones are connected and have battery info
+if [ "$PERCENTAGE" = "" ] || [ "$PERCENTAGE" = "0" ]; then
+  # Headphones not connected or no battery info, don't show anything
   sketchybar --set "$NAME" drawing=off
   exit 0
 fi
