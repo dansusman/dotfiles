@@ -13,11 +13,12 @@ customCommands:
     output: log
 # Optional: Configure git editor to use the generated message
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
   commit:
     autoWrapCommitMessage: false
 gui:
   showIcons: true
   sidePanelWidth: 0.3333
+  nerdFontsVersion: "3"
