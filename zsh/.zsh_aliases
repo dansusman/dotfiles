@@ -45,4 +45,6 @@ red() {
       ;;
   esac
 }
+alias b="berry $1"
+alias bs="b staging"
 
