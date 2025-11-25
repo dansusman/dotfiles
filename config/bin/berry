@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Usage: berry <berry-name>"
+    exit 1
+fi
+
+config_file="Config/config"
+
+# Check if we're in the right directory
+if [ ! -d "Config" ]; then
+  echo "Error: Config/ directory not found. Are you in the review directory?"
+  exit 1
+fi
+
+# Write the config file with the berry name
+cat > "$config_file" << EOF
+BACKEND_HOST = https://$1.notability.com
+NOTE_GALLERY_URL = http://$1.notability.com/gallery
+GLOBAL_ENDPOINT = global
+EOF
+
+echo "✓ Updated Config/config to use $1.notability.com"
+
