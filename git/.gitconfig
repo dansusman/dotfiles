@@ -122,6 +122,7 @@
 	# Usage: git squash [branch] - defaults to parent commit if no branch specified
 	parent-commit = "!f() { CURRENT=$(git branch --show-current); git log --format=\"%H\" | while read commit; do other_branch=$(git branch --contains \"$commit\" --format=\"%(refname:short)\" | grep -v \"^$CURRENT$\" | head -1); if [ -n \"$other_branch\" ]; then echo \"$commit\"; break; fi; done; }; f"
 	squash = "!f() { TARGET=${1:-$(git parent-commit)}; git rebase -i --autosquash $(git merge-base HEAD ${TARGET:-origin/staging}); }; f"
+	dfst = "!f() { git diff $(git parent-commit) --stat; }; f"
 	append = town append
 	compress = town compress
 	contribute = town contribute
