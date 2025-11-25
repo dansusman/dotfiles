@@ -30,10 +30,6 @@ path = "~/Developer/notability/staging"
 startup_command = "git pull && open ios/Notability.xcworkspace"
 
 [[session]]
-name = "short"
-path = "~/Developer/notability/short"
-
-[[session]]
 name = "curious"
 path = "~/scratch"
 startup_command = "claude --dangerously-skip-permissions"
