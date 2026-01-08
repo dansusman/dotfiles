@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Git worktree removal script with cleanup for tmux sessions and Xcode DerivedData
+
+# Select worktree interactively
+SELECTION=$(git worktree list | gum choose)
+
+if [ -z "$SELECTION" ]; then
+    echo "No worktree selected"
+    exit 0
+fi
+
+# Extract worktree path and branch name
+WT=$(echo "$SELECTION" | awk '{print $1}')
+BRANCH=$(echo "$SELECTION" | sed -n 's/.*\[\(.*\)\].*/\1/p')
+BRANCH_NAME=$(basename "$BRANCH")
+
+echo "Removing worktree: $WT"
+echo "Deleting branch: $BRANCH"
+
+# Remove worktree and branch
+git worktree remove "$WT"
+git branch -D "$BRANCH"
+
+# Kill associated tmux session
+TMUX_SESSION=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep "$BRANCH_NAME" | head -1)
+if [ -n "$TMUX_SESSION" ]; then
+    echo "Killing tmux session: $TMUX_SESSION"
+    tmux kill-session -t "$TMUX_SESSION"
+fi
+
+# Clean up Xcode DerivedData
+DERIVED_DATA_DIR="$HOME/Library/Developer/Xcode/DerivedData"
+if [ -d "$DERIVED_DATA_DIR" ]; then
+    echo "Checking for Xcode DerivedData to clean up..."
+
+    for dd_dir in "$DERIVED_DATA_DIR"/*; do
+        # Skip if not a directory or if it's a system directory
+        [ -d "$dd_dir" ] || continue
+        [[ "$(basename "$dd_dir")" =~ ^(ModuleCache|CompilationCache) ]] && continue
+
+        info_plist="$dd_dir/info.plist"
+        if [ -f "$info_plist" ]; then
+            # Extract WorkspacePath from info.plist
+            workspace_path=$(plutil -extract WorkspacePath raw "$info_plist" 2>/dev/null)
+
+            # Check if workspace path contains the worktree path
+            if [ -n "$workspace_path" ] && echo "$workspace_path" | grep -q "$WT"; then
+                echo "  Removing DerivedData: $(basename "$dd_dir")"
+                rm -rf "$dd_dir"
+            fi
+        fi
+    done
+fi
+
+echo "Cleanup complete!"
