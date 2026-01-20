@@ -138,3 +138,6 @@
 	conflictStyle = zdiff3
 [fetch]
 	prune = true
+[rerere]
+	enabled = true
+	autoupdate = true
