@@ -22,7 +22,7 @@
 	sp = stash pop
 	unstage = reset --soft HEAD^
 	w = restore .
-	up = reset --hard @{upstream}
+	ups = reset --hard @{upstream}
 	pullf = "!sh -c 'git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)'"
         # Purge merged branches
 	pm = "!f() { \
@@ -117,6 +117,7 @@
 	compress = town compress
 	contribute = town contribute
 	diff-parent = town diff-parent
+	up = town up
 	down = town down
 	hack = town hack
 	delete = town delete
@@ -141,3 +142,6 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+[git-town]
+	sync-feature-strategy = rebase
+	push-branches = false
