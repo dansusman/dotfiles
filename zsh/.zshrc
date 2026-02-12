@@ -219,3 +219,6 @@ claudette() {
     # npx ccusage@latest daily
 }
 
+
+# Added by GitButler installer
+eval "$(but completions zsh)"
