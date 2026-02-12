@@ -27,7 +27,7 @@ startup_command = "gh dash"
 [[session]]
 name = "staging"
 path = "~/Developer/notability/staging"
-startup_command = "git pull && open ios/Notability.xcodeproj"
+startup_command = "git pull"
 
 [[session]]
 name = "curious"
