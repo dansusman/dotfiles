@@ -1,0 +1,120 @@
+schemaVersion = 1
+
+[hotkeys]
+custom = []
+
+    [hotkeys.app.activate]
+    carbonKeyCode = 11
+    carbonModifiers = 2048
+
+    [hotkeys.app.leaderMode]
+    carbonKeyCode = 8
+    carbonModifiers = 2048
+
+[[leaderMode.bindings]]
+iconPath = 'figure.arms.open'
+key = 'o'
+label = 'Open'
+
+    [[leaderMode.bindings.children]]
+    key = 'f'
+    label = 'Firefox'
+    url = 'tuna://run/path.%252FApplications%252FFirefox%2520Developer%2520Edition.app/Open'
+
+    [[leaderMode.bindings.children]]
+    key = 's'
+    label = 'Slack'
+    url = 'tuna://run/path.%252FApplications%252FSlack.app/Open'
+
+[[leaderMode.bindings]]
+iconPath = 'trash.fill'
+key = 'b'
+label = 'Browse'
+
+    [[leaderMode.bindings.children]]
+    key = 'g'
+    label = 'PRs'
+    url = 'tuna://run/url.https:%252F%252Fgithub.com%252Fpulls%252Freviews%253Fq=review-requested:@me%252520is:open/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 'c'
+    label = 'Calendar'
+    url = 'tuna://run/url.https:%252F%252Fcalendar.google.com/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 'm'
+    label = 'Collab Board'
+    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F3ze2ufam/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 's'
+    label = 'Server Board (main)'
+    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F2k6dp94r/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 't'
+    label = 'Server Board (current)'
+    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F4ej3fbe4/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 'n'
+    label = 'NB'
+    url = 'tuna://run/url.https:%252F%252Fgithub.com%252FGinger-Labs%252FNotability/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 'd'
+    label = 'Data Loss Board'
+    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F3ubzms92/Open%20URL'
+
+    [[leaderMode.bindings.children]]
+    key = 'b'
+    url = 'tuna://run/url.https:%252F%252Fgithub.com%252Forgs%252FGinger-Labs%252Fprojects%252F52%252Fviews%252F8/Open%20URL'
+
+[[leaderMode.bindings]]
+key = 'i'
+label = 'Open Issue (pasteboard)'
+url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-issue/Run%20Text%20as%20Shell%20Command'
+
+[[leaderMode.bindings]]
+key = 'a'
+label = 'Airdrop'
+url = 'tuna://run/text.zsh%2520~%252Fbin%252Fairdrop/Run%20Text%20as%20Shell%20Command'
+
+[[leaderMode.bindings]]
+key = 's'
+label = 'Sleep'
+url = 'tuna://run/text.pmset%2520sleepnow/Run%20Text%20as%20Shell%20Command'
+
+[[leaderMode.bindings]]
+key = 'l'
+label = 'Open Slack (pasteboard)'
+url = 'tuna://run/text.source%2520~%252F.dotfiles%252Fzsh%252F.env%2520&&%2520zsh%2520~%252F.dotfiles%252Fconfig%252Fbin%252Fslack-convert%2520--pasteboard/Run%20Text%20as%20Shell%20Command'
+
+[[leaderMode.bindings]]
+iconPath = 'paperplane.fill'
+key = 'u'
+label = 'Audio'
+
+    [[leaderMode.bindings.children]]
+    key = 'h'
+    label = 'Headphones'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch%2520headphone/Run%20Text%20as%20Shell%20Command'
+
+    [[leaderMode.bindings.children]]
+    key = 'e'
+    label = 'External Audio'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch/Run%20Text%20as%20Shell%20Command'
+
+    [[leaderMode.bindings.children]]
+    key = 'i'
+    label = 'Input Device'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch%2520-i/Run%20Text%20as%20Shell%20Command'
+
+[settings]
+themeIdentifier = 'com.brnbw.tuna.themes.default'
+
+[[catalogSettings]]
+catalogIdentifier = 'com.brnbw.tuna.themes.default'
+
+    [catalogSettings.values]
+    ThemeTint = 'graphite'
