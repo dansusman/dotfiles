@@ -20,6 +20,11 @@ startup_command = "sesh connect $(git worktree list | awk '{print $1}' | gum fil
 preview_command = "git -C ~/Developer/notability/ worktree list"
 
 [[session]]
+name = "gitbutler"
+path = "~/Developer/nb-gb"
+startup_command = "but"
+
+[[session]]
 name = "review prs"
 path = "~/Developer/notability/review"
 startup_command = "gh dash"
