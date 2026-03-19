@@ -148,3 +148,4 @@
 [gitbutler]
 	aiModelProvider = anthropic
 	aiAnthropicKeyOption = bringYourOwn
+	aiAnthropicModelName = claude-sonnet-4-0
