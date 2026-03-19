@@ -206,12 +206,16 @@ if.app-id = 'com.google.Chrome'
 run = 'move-node-to-workspace 4' # Chrome always on workspace 4
 
 [[on-window-detected]]
-if.app-id = 'com.sindresorhus.Dato'
-run = 'move-node-to-workspace 4' # Dato always on workspace 4
+if.app-id = 'leits.MeetingBar'
+run = 'move-node-to-workspace 4' # MeetingBar always on workspace 4
 
 [[on-window-detected]]
 if.app-id = 'com.apple.iphonesimulator'
 run = 'move-node-to-workspace 2' # Simulators always on workspace 2
+
+[[on-window-detected]]
+if.app-id = 'com.gitbutler.app'
+run = 'move-node-to-workspace 1' # GitButler always on workspace 1
 
 [[on-window-detected]]
 if.app-id = 'com.gingerlabs.Notability'
