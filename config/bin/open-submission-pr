@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+pr_url=$(gh pr list --repo Ginger-Labs/Notability --state open --search "Submission in:title" \
+    --json number,title,url \
+    --jq '[.[] | select(.title | test("^[0-9]+\\.[0-9]+\\.?[0-9]* Submission$"))] | sort_by(.number) | last | .url')
+
+if [[ -z "$pr_url" ]]; then
+    echo "No open submission PR found." >&2
+    exit 1
+fi
+
+open "$pr_url"

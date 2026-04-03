@@ -26,6 +26,18 @@ label = 'Open'
     label = 'Slack'
     url = 'tuna://run/path.%252FApplications%252FSlack.app/Open'
 
+    [[leaderMode.bindings.children]]
+    iconPath = '/Users/danielsusman/Applications/GitButler.app'
+    key = 'x'
+    label = "GB \U0001F91D XC"
+    url = 'tuna://run/text.open%2520~%252FDeveloper%252Fnb-gb%252Fios%252FNotability.xcodeproj/Run%20Text%20as%20Shell%20Command'
+
+    [[leaderMode.bindings.children]]
+    iconPath = '/Applications/GitHub Copilot for Xcode.app'
+    key = 'r'
+    label = 'Submission PR'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-submission-pr/Run%20Text%20as%20Shell%20Command'
+
 [[leaderMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
