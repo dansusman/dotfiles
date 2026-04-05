@@ -1,85 +1,181 @@
 tap "arl/arl"
 tap "facebook/fb"
 tap "felixkratz/formulae"
+tap "freepicheep/tap"
 tap "homebrew/services"
 tap "koekeishiya/formulae"
+tap "menubar-apps/menubar-apps"
 tap "nikitabobko/tap"
 tap "stefanlogue/tools"
+tap "withgraphite/tap"
 tap "xcodesorg/made"
+# Aquarium animation in ASCII art
+brew "asciiquarium"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Multi-shell multi-command argument completer
+brew "carapace"
+# Object-file caching compiler wrapper
 brew "ccache"
+# Cross-platform make
 brew "cmake"
+# GNU File, Shell, and Text utilities
 brew "coreutils"
+# Pack, ship and run any application as a lightweight container
 brew "docker"
+# Modern, maintained replacement for ls
 brew "eza"
+# Simple, fast and user-friendly alternative to find
 brew "fd"
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
 brew "gh"
-brew "ghostty"
+# Syntax-highlighting pager for git and diff output
 brew "git-delta"
+# Git extension for versioning large files
 brew "git-lfs"
+# Perfect hash function generator
 brew "gperf"
+# Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
+# Tool for glamorous shell scripts
 brew "gum"
+# Configurable static site generator
+brew "hugo"
+# Git-compatible distributed version control system
+brew "jj"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Library to communicate with iOS devices natively
 brew "libimobiledevice"
+# Implementation of the file(1) command
 brew "libmagic"
-brew "python@3.13"
+# Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Small build system for use with gyp or CMake
 brew "ninja"
+# Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# On-chip debugging, in-system programming and boundary-scan testing
 brew "open-ocd"
+# PAM module for reattaching to the user's GUI (Aqua) session
 brew "pam-reattach"
-brew "pipx"
+# Object-relational database system
 brew "postgresql@14", restart_service: :changed
+# Terminal slideshow tool
 brew "presenterm"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.13"
+# Python interface to Tcl/Tk
 brew "python-tk@3.13"
+# Generic machine emulator and virtualizer
 brew "qemu"
+# Ruby version manager
 brew "rbenv"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Powerful, clean, object-oriented scripting language
 brew "ruby"
+# Safe, concurrent, practical language
 brew "rust"
+# Smart session manager for the terminal
 brew "sesh"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Formatting tool for reformatting Swift code
 brew "swiftformat"
+# Tool to enforce Swift style and conventions
 brew "swiftlint"
+# Change macOS audio source from the command-line
 brew "switchaudio-osx"
+# Terminal multiplexer
 brew "tmux"
+# Plugin manager for tmux
 brew "tpm"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Language for application scale JavaScript development
 brew "typescript"
+# Convert HTML to PDF
+brew "weasyprint"
+# Internet file retriever
 brew "wget"
+# Little beautifier tool for xcodebuild
 brew "xcbeautify"
+# Build server protocol implementation for integrating Xcode with sourcekit-lsp
 brew "xcode-build-server"
+# JavaScript package manager
 brew "yarn"
+# Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Fish-like fast/unobtrusive autosuggestions for zsh
 brew "zsh-autosuggestions"
+# Better and friendly vi(vim) mode plugin for ZSH
 brew "zsh-vi-mode"
+# Git in your tmux status bar.
 brew "arl/arl/gitmux"
+# A Powerful Command Line for automating iOS Simulators
 brew "facebook/fb/idb-companion"
+# A window border system for macOS
 brew "felixkratz/formulae/borders"
+# Custom macOS statusbar with shell plugin, interaction and graph support
 brew "felixkratz/formulae/sketchybar"
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
-cask "aerospace"
+# Command-line interface for 1Password
+cask "1password-cli"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "nikitabobko/tap/aerospace"
+# Enable Windows-like alt-tab
 cask "alt-tab"
+# Open links in any browser
 cask "choosy"
+# Screen capturing tool
 cask "cleanshot"
+# Reclaim storage used for Xcode caches
+cask "devcleaner"
+# Utility for customizing which browser to start
+cask "finicky"
+# Web browser
 cask "firefox"
 cask "font-hack-nerd-font"
 cask "font-iosevka"
 cask "font-iosevka-term-nerd-font"
+# Xcode extension for GitHub Copilot
 cask "github-copilot-for-xcode"
+# Utility to hide menu bar items
 cask "hiddenbar"
+# GitHub contributions in your status bar
 cask "jandi-statusbar"
+# Keyboard customiser
 cask "karabiner-elements"
+# Open-source keystroke visualiser
 cask "keycastr"
+# GPU-based terminal emulator
+cask "kitty"
+# Application launcher
 cask "leader-key"
+# Clipboard manager
 cask "maccy"
+# Shows the next meeting in the menu bar
+cask "meetingbar"
+# Simple application that will prevent iTunes or Apple Music from launching
 cask "notunes"
+# Emoji picker optimised for blind people
 cask "rocket"
+# Music streaming service
 cask "spotify"
-cask "xcodes"
+# Minimal GUI for AI code agents
+cask "t3-code"
+# Install and switch between multiple versions of Xcode
+cask "xcodes-app"
+cargo "wiki-tui"
