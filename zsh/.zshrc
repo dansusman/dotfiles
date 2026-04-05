@@ -222,3 +222,6 @@ claudette() {
 
 # Added by GitButler installer
 eval "$(but completions zsh)"
+# Source secrets (not tracked in git)
+[ -f "$HOME/secrets" ] && source "$HOME/secrets"
+
