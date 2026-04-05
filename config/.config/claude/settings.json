@@ -1,4 +1,5 @@
 {
+  "includeCoAuthoredBy": false,
   "model": "sonnet[1m]",
   "hooks": {
     "Notification": [
@@ -62,8 +63,8 @@
     "command": "bash ~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
   },
-  "skipDangerousModePermissionPrompt": true,
-  "includeCoAuthoredBy": false
+  "skipDangerousModePermissionPrompt": true
 }
