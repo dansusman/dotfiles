@@ -225,3 +225,9 @@ eval "$(but completions zsh)"
 # Source secrets (not tracked in git)
 [ -f "$HOME/secrets" ] && source "$HOME/secrets"
 
+# bun completions
+[ -s "/Users/danielsusman/.bun/_bun" ] && source "/Users/danielsusman/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
