@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+LOCALIZATION_DIR="${NOTABILITY_LOCALIZATION:-$HOME/Developer/notability/staging/Tools/Localization}"
+REPO_ROOT=$(git -C "$LOCALIZATION_DIR" rev-parse --show-toplevel)
+BRANCH=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)
+
+if [[ ! "$BRANCH" =~ ^release/ ]]; then
+    echo "Error: not on a release branch (current: $BRANCH). Bail."
+    exit 1
+fi
+
+cd "$LOCALIZATION_DIR"
+
+echo "Removing cached gengo jobs..."
+rm -rf gengo/*
+
+echo "Running --gengo-import..."
+python3 localizer.py --gengo-import
+
+echo ""
+echo "=== Review the diff ==="
+echo "Run: git diff Tools/Localization/app-db.txt"
+echo ""
+echo "Look for translated placeholders (e.g. %1\$@, %d) or anything suspect."
+echo "If anything needs retranslating, comment on the job at gengo.com."
+echo ""
+echo "When satisfied, run export-strings"

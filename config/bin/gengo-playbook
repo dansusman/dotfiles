@@ -1,0 +1,28 @@
+#!/bin/bash
+set -e
+
+echo """
+1. Import strings to app-db: gu
+2. Check output: git diff
+3. Create gengo job: gcr <version_number>
+4. Create PR: git push/gh pr
+5. Update PR description: gpr
+6. Use Gengo website
+  a. 20 langs
+  b. translate from english
+  c. app/website user interface
+  d. regular quality - advanced
+  e. tone of voice: business
+  f. add top level notes as needed
+  g. confirm & pay
+7. Wait for translators to finish all jobs
+8. Import translations from Gengo: gi
+9. Check output: git diff
+10. Export translations to GLRes files: ge
+11. Run GLRes unit tests
+12. Push to strings branch: git push
+13. Wait for PR approvals
+14. Approve jobs: gap
+15. Merge PR
+16. Cherry pick into latest release: cpr <translation_pr_number>
+"""

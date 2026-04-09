@@ -47,4 +47,11 @@ red() {
 }
 alias b="berry $1"
 alias bs="b staging"
-
+alias cpr="cherry-pick-pr"
+alias gi="import-translations"
+alias gcr="create-gengo"
+alias ge="export-strings"
+alias gu="update-strings"
+alias gpr="gengo-pr-descrption"
+alias gap="approve-gengo"
+alias gplay="gengo-playbook"

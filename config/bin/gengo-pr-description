@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+LOCALIZATION_DIR="${NOTABILITY_LOCALIZATION:-$HOME/Developer/notability/staging/Tools/Localization}"
+REPO_ROOT=$(git -C "$LOCALIZATION_DIR" rev-parse --show-toplevel)
+BRANCH=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)
+
+if [[ ! "$BRANCH" =~ ^susman/strings/ ]]; then
+    echo "Error: not on a strings branch (current: $BRANCH). Bail."
+    exit 1
+fi
+
+cd "$REPO_ROOT"
+
+python3 Tools/release/parse_gengo_job.py - | pbcopy
+echo "PR description copied to pasteboard."

@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+LOCALIZATION_DIR="${NOTABILITY_LOCALIZATION:-$HOME/Developer/notability/staging/Tools/Localization}"
+REPO_ROOT=$(git -C "$LOCALIZATION_DIR" rev-parse --show-toplevel)
+BRANCH=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)
+
+if [[ ! "$BRANCH" =~ ^release/ ]]; then
+    echo "Error: not on a release branch (current: $BRANCH). Bail."
+    exit 1
+fi
+
+cd "$LOCALIZATION_DIR"
+
+echo "Running --gengo-approve-all..."
+python3 localizer.py --gengo-approve-all
+
+echo "Done."

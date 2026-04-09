@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: cherry-pick-pr <pr-number> [cherry-pick-args...]"
+  exit 1
+fi
+
+PR=$1
+shift
+
+COMMIT=$(gh pr view "$PR" --json mergeCommit --jq '.mergeCommit.oid')
+
+if [[ -z "$COMMIT" ]]; then
+  echo "Error: no merge commit found for PR #$PR"
+  exit 1
+fi
+
+echo "PR #$PR -> $COMMIT"
+git fetch
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse "origin/$BRANCH" 2>/dev/null || true)
+
+if [[ -n "$REMOTE" && "$LOCAL" != "$REMOTE" ]]; then
+  AHEAD=$(git rev-list --count "origin/$BRANCH..HEAD")
+  BEHIND=$(git rev-list --count "HEAD..origin/$BRANCH")
+  echo "Branch '$BRANCH' is out of sync with origin ($AHEAD ahead, $BEHIND behind)."
+  echo ""
+  echo "Incoming changes:"
+  git log --oneline "HEAD..origin/$BRANCH"
+  echo ""
+  read -r -p "Update local branch to match origin? [y/N] " REPLY
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    git merge --ff-only "origin/$BRANCH"
+  else
+    echo "Aborting."
+    exit 1
+  fi
+fi
+
+git cherry-pick "$@" "$COMMIT"

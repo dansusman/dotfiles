@@ -1,0 +1,58 @@
+#!/bin/bash
+set -e
+
+VERSION="$1"
+if [[ -z "$VERSION" ]]; then
+    echo "Usage: $0 <version>"
+    echo "  e.g. $0 16.1.2"
+    exit 1
+fi
+
+LOCALIZATION_DIR="${NOTABILITY_LOCALIZATION:-$HOME/Developer/notability/staging/Tools/Localization}"
+REPO_ROOT=$(git -C "$LOCALIZATION_DIR" rev-parse --show-toplevel)
+BRANCH=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)
+
+if [[ ! "$BRANCH" =~ ^release/ ]]; then
+    echo "Error: not on a release branch (current: $BRANCH). Bail."
+    exit 1
+fi
+
+VERSION_NODOTS="${VERSION//./}"
+BRANCH_NAME="susman/strings/${VERSION_NODOTS}"
+
+cd "$LOCALIZATION_DIR"
+
+echo "Running --gengo-create..."
+python3 localizer.py --gengo-create
+cat gengo_job.txt | pbcopy
+echo "gengo_job.txt copied to pasteboard."
+
+echo ""
+echo "=== Checking gengo_job.txt for brand/product names ==="
+BRAND_PATTERN="Notability|Apple Pencil Pro|Apple Pencil|Apple Mail|Face ID|iCloud|iPhone|iPad|\bMac\b|\bLearn\b"
+MATCHES=$(grep -En "$BRAND_PATTERN" gengo_job.txt || true)
+if [[ -n "$MATCHES" ]]; then
+    echo "Found potential brand/product names — verify these should NOT be translated:"
+    echo "$MATCHES"
+    echo ""
+    echo "If any, note in string comment and/or overall job comment when submitting."
+    echo "Unsure? Ask in #notability-product."
+else
+    echo "No brand/product names found."
+fi
+
+echo ""
+echo "Creating branch '$BRANCH_NAME' off staging..."
+cd "$REPO_ROOT"
+git fetch origin staging
+git checkout -b "$BRANCH_NAME" origin/staging
+
+echo "Committing..."
+git add Tools/Localization/
+git commit -m "chore(strings): run localization scripts for ${VERSION} release"
+
+echo ""
+echo "Done. Next steps:"
+echo "  1. git push --set-upstream origin $BRANCH_NAME"
+echo "  2. Open PR, request reviewer to double-check the job file."
+echo "  3. Submit gengo_job.txt on the Gengo website."
