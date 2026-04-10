@@ -155,7 +155,7 @@ mkcdir ()
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 # ruby config
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+# export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 export GEM_HOME=$HOME/.gem
 export PATH=$GEM_HOME/bin:$PATH
 eval "$(zoxide init --cmd z zsh)"
