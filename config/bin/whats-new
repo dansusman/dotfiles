@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+VERSION="$1"
+if [[ -z "$VERSION" ]]; then
+    echo "Usage: $0 <version>"
+    echo "  e.g. $0 16.1.2"
+    exit 1
+fi
+
+bundle exec fastlane update_whats_new version:$VERSION api_key_file:app_store_key.p8 api_key_id:$APP_API_KEY
+
