@@ -63,6 +63,6 @@ tmux set-option -gq window-status-current-format "$(make_bubble ' #I:#W ' "$colo
 # *********************************************************
 # Others                                                  *
 # *********************************************************
-tmux set-option -gq mode-style "bg=$color_main,fg=0"
+tmux set-option -gq mode-style "bg=colour221,fg=colour0,bold"
 tmux set-option -gq pane-active-border-style "fg=$color_main,bg=0"
 tmux set-option -gq clock-mode-colour "$color_main"
