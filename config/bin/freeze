@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO="$HOME/Developer/notability/staging"
+
+usage() {
+  cat <<EOF
+Usage: freeze <version>
+
+Cuts a release freeze branch for the NEXT version of Notability.
+
+Arguments:
+  version   The upcoming release version (e.g. 16.1.4)
+
+Steps:
+  1. Verifies current worktree is on staging with clean status
+  2. Creates branch susman/freeze/<version-no-dots>
+  3. Runs update_version.py to bump milestone and xcconfig
+  4. Commits version bump files
+  5. Opens a PR with iOS/Skip QA labels
+
+Example:
+  freeze 16.1.4
+EOF
+  exit 0
+}
+
+die() {
+  echo "error: $1" >&2
+  exit 1
+}
+
+[[ "${1:-}" == "--help" || "${1:-}" == "-h" ]] && usage
+[[ $# -ne 1 ]] && die "version argument required. Run 'freeze --help' for usage."
+
+VERSION="$1"
+VERSION_NO_DOTS="${VERSION//./}"
+BRANCH="susman/freeze/${VERSION_NO_DOTS}"
+
+cd "$REPO"
+
+# Check on staging branch
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+[[ "$CURRENT_BRANCH" == "staging" ]] || die "must be on staging branch (currently on $CURRENT_BRANCH)"
+
+# Check clean status
+[[ -z "$(git status --porcelain)" ]] || die "working tree is not clean. Commit or stash changes first."
+
+git checkout -b "$BRANCH"
+
+python3 Tools/release/update_version.py "$VERSION"
+
+git add .github/workflows/setMilestoneOnMerge.yml ios/XCConfig/Version.xcconfig
+git commit -m "chore(freeze): bump milestone and version to $VERSION"
+
+gh pr create \
+  --title "chore(freeze): bump milestone and version to $VERSION" \
+  --body "" \
+  --label "Claude Opt Out" \
+  --label "iOS" \
+  --label "Skip QA" \
+  --assignee "dansusman"
