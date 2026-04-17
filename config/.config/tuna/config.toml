@@ -5,11 +5,11 @@ custom = []
 
     [hotkeys.app.activate]
     carbonKeyCode = 11
-    carbonModifiers = 2048
+    carbonModifiers = 6912
 
     [hotkeys.app.leaderMode]
-    carbonKeyCode = 8
-    carbonModifiers = 2048
+    carbonKeyCode = 9
+    carbonModifiers = 6912
 
 [[leaderMode.bindings]]
 iconPath = 'figure.arms.open'
