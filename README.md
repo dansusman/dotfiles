@@ -6,8 +6,10 @@ All my config files for macOS.
 - `chrome`: Currently unused, but Firefox UI tweaking
 - `config/.config`: anything that expects to land in `~/.config`
     - `aerospace`: config for aerospace window manager
+    - `claude`: user settings for Claude Code
     - `commit-helper`: config options for `generate-commit` script (Claude-powered conventional commit generator)
     - `karabiner`: configs for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements) with sublayering via [mxstbr](https://github.com/mxstbr/karabiner)
+    - `pi`: settings, keybindings, skills, and extensions for [pi coding agent](https://github.com/mariozechner/pi-coding-agent)
     - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
     - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd) - OUTDATED, not in use
     - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai) - OUTDATED, not in use
@@ -38,6 +40,7 @@ All my config files for macOS.
 9. Run `ln -s ~/.dotfiles/susman.zsh-theme ~/.oh-my-zsh/themes` to grab my custom OhMyZSH theme
 10. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
 11. Run `ln -s ~/.dotfiles/config/.config/claude/settings.json ~/.claude/settings.json` to setup user settings for Claude Code
+12. The `install` script also sets up `~/.pi/agent` symlinks for pi coding agent (settings, skills, extensions, keybindings)
 
 ### nvim as XCode replacement
 1. Ensure `sourcekit-lsp` and `xcodebuild.nvim` are installed in your nvim setup. Ensure `xcode-build-server` is on your machine (should've been installed in brew install script).

@@ -10,3 +10,10 @@ done
 popd
 
 ln -s ~/.dotfiles/git/.gitignore ~/.gitignore
+
+# pi coding agent
+mkdir -p ~/.pi/agent
+ln -sf ~/.config/pi/agent/settings.json ~/.pi/agent/settings.json
+ln -sf ~/.config/pi/agent/skills ~/.pi/agent/skills
+ln -sf ~/.config/pi/agent/extensions ~/.pi/agent/extensions
+ln -sf ~/.config/pi/agent/keybindings.json ~/.pi/agent/keybindings.json
