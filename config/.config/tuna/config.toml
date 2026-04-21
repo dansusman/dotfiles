@@ -38,6 +38,12 @@ label = 'Open'
     label = 'Submission PR'
     url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-submission-pr/Run%20Text%20as%20Shell%20Command'
 
+    [[leaderMode.bindings.children]]
+    iconPath = 'fire.extinguisher'
+    key = 'm'
+    label = 'Firebase'
+    url = 'tuna://run/url.https:%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli=1/Open%20URL'
+
 [[leaderMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
@@ -122,6 +128,12 @@ label = 'Audio'
     label = 'Input Device'
     url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch%2520-i/Run%20Text%20as%20Shell%20Command'
 
+[[leaderMode.bindings]]
+iconPath = '/Applications/WireView.app'
+key = 'w'
+label = 'Open WireView'
+url = 'tuna://run/Tuna.Internal.RecentObjectsCatalog.WireView/Open'
+
 [settings]
 themeIdentifier = 'com.brnbw.tuna.themes.default'
 
@@ -129,4 +141,4 @@ themeIdentifier = 'com.brnbw.tuna.themes.default'
 catalogIdentifier = 'com.brnbw.tuna.themes.default'
 
     [catalogSettings.values]
-    ThemeTint = 'graphite'
+    ThemeTint = 'system'
