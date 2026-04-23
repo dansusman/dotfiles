@@ -6,4 +6,5 @@ config/.config/swiftpm
 config/.config/claude/stats*
 config/.config/claude/todo*
 config/.config/claude/projects*
+config/.config/carapace/
 .zcompdump_*
