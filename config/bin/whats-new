@@ -2,11 +2,20 @@
 set -e
 
 VERSION="$1"
+PLATFORM="$2"
+
 if [[ -z "$VERSION" ]]; then
-    echo "Usage: $0 <version>"
-    echo "  e.g. $0 16.1.2"
+    echo "Usage: $0 <version> [platform]"
+    echo "  e.g. $0 16.1.2          # both platforms"
+    echo "       $0 16.1.2 mac       # macOS only"
+    echo "       $0 16.1.2 ios       # iOS only"
     exit 1
 fi
 
-bundle exec fastlane update_whats_new version:$VERSION api_key_file:app_store_key.p8 api_key_id:$APP_API_KEY
+PLATFORM_ARG=""
+if [[ -n "$PLATFORM" ]]; then
+    PLATFORM_ARG="platform:$PLATFORM"
+fi
+
+bundle exec fastlane update_whats_new version:$VERSION api_key_file:app_store_key.p8 api_key_id:$APP_API_KEY $PLATFORM_ARG
 
