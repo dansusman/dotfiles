@@ -1,5 +1,11 @@
 {
   "includeCoAuthoredBy": false,
+  "permissions": {
+    "deny": [
+      "Bash(/Users/danielsusman/Applications/GitButler.app/Contents/MacOS/gitbutler-tauri log --json 2>/dev/null)",
+      "Bash(head -50)"
+    ]
+  },
   "model": "sonnet[1m]",
   "hooks": {
     "Notification": [
@@ -13,13 +19,13 @@
         ]
       }
     ],
-    "Stop": [
+    "PostToolUse": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "claude-notify Stop"
+            "command": "claude-notify PostToolUse"
           }
         ]
       }
@@ -35,13 +41,13 @@
         ]
       }
     ],
-    "PostToolUse": [
+    "Stop": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "claude-notify PostToolUse"
+            "command": "claude-notify Stop"
           }
         ]
       }
@@ -63,8 +69,24 @@
     "command": "bash ~/.claude/statusline.sh"
   },
   "enabledPlugins": {
+    "caveman@caveman": true,
+    "clangd-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "clangd-lsp@claude-plugins-official": true
+    "improve-claude-md@skills": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "skills": {
+      "source": {
+        "source": "github",
+        "repo": "humanlayer/skills"
+      }
+    }
   },
   "skipDangerousModePermissionPrompt": true
 }
