@@ -1,0 +1,10 @@
+{
+  "plugins": [],
+  "sessionFilter": "all",
+  "detailPanelHeights": {
+    "dotfiles": 33,
+    "default": 40
+  },
+  "theme": "transparent",
+  "sidebarWidth": 36
+}
