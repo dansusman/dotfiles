@@ -134,6 +134,10 @@ custom = []
     carbonKeyCode = 9
     carbonModifiers = 6912
 
+    [hotkeys.app.textMode]
+    carbonKeyCode = 17
+    carbonModifiers = 6912
+
 [settings]
 themeIdentifier = 'com.brnbw.tuna.themes.default'
 
