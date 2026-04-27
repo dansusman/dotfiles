@@ -1,6 +1,6 @@
 ---
 name: pr-review-slideshow
-description: Review a GitHub PR and produce an HTML slideshow of manual-verification callouts (no comments posted, no approve/reject). Use when the user says "review PR <num> and make a slideshow", "slideshow callouts for <num>", "generate review callouts for <num>", "look at <num> and give me callouts", or similar. Two-pass review: initial suggestions, then validate each by tracing code, then output the deck.
+description: "Review a GitHub PR and produce an HTML slideshow of manual-verification callouts (no comments posted, no approve/reject). Use when the user says 'review PR <num> and make a slideshow', 'slideshow callouts for <num>', 'generate review callouts for <num>', 'look at <num> and give me callouts', or similar. Two-pass review: initial suggestions, then validate each by tracing code, then output the deck."
 ---
 
 # PR Review Slideshow
@@ -13,7 +13,20 @@ The user gives a PR number (e.g. `51840`). Assume the `Ginger-Labs/Notability` r
 
 ## Workflow
 
-### 1. Gather PR context
+### 1. Check out the PR branch in the review worktree
+
+All tracing in later steps must run against the PR's actual code, not `staging`. Use the dedicated review worktree at `/Users/danielsusman/Developer/notability/review`.
+
+```bash
+cd /Users/danielsusman/Developer/notability/review
+gh pr checkout <num>
+```
+
+If the worktree has uncommitted changes or `gh pr checkout` refuses, stop and ask the user how to proceed — **do not** stash, reset, or force anything.
+
+Run all subsequent `grep`/`read`/file inspection from this worktree.
+
+### 2. Gather PR context
 
 ```bash
 gh pr view <num> --json title,body,author,files,additions,deletions,baseRefName,headRefName,url
@@ -22,7 +35,7 @@ gh pr diff <num>
 
 Read the description carefully — author often flags their own concerns and lists manual test steps. Capture both.
 
-### 2. First pass — generate suggestions
+### 3. First pass — generate suggestions
 
 Walk the diff and brainstorm callouts. For each, classify:
 
@@ -37,7 +50,7 @@ Cross-reference project conventions:
 - `docs/observability.md` for log keys / levels
 - `docs/analytics.md` for Mixpanel events
 
-### 3. Second pass — validate every suggestion by tracing the code
+### 4. Second pass — validate every suggestion by tracing the code
 
 This is the most important step. For each callout from pass 1, **track it down in the actual codebase before keeping it**. Common things to verify:
 
@@ -53,7 +66,7 @@ For each callout, the second pass produces one of three verdicts:
 2. **Confirmed non-issue** — drop from the active callouts, but **keep on the "non-issues" recap slide** with the one-line reason it's fine.
 3. **Refined** — concern was real but different from the original framing. Rewrite the slide.
 
-### 4. Build the HTML slideshow
+### 5. Build the HTML slideshow
 
 Write to `/tmp/pr-<num>-callouts.html` and `open` it.
 

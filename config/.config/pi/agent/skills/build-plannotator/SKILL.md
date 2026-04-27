@@ -1,5 +1,5 @@
 ---
-name: build-local
+name: build-plannotator
 description: Build and install Plannotator locally as a compiled binary. Use when the user says "update plannotator", "rebuild plannotator", "install plannotator locally", "build the binary", or similar. Rebuilds the review app, hook, and compiles to ~/.local/bin/plannotator.
 ---
 
