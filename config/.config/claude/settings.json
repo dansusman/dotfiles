@@ -6,7 +6,7 @@
       "Bash(head -50)"
     ]
   },
-  "model": "sonnet[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "Notification": [
       {
@@ -88,5 +88,8 @@
       }
     }
   },
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "editorMode": "vim",
+  "preferredNotifChannel": "terminal_bell",
+  "effortLevel": "medium"
 }
