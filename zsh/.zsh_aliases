@@ -30,6 +30,7 @@ alias gsm="generate-slack-msg"
 alias js="jj st"
 # launch claude-notify daemon
 alias da="~/claude-notify/dist/ClaudeNotifyDaemon.app/Contents/MacOS/ClaudeNotifyDaemon"
+alias cs="claude-safe"
 red() {
   if [ -z "$1" ]; then
     echo "Usage: red <branch_name>"
