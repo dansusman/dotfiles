@@ -14,29 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "claude-notify Notification"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "claude-notify PostToolUse"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "claude-notify PreToolUse"
+            "command": "claude-notify-sound Notification"
           }
         ]
       }
@@ -47,18 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "claude-notify Stop"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "claude-notify SubagentStop"
+            "command": "claude-notify-sound Stop"
           }
         ]
       }

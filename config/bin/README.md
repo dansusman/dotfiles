@@ -17,9 +17,8 @@ This directory contains various utility scripts for development and system autom
 
 ### Claude Code Integration
 
-- **`claude-notify`** - macOS notification for Claude Code user input
-- **`claude-start`** - Start Claude Code services
-- **`claude-stop`** - Stop Claude Code services
+- **`claude-notify-sound`** - Hook script for Claude Code `Notification` and `Stop` events. Plays `assets/notify.mp3` and posts a macOS notification when the Ghostty/tmux pane is not focused. Wired up in `~/.claude/settings.json` hooks. Bundled sound lives at `assets/notify.mp3` (resolved relative to script, symlink-safe).
+- **`claude-safe`** - Launch `claude --dangerously-skip-permissions` with a curated `--disallowedTools` list that blocks remote-mutating actions (push, PR create/edit/merge, gh write APIs). Aliased to `cs` in `.zsh_aliases`.
 - **`install-claude-commit`** - Install Claude commit message generator
 
 ### System Utilities

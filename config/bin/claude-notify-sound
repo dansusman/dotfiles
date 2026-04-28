@@ -1,0 +1,48 @@
+#!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+SOUND="$SCRIPT_DIR/assets/notify.mp3"
+EVENT="${1:-Claude}"
+
+INPUT=$(cat)
+
+is_focused() {
+  local front
+  front=$(osascript -e 'tell application "System Events" to name of first application process whose frontmost is true' 2>/dev/null)
+  [[ "$front" != "ghostty" && "$front" != "Ghostty" ]] && return 1
+
+  if [ -n "$TMUX_PANE" ]; then
+    local active
+    active=$(tmux display -p -t "$TMUX_PANE" '#{pane_active}#{window_active}#{session_attached}' 2>/dev/null)
+    [[ "$active" == "111" ]] || return 1
+  fi
+  return 0
+}
+
+if is_focused; then
+  exit 0
+fi
+
+afplay "$SOUND" &
+
+case "$EVENT" in
+  Notification)
+    BODY=$(printf '%s' "$INPUT" | jq -r '.message // "Waiting for input"')
+    ;;
+  Stop)
+    TRANSCRIPT=$(printf '%s' "$INPUT" | jq -r '.transcript_path // empty')
+    if [ -n "$TRANSCRIPT" ] && [ -f "$TRANSCRIPT" ]; then
+      BODY=$(jq -rs 'map(select(.type=="assistant") | .message.content // [] | map(select(.type=="text") | .text) | join(" ")) | map(select(. != "")) | last // empty' "$TRANSCRIPT")
+    fi
+    BODY="${BODY:-Done}"
+    ;;
+  *)
+    BODY="$EVENT"
+    ;;
+esac
+
+BODY=$(printf '%s' "$BODY" | tr '\n\r' '  ' | cut -c1-240)
+TITLE="Claude Code ($EVENT)"
+
+osascript -e "display notification \"$(printf '%s' "$BODY" | sed 's/"/\\"/g')\" with title \"$(printf '%s' "$TITLE" | sed 's/"/\\"/g')\"" >/dev/null 2>&1 &
+
+exit 0
