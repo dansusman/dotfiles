@@ -33,7 +33,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash ~/.claude/statusline.sh"
+    "command": "bash ~/.config/claude/statusline.sh"
   },
   "enabledPlugins": {
     "caveman@caveman": true,
