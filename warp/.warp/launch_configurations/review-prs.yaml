@@ -1,0 +1,8 @@
+---
+name: review prs
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/Developer/notability/review
+          commands:
+            - exec: gh dash

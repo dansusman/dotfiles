@@ -1,0 +1,8 @@
+---
+name: lazygit config
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/.dotfiles/config/.config/lazygit
+          commands:
+            - exec: nvim config.yml

@@ -1,0 +1,72 @@
+[appearance]
+
+[appearance.themes]
+system_theme = false
+theme = {
+  custom = { name = "Gruber Lighter", path = "/Users/danielsusman/.warp-oss/themes/gruber-lighter.yaml" },
+}
+
+[appearance.vertical_tabs]
+enabled = true
+use_latest_prompt_as_title = true
+
+[appearance.text]
+notebook_font_size = 14.0
+font_size = 14.0
+font_name = "IosevkaTerm Nerd Font Mono"
+ai_font_name = "IosevkaTerm Nerd Font Mono"
+match_ai_font = true
+
+[appearance.window]
+zoom_level = 110
+
+[appearance.input]
+input_mode = "waterfall"
+
+[code]
+
+[code.editor]
+show_code_review_button = true
+show_project_explorer = true
+show_global_search = true
+
+[warp_drive]
+enabled = false
+
+[agents]
+
+[agents.third_party]
+should_render_cli_agent_toolbar = true
+auto_open_composer_on_cli_agent_start = true
+auto_dismiss_composer_after_submit = true
+auto_toggle_composer = true
+
+[agents.third_party.cli_agent_toolbar_enabled_commands]
+claude = "Claude"
+claude-safe = "Claude"
+cs = "Claude"
+
+[agents.warp_agent]
+is_any_ai_enabled = false
+
+[agents.warp_agent.other]
+show_agent_notifications = true
+
+[text_editing]
+vim_mode_enabled = true
+
+[notifications]
+toast_duration_secs = 18
+
+[notifications.preferences]
+is_agent_task_completed_enabled = true
+is_long_running_enabled = true
+is_needs_attention_enabled = true
+is_password_prompt_enabled = true
+long_running_threshold = 60
+mode = "disabled"
+play_notification_sound = true
+
+[general]
+default_session_mode = "tab_config"
+default_tab_config_path = "/Users/danielsusman/.warp-oss/tab_configs/new_terminal_in_directory.toml"

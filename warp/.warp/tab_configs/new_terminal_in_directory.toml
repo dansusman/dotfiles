@@ -1,0 +1,11 @@
+name = "New Terminal in Directory"
+title = "{{directory}}"
+
+[[panes]]
+id = "main"
+type = "terminal"
+directory = "{{directory}}"
+
+[params.directory]
+type = "repo"
+description = "Directory to open terminal in"

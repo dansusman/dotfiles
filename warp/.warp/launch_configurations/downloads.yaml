@@ -1,0 +1,8 @@
+---
+name: Downloads
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/Downloads
+          commands:
+            - exec: yazi

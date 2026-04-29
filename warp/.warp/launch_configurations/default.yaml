@@ -1,0 +1,6 @@
+---
+name: default
+windows:
+  - tabs:
+      - layout:
+          cwd: ~

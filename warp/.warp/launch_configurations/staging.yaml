@@ -1,0 +1,8 @@
+---
+name: staging
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/Developer/notability/staging
+          commands:
+            - exec: git pull

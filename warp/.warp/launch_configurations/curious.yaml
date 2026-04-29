@@ -1,0 +1,8 @@
+---
+name: curious
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/scratch
+          commands:
+            - exec: claude --dangerously-skip-permissions

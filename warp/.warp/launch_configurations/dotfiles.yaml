@@ -1,0 +1,6 @@
+---
+name: dotfiles
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/.dotfiles

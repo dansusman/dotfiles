@@ -1,0 +1,8 @@
+---
+name: sesh config
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/.dotfiles/config/.config/sesh
+          commands:
+            - exec: nvim sesh.toml

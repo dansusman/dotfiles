@@ -1,0 +1,24 @@
+name: Gruber Lighter
+details: lighter
+accent: '#8C6600'
+foreground: '#181820'
+background: '#F5F1E8'
+terminal_colors:
+  normal:
+    black: '#181820'
+    red: '#BF1A24'
+    green: '#33800D'
+    yellow: '#8C6600'
+    blue: '#404D8C'
+    magenta: '#6647B3'
+    cyan: '#1A59CC'
+    white: '#E5E2D8'
+  bright:
+    black: '#80766B'
+    red: '#D94550'
+    green: '#5CA82E'
+    yellow: '#B38A1F'
+    blue: '#6373AB'
+    magenta: '#8B6FCC'
+    cyan: '#4A85E0'
+    white: '#FFFFFF'

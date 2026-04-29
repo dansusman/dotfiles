@@ -1,0 +1,8 @@
+---
+name: notability
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/Developer/nb-gb
+          commands:
+            - exec: but

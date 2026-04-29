@@ -1,0 +1,8 @@
+---
+name: new worktree
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/Developer/notability
+          commands:
+            - exec: ntb_new_worktree

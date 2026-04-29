@@ -1,0 +1,8 @@
+---
+name: tmux config
+windows:
+  - tabs:
+      - layout:
+          cwd: ~/.dotfiles/tmux
+          commands:
+            - exec: nvim .tmux.conf
