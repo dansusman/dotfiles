@@ -218,6 +218,14 @@ if.app-id = 'com.gitbutler.app'
 run = 'move-node-to-workspace 1' # GitButler always on workspace 1
 
 [[on-window-detected]]
+if.app-id = 'dev.warp.WarpOss'
+run = 'move-node-to-workspace 3' # WarpOss always on workspace 3
+
+[[on-window-detected]]
+if.app-id = 'dev.warp.Warp-Stable'
+run = 'move-node-to-workspace 3' # Warp always on workspace 3
+
+[[on-window-detected]]
 if.app-id = 'com.gingerlabs.Notability'
 run = 'layout floating' # Notability always float
 
