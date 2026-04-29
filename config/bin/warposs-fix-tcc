@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+APP="${1:-/Applications/WarpOss.app}"
+CERT=$CODESIGN_IDENTITY
+BUNDLE_ID="dev.warp.WarpOss"
+TCC_DB="$HOME/Library/Application Support/com.apple.TCC/TCC.db"
+
+echo "Re-signing $APP with $CERT..."
+codesign --force --deep --sign "$CERT" --options runtime "$APP"
+
+echo "Patching TCC.db (Warp needs Full Disk Access)..."
+sqlite3 "$TCC_DB" "UPDATE access SET auth_value=2, auth_reason=2 WHERE client='$BUNDLE_ID' AND service='kTCCServiceSystemPolicyAppData';"
+
+ROW=$(sqlite3 "$TCC_DB" "SELECT auth_value, length(csreq) FROM access WHERE client='$BUNDLE_ID' AND service='kTCCServiceSystemPolicyAppData';")
+echo "TCC row: $ROW (want '2|160')"
+echo "Done. Quit and relaunch WarpOss."
