@@ -21,7 +21,7 @@ match_ai_font = true
 zoom_level = 110
 
 [appearance.input]
-input_mode = "waterfall"
+input_mode = "pinned_to_bottom"
 
 [code]
 
