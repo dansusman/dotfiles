@@ -79,6 +79,7 @@ Required slides, in order:
    - One-sentence claim
    - A `<pre>` with the relevant code or trace evidence (file:line)
    - 1–3 bullets of "**Verify:** …" actions for the human
+   - **Recommendation block** — *required on every slide that proposes an issue* (warn/bad pill, or any "consider"/"medium"/"high" framing). Visually distinct from the Verify block (e.g. different border color, "Recommendation" or "How to fix" heading). Contains the concrete fix: the API to use, the line to change, the alternative pattern, or — if the right fix is genuinely unclear — 2 options with tradeoffs. Do not write a recommendation block for pure ✅ "Like" slides or neutral question slides where you're not asserting a problem.
 4. **Manual QA checklist** — author's listed test steps + any extras you'd add (mixed-content cases, edge thresholds, cancellation).
 5. **Style nits** (optional, only if any)
 6. **Initial recommendations — confirmed non-issues** — *required slide*. List every callout that was dropped after the second pass, with the one-line reason ("PDFTron `GetIndex` is 1-indexed by spec, see `PDFTronWrapper.m:198`"). This shows the human what was already vetted so they don't waste time re-checking.
