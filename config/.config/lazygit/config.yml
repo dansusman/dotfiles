@@ -15,7 +15,7 @@ customCommands:
 git:
   pagers:
     - colorArg: always
-      pager: delta --dark --paging=never
+      pager: delta --light --paging=never
   commit:
     autoWrapCommitMessage: false
 gui:

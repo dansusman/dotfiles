@@ -39,7 +39,8 @@
     "caveman@caveman": true,
     "clangd-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "improve-claude-md@skills": true
+    "improve-claude-md@skills": true,
+    "warp@claude-code-warp": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -53,10 +54,17 @@
         "source": "github",
         "repo": "humanlayer/skills"
       }
+    },
+    "claude-code-warp": {
+      "source": {
+        "source": "github",
+        "repo": "warpdotdev/claude-code-warp"
+      }
     }
   },
+  "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "light-daltonized",
   "editorMode": "vim",
-  "preferredNotifChannel": "terminal_bell",
-  "effortLevel": "medium"
+  "preferredNotifChannel": "terminal_bell"
 }

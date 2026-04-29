@@ -31,8 +31,18 @@ lines_removed=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
 # Context usage percentage
 used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 
-# Terminal width — try sources in priority order; first positive integer wins
-cols=$(tmux display-message -p '#{client_width}' 2>/dev/null)
+# Terminal width — try sources in priority order; first positive integer wins.
+# Only trust tmux when actually inside tmux ($TMUX set) — otherwise a stray
+# tmux server can report a bogus width unrelated to the current terminal.
+cols=""
+if [ -n "$TMUX" ]; then
+    cols=$(tmux display-message -p '#{client_width}' 2>/dev/null)
+fi
+# Read real width from controlling tty (Claude Code pipes stdin, so $COLUMNS
+# and `tput cols` see no tty — but /dev/tty still points at the real terminal).
+if ! [[ "$cols" =~ ^[1-9][0-9]*$ ]]; then
+    cols=$(stty size </dev/tty 2>/dev/null | awk '{print $2}')
+fi
 if ! [[ "$cols" =~ ^[1-9][0-9]*$ ]]; then
     cols="$COLUMNS"
 fi
@@ -43,7 +53,7 @@ if ! [[ "$cols" =~ ^[1-9][0-9]*$ ]]; then
     cols=80
 fi
 
-# Apply safety margin (39) to stay well inside Claude Code's render area
+# Apply safety margin to stay well inside Claude Code's render area
 cols=$(( cols - 39 ))
 [ "$cols" -lt 40 ] && cols=40
 

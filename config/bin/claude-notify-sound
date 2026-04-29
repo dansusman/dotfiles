@@ -5,10 +5,30 @@ EVENT="${1:-Claude}"
 
 INPUT=$(cat)
 
+SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.session_id // empty')
+FLAG_DIR="${TMPDIR:-/tmp}/claude-notify"
+mkdir -p "$FLAG_DIR"
+FLAG_FILE="$FLAG_DIR/${SESSION_ID:-default}.flag"
+
+case "$EVENT" in
+  Notification)
+    if [ -n "$SESSION_ID" ] && [ -f "$FLAG_FILE" ]; then
+      exit 0
+    fi
+    : > "$FLAG_FILE"
+    ;;
+  Stop)
+    rm -f "$FLAG_FILE"
+    ;;
+esac
+
 is_focused() {
   local front
   front=$(osascript -e 'tell application "System Events" to name of first application process whose frontmost is true' 2>/dev/null)
-  [[ "$front" != "ghostty" && "$front" != "Ghostty" ]] && return 1
+  case "$front" in
+    ghostty|Ghostty|Warp|warp-oss) ;;
+    *) return 1 ;;
+  esac
 
   if [ -n "$TMUX_PANE" ]; then
     local active
