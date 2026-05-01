@@ -64,6 +64,8 @@ Put each PR into exactly one of these buckets:
 
 ## Step 3 — Write the callouts
 
+Write the result to `Callouts.md` in the current working directory (overwrite if it exists). Also print it to chat so the user sees it inline. Do not skip the file write — the user expects a reviewable artifact.
+
 Output format:
 
 ```
@@ -74,22 +76,24 @@ Release PR: https://github.com/Ginger-Labs/Notability/pull/<num>
 (items flagged with Support Requested label, Zendesk mentions, user reports, or beta feedback — surface these first so support knows "yes, this is the one you've been hearing about")
 
 - <Plain-language description of the change and who it affects>
-  PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
-  Signals: Support Requested label, Zendesk ticket mentioned
-  📸 Screenshots in PR   🎥 Demo video in PR   (only if actually present)
+  - PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
+  - Signals: Support Requested label, Zendesk ticket mentioned
+  - 📸 Screenshots in PR   🎥 Demo video in PR   (only if actually present)
+
+**IMPORTANT: PR / Signals / 📸 / 🎥 lines must be markdown sub-bullets — leading two spaces + `- ` — so they render as nested list items, not plain continuation text. Do not omit the `- `.**
 
 ## ✨ New Features
 
 - Introducing <Feature> — <one sentence on what it does and how users access it>.
-  PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
-  🎥 Demo video in PR
+  - PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
+  - 🎥 Demo video in PR
 
 ## 🛠 Bug Fixes & Improvements
 (grouped by theme where it makes sense — library, editor, subscriptions, iOS 26, migration, etc.)
 
 ### <Theme e.g. Library & Thumbnails>
 - <Plain-language description>
-  PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
+  - PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
 
 ### <Theme e.g. Subscriptions & Billing>
 - ...
@@ -98,7 +102,7 @@ Release PR: https://github.com/Ginger-Labs/Notability/pull/<num>
 (PRs that are risky refactors of user-facing areas — not tech debt exactly, but support should know what to blame if reports spike)
 
 - <Area> was refactored this release. If you see an uptick in <specific user-visible symptom>, it may be related.
-  PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
+  - PR: https://github.com/Ginger-Labs/Notability/pull/XXXXX
 
 ---
 
