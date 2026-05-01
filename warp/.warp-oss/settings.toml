@@ -12,13 +12,14 @@ use_latest_prompt_as_title = true
 
 [appearance.text]
 notebook_font_size = 14.0
-font_size = 14.0
+font_size = 16.0
 font_name = "IosevkaTerm Nerd Font Mono"
 ai_font_name = "IosevkaTerm Nerd Font Mono"
 match_ai_font = true
+ligature_rendering_enabled = true
 
 [appearance.window]
-zoom_level = 110
+zoom_level = 100
 
 [appearance.input]
 input_mode = "pinned_to_bottom"
@@ -68,5 +69,5 @@ mode = "disabled"
 play_notification_sound = true
 
 [general]
-default_session_mode = "tab_config"
+default_session_mode = "terminal"
 default_tab_config_path = "/Users/danielsusman/.warp-oss/tab_configs/new_terminal_in_directory.toml"
