@@ -17,3 +17,7 @@ ln -sf ~/.config/pi/agent/settings.json ~/.pi/agent/settings.json
 ln -sf ~/.config/pi/agent/skills ~/.pi/agent/skills
 ln -sf ~/.config/pi/agent/extensions ~/.pi/agent/extensions
 ln -sf ~/.config/pi/agent/keybindings.json ~/.pi/agent/keybindings.json
+
+# agents skills
+mkdir -p ~/.agents
+ln -sf ~/.config/agents/skills ~/.agents/skills
