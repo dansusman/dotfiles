@@ -56,7 +56,7 @@ gh pr diff <NUMBER> | grep -A30 "<FeatureCaseName>\|optIn\|beta\|everyone\|remot
 **Inclusion rules:**
 - `.everyone` → include (visible to all users)
 - `.remoteConfig` → include (server-controlled rollout to real users)
-- `.beta` → include only if the PR description makes clear it's a significant user-facing change being broadly tested
+- `.beta` → **exclude.** What's New is App Store copy for real users, not beta testers. Beta features are not yet visible to the general App Store audience, so do not announce them here. (For TestFlight beta notes, use the `generate-beta-test-details` skill instead.)
 - `.optIn` → exclude (debug/internal only, not visible to real users)
 - `.gingerLabs` → exclude (Ginger Labs staff only)
 
