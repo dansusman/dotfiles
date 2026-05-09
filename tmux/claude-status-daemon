@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# claude-status-daemon — keep /tmp/claude-status.cache fresh.
+#
+# Fed by fswatch on ~/.claude/projects/ (real fs events) plus a periodic
+# tick so mtime-based promotions (running -> waiting -> stale) fire even
+# when no jsonl writes are happening.
+#
+# Single instance, guarded by /tmp/claude-status-daemon.pid.
+# Auto-spawned by tmux (theme.tmux). Safe to run manually for debugging.
+#
+# Cache format is the same as `claude-status-map`: one line per tmux
+# session that has a Claude project dir, "<name>\t<status>".
+
+set -u
+
+CACHE="${CLAUDE_STATUS_CACHE:-/tmp/claude-status.cache}"
+LOCK="${CLAUDE_STATUS_LOCK:-/tmp/claude-status-daemon.pid}"
+TICK_SECS="${CLAUDE_STATUS_TICK_SECS:-2}"
+PROJECTS_DIR="$HOME/.claude/projects"
+
+# --- single instance ----------------------------------------------------
+if [ -f "$LOCK" ]; then
+  pid=$(cat "$LOCK" 2>/dev/null || true)
+  if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+    exit 0
+  fi
+  rm -f "$LOCK"
+fi
+echo $$ > "$LOCK"
+
+cleanup() {
+  rm -f "$LOCK" "${EVT_FIFO:-}"
+  [ -n "${TICKER_PID:-}" ] && kill "$TICKER_PID" 2>/dev/null || true
+  [ -n "${WATCHER_PID:-}" ] && kill "$WATCHER_PID" 2>/dev/null || true
+}
+trap cleanup EXIT
+trap 'cleanup; exit 0' INT TERM
+
+# --- refresh ------------------------------------------------------------
+# Cache format: per-PID rows from claude-status-pids. Both consumers
+# (claude-status-summary, claude-status-map) project from this single
+# canonical primitive.
+refresh() {
+  local tmp="$CACHE.tmp.$$"
+  if claude-status-pids > "$tmp" 2>/dev/null; then
+    mv "$tmp" "$CACHE"
+  else
+    rm -f "$tmp"
+  fi
+}
+
+refresh
+
+# --- event source -------------------------------------------------------
+# Two producers feed a single FIFO of "wakeup" markers:
+#   1. fswatch on the projects dir (event-driven)
+#   2. periodic ticker (covers mtime-based status promotions)
+#
+# Use a fifo so the consumer loop can read from either source.
+EVT_FIFO="$(mktemp -u -t claude-status-evt.XXXXXX)"
+mkfifo "$EVT_FIFO"
+
+# Open fifo for reading on FD 3 so writers don't block waiting for a reader,
+# and the loop doesn't hit EOF when one writer drops.
+exec 3<>"$EVT_FIFO"
+
+# Watcher: emits a NUL byte per fs event batch.
+if [ -d "$PROJECTS_DIR" ]; then
+  ( fswatch -l 0.1 -0 "$PROJECTS_DIR" 2>/dev/null > "$EVT_FIFO" ) &
+  WATCHER_PID=$!
+fi
+
+# Ticker: emits a NUL byte every $TICK_SECS for periodic refresh.
+( while sleep "$TICK_SECS"; do printf '\0' > "$EVT_FIFO"; done ) &
+TICKER_PID=$!
+
+# --- consumer loop ------------------------------------------------------
+# Read NUL-delimited events from the fifo and refresh the cache.
+while IFS= read -r -d '' _ <&3; do
+  refresh
+done

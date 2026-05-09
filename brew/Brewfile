@@ -31,6 +31,8 @@ brew "fd"
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Cross-platform file change monitor with multi-thread engine
+brew "fswatch"
 # GitHub command-line tool
 brew "gh"
 # Syntax-highlighting pager for git and diff output

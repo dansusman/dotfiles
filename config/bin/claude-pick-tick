@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# One tick of the sesh-pick reload chain.
+# - Bumps the frame counter so running rows appear to spin between reloads.
+# - Refreshes the status map.
+# - Sleeps briefly when something is running (drives ~8fps animation),
+#   sleeps long when idle (throttles cost).
+# - Emits rows for the active mode.
+#
+# Usage: claude-pick-tick <state-file> <map-file> <frame-file>
+set -u
+
+STATE_FILE="${1:?state file required}"
+MAP_FILE="${2:?map file required}"
+FRAME_FILE="${3:?frame file required}"
+
+# Bump frame counter
+cur=$(cat "$FRAME_FILE" 2>/dev/null || echo 0)
+echo $(( (cur + 1) % 1000000 )) > "$FRAME_FILE"
+
+# claude-status-map reads the daemon cache when present and projects it
+# to per-tmux-session rows. Cheap (just awk over a small file).
+claude-status-map > "$MAP_FILE" 2>/dev/null
+
+if grep -qE $'\trunning$|\twaiting$' "$MAP_FILE"; then
+  sleep 0.12   # ~8fps animation
+else
+  sleep 3      # idle throttle
+fi
+
+mode=$(cat "$STATE_FILE" 2>/dev/null || echo default)
+export CLAUDE_STATUS_MAP="$MAP_FILE"
+export CLAUDE_FRAME_FILE="$FRAME_FILE"
+
+case "$mode" in
+  tmux)    sesh-list-status -t --icons ;;
+  configs) sesh-list-status -c --icons ;;
+  zoxide)  sesh-list-status -z --icons ;;
+  find)    fd -H -d 2 -t d -E .Trash . ~ | sed 's/^/  /' ;;
+  *)       sesh-list-status --icons --hide-duplicates ;;
+esac

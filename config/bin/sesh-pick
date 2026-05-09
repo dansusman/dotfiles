@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Sesh picker:
+# - rows decorated with Claude status glyphs (sesh-list-status)
+# - fzf's NATIVE loading spinner animates while any session is running /
+#   waiting, driven by a load:reload-sync chain. The reload command
+#   (claude-pick-tick) sleeps briefly between cycles so the spinner stays
+#   visible. When all sessions are idle, the chain throttles to a long
+#   sleep so reloads don't burn CPU.
+# - Mode (default/tmux/configs/zoxide/find) is held in a state file so
+#   ctrl-X switches survive the reload chain.
+#
+# Usage: sesh-pick [root]
+set -u
+
+ROOT_MODE="${1:-}"
+
+MAP_FILE="$(mktemp -t claude-status-map.XXXXXX)"
+STATE_FILE="$(mktemp -t fzf-mode.XXXXXX)"
+FRAME_FILE="$(mktemp -t fzf-frame.XXXXXX)"
+trap 'rm -f "$MAP_FILE" "$STATE_FILE" "$FRAME_FILE"' EXIT INT TERM
+
+echo default > "$STATE_FILE"
+echo 0 > "$FRAME_FILE"
+claude-status-map > "$MAP_FILE" 2>/dev/null
+export CLAUDE_STATUS_MAP="$MAP_FILE"
+export CLAUDE_FRAME_FILE="$FRAME_FILE"
+
+QUERY=""
+if [ "$ROOT_MODE" = "root" ]; then
+  QUERY="$(sesh root | sed 's/_/./g')/"
+fi
+
+# initial render: same path as a tick (also seeds the spinner-on-load)
+selection=$(
+  sesh-list-status --icons --hide-duplicates | fzf-tmux -p 90%,90% --no-border \
+    --ansi \
+    --list-border \
+    --no-sort --prompt '⚡  ' \
+    --query "$QUERY" \
+    --color 'list-border:6,input-border:3,preview-border:4,header-bg:-1,header-border:6' \
+    --input-border \
+    --header-border \
+    --header '        ^a all ^t tmux ^g configs ^x zoxide ^d kill ^f find' \
+    --bind 'tab:down,btab:up' \
+    --bind 'ctrl-b:abort' \
+    --bind "load:reload-sync(claude-pick-tick '$STATE_FILE' '$MAP_FILE' '$FRAME_FILE')" \
+    --bind "ctrl-a:change-prompt(⚡  )+execute-silent(echo default > '$STATE_FILE')+reload(sesh-list-status --icons --hide-duplicates)" \
+    --bind "ctrl-t:change-prompt(  )+execute-silent(echo tmux > '$STATE_FILE')+reload(sesh-list-status -t --icons)" \
+    --bind "ctrl-g:change-prompt(⚙️  )+execute-silent(echo configs > '$STATE_FILE')+reload(sesh-list-status -c --icons)" \
+    --bind "ctrl-x:change-prompt(📁  )+execute-silent(echo zoxide > '$STATE_FILE')+reload(sesh-list-status -z --icons)" \
+    --bind "ctrl-f:change-prompt(🔎  )+execute-silent(echo find > '$STATE_FILE')+reload(fd -H -d 2 -t d -E .Trash . ~ | sed 's/^/  /')" \
+    --bind "ctrl-d:execute(tmux kill-session -t {2..})+reload(sesh-list-status --icons --hide-duplicates)" \
+    --preview-window 'right:70%' \
+    --preview 'sesh preview {2..}'
+) || true
+
+[ -z "${selection:-}" ] && exit 0
+
+target=$(printf '%s' "$selection" | sed -E 's/^[^[:space:]]*[[:space:]]+//')
+exec sesh connect "$target"

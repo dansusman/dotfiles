@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Tmux status-line summary across every Claude owned by the current tmux
+# server.
+#
+# A Claude is "live and ours" iff its PID is a descendant of the current
+# tmux server's PID. Source data comes from /tmp/claude-status.cache (per
+# the claude-status-pids contract). Falls back to a live walk if the
+# cache is missing.
+#
+# Modes:
+#   claude-status-summary                 emit pill text (default)
+#   claude-status-summary --classify FILE classify a single jsonl, print state
+set -u
+
+CACHE="${CLAUDE_STATUS_CACHE:-/tmp/claude-status.cache}"
+NOW=$(date +%s)
+
+# *** classify <file> -> echoes one of: running waiting done interrupted none
+classify_file() {
+  local f=$1 mtime age line
+  mtime=$(stat -f %m "$f" 2>/dev/null) || { echo none; return; }
+  age=$((NOW - mtime))
+  if [ "$age" -gt 300 ]; then echo none; return; fi
+
+  line=$(
+    tail -c 16384 "$f" 2>/dev/null \
+      | grep -E '"role":"(user|assistant)"' \
+      | grep -vE '<system-reminder>|<local-command-|<bash-|<task-notification>|<command-name>/[a-z]+</command-name>' \
+      | tail -n 1
+  )
+
+  case "$line" in
+    *'"role":"assistant"'*'"stop_reason":"end_turn"'*) echo done; return ;;
+    *'"role":"user"'*'[Request interrupted'*)          echo interrupted; return ;;
+  esac
+
+  case "$line" in
+    *'"role":"assistant"'*'"type":"tool_use"'*|\
+    *'"role":"assistant"'*'"stop_reason":"tool_use"'*)
+      if   [ "$age" -ge 15 ]; then echo none
+      elif [ "$age" -ge 3 ];  then echo waiting
+      else                         echo running
+      fi
+      return ;;
+    *'"role":"assistant"'*'"type":"thinking"'*|\
+    *'"role":"assistant"'*'"stop_reason":null'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo none; fi
+      return ;;
+    *'"role":"assistant"'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo done; fi
+      return ;;
+    *'"role":"user"'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo none; fi
+      return ;;
+  esac
+  echo none
+}
+
+if [ "${1:-}" = "--classify" ] && [ -n "${2:-}" ]; then
+  classify_file "$2"
+  exit 0
+fi
+
+# *** ancestor check: is $1 a descendant of $2?
+is_descendant_of() {
+  local pid=$1 ancestor=$2 cur=$1
+  while [ -n "$cur" ] && [ "$cur" != 0 ] && [ "$cur" != 1 ]; do
+    if [ "$cur" = "$ancestor" ]; then return 0; fi
+    cur=$(ps -o ppid= -p "$cur" 2>/dev/null | tr -d ' ')
+    [ -z "$cur" ] && return 1
+  done
+  return 1
+}
+
+TMUX_PID=$(tmux display-message -p '#{pid}' 2>/dev/null || true)
+
+# Pull rows from the daemon cache when present; otherwise produce them
+# inline. Either way, the format is <pid>\t<ppid>\t<cwd>\t<jsonl>\t<status>.
+if [ -r "$CACHE" ]; then
+  rows=$(cat "$CACHE")
+else
+  rows=$(claude-status-pids 2>/dev/null)
+fi
+
+running=0; waiting=0; done_=0; interrupted=0
+
+while IFS=$'\t' read -r pid _ppid _cwd _jsonl status; do
+  [ -z "$pid" ] && continue
+  if [ -n "$TMUX_PID" ]; then
+    is_descendant_of "$pid" "$TMUX_PID" || continue
+  fi
+  case "$status" in
+    running)     running=$((running + 1)) ;;
+    waiting)     waiting=$((waiting + 1)) ;;
+    done)        done_=$((done_ + 1)) ;;
+    interrupted) interrupted=$((interrupted + 1)) ;;
+  esac
+done <<< "$rows"
+
+parts=()
+[ "$running"     -gt 0 ] && parts+=("◐ $running")
+[ "$waiting"     -gt 0 ] && parts+=("⏳ $waiting")
+[ "$done_"       -gt 0 ] && parts+=("✓ $done_")
+[ "$interrupted" -gt 0 ] && parts+=("✗ $interrupted")
+
+if [ "${#parts[@]}" -eq 0 ]; then
+  printf '∅'
+else
+  printf '%s' "${parts[*]}"
+fi
