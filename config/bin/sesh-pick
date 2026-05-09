@@ -37,7 +37,7 @@ selection=$(
     --list-border \
     --no-sort --prompt '⚡  ' \
     --query "$QUERY" \
-    --color 'list-border:6,input-border:3,preview-border:4,header-bg:-1,header-border:6' \
+    --color 'list-border:6,input-border:3,preview-border:4,header-bg:-1,header-border:6,current-bg:254,current-fg:-1,current-hl:5' \
     --input-border \
     --header-border \
     --header '        ^a all ^t tmux ^g configs ^x zoxide ^d kill ^f find' \
