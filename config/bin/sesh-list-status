@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Wrap `sesh list` and prepend a Claude status glyph to each row.
+#
+# Glyphs:  running -> animated spinner (frame from $CLAUDE_FRAME_FILE)
+#          waiting ◐ | done ✓ | interrupted ⚠ | stale ✗ | idle (space)
+set -u
+
+if [ "$#" -eq 0 ]; then
+  set -- --icons
+fi
+
+if [ -n "${CLAUDE_STATUS_MAP:-}" ] && [ -r "$CLAUDE_STATUS_MAP" ]; then
+  MAP_FILE="$CLAUDE_STATUS_MAP"
+else
+  MAP_FILE="$(mktemp -t claude-status-map.XXXXXX)"
+  trap 'rm -f "$MAP_FILE"' EXIT
+  claude-status-map > "$MAP_FILE" 2>/dev/null
+fi
+
+frames=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+frame_idx=0
+if [ -n "${CLAUDE_FRAME_FILE:-}" ] && [ -r "$CLAUDE_FRAME_FILE" ]; then
+  frame_idx=$(cat "$CLAUDE_FRAME_FILE" 2>/dev/null)
+  frame_idx=${frame_idx:-0}
+fi
+SPIN="${frames[$((frame_idx % ${#frames[@]}))]}"
+
+sesh list "$@" | awk -v mapfile="$MAP_FILE" -v spin="$SPIN" '
+  BEGIN {
+    while ((getline line < mapfile) > 0) {
+      n = index(line, "\t")
+      if (n > 0) status[substr(line, 1, n-1)] = substr(line, n+1)
+    }
+    close(mapfile)
+    g["running"]     = spin
+    g["waiting"]     = "◐"
+    g["done"]        = "✓"
+    g["interrupted"] = "⚠"
+    g["stale"]       = "✗"
+  }
+  {
+    plain = $0
+    gsub(/\033\[[0-9;]*[a-zA-Z]/, "", plain)
+    sub(/^[^ \t]+[ \t]+/, "", plain)
+    glyph = (plain in status && status[plain] in g) ? g[status[plain]] : " "
+    print glyph " " $0
+  }
+'

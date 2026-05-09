@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Project the per-PID Claude state cache onto live tmux sessions.
+#
+# Output (TSV): one line per tmux session with at least one matching
+# Claude PID, "<session>\t<status>" — highest-priority state across all
+# Claudes whose cwd matches that session's path.
+#
+# Priority (high -> low): running > waiting > interrupted > done > none.
+#
+# Source data: /tmp/claude-status.cache (written by the daemon via
+# claude-status-pids). Falls back to a live walk if cache is missing.
+set -u
+
+CACHE="${CLAUDE_STATUS_CACHE:-/tmp/claude-status.cache}"
+TMP_CACHE=""
+cleanup() { [ -n "$TMP_CACHE" ] && rm -f "$TMP_CACHE"; }
+trap cleanup EXIT
+
+if [ -r "$CACHE" ]; then
+  pids_path="$CACHE"
+else
+  TMP_CACHE="$(mktemp -t pids.XXXXXX)"
+  claude-status-pids > "$TMP_CACHE" 2>/dev/null
+  pids_path="$TMP_CACHE"
+fi
+
+[ ! -s "$pids_path" ] && exit 0
+
+tmux list-sessions -F '#S	#{session_path}' 2>/dev/null | \
+awk -F'\t' '
+  BEGIN {
+    pri["running"]     = 0
+    pri["waiting"]     = 1
+    pri["interrupted"] = 2
+    pri["done"]        = 3
+    pri["none"]        = 4
+  }
+  # First file: per-PID cache (pid \t ppid \t cwd \t jsonl \t status)
+  NR == FNR {
+    if (NF >= 5) {
+      cwd = $3; status = $5
+      if (cwd == "" || status == "") next
+      enc = cwd
+      gsub(/[\/._]/, "-", enc)
+      if (!(enc in best) || pri[status] < pri[best[enc]]) best[enc] = status
+    }
+    next
+  }
+  # Second file: tmux sessions (name \t session_path)
+  {
+    name = $1; spath = $2
+    enc = spath
+    gsub(/[\/._]/, "-", enc)
+    if (enc in best && best[enc] != "none") print name "\t" best[enc]
+  }
+' "$pids_path" -

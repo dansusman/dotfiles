@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# Canonical Claude state primitive: one row per live `claude` process.
+#
+# Output (TSV):
+#   <pid>\t<ppid>\t<cwd>\t<jsonl>\t<status>
+#
+# Where status ∈ {running, waiting, done, interrupted, none}.
+# Consumers (claude-status-summary, claude-status-map) project from this.
+#
+# This is what the daemon writes to /tmp/claude-status.cache.
+set -u
+
+NOW=$(date +%s)
+
+# Classify a single jsonl. Same rules as claude-status-summary --classify
+# but inlined so this script has no script-to-script call overhead.
+classify_file() {
+  local f=$1 mtime age line
+  mtime=$(stat -f %m "$f" 2>/dev/null) || { echo none; return; }
+  age=$((NOW - mtime))
+  if [ "$age" -gt 300 ]; then echo none; return; fi
+
+  line=$(
+    tail -c 16384 "$f" 2>/dev/null \
+      | grep -E '"role":"(user|assistant)"' \
+      | grep -vE '<system-reminder>|<local-command-|<bash-|<task-notification>|<command-name>/[a-z]+</command-name>' \
+      | tail -n 1
+  )
+
+  case "$line" in
+    *'"role":"assistant"'*'"stop_reason":"end_turn"'*) echo done; return ;;
+    *'"role":"user"'*'[Request interrupted'*)          echo interrupted; return ;;
+  esac
+
+  case "$line" in
+    *'"role":"assistant"'*'"type":"tool_use"'*|\
+    *'"role":"assistant"'*'"stop_reason":"tool_use"'*)
+      if   [ "$age" -ge 15 ]; then echo none
+      elif [ "$age" -ge 3 ];  then echo waiting
+      else                         echo running
+      fi
+      return ;;
+    *'"role":"assistant"'*'"type":"thinking"'*|\
+    *'"role":"assistant"'*'"stop_reason":null'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo none; fi
+      return ;;
+    *'"role":"assistant"'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo done; fi
+      return ;;
+    *'"role":"user"'*)
+      if [ "$age" -lt 15 ]; then echo running; else echo none; fi
+      return ;;
+  esac
+  echo none
+}
+
+USED=$'\n'
+# Recent Claude builds set comm to "claude <version>", so `pgrep -x claude`
+# misses them. Walk ps directly and match the first whitespace-delimited
+# token of comm.
+for pid in $(ps -ax -o pid=,comm= 2>/dev/null | awk '$2 == "claude" { print $1 }'); do
+  ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+  [ -z "$ppid" ] && continue
+
+  cwd=$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | awk '/^n/ {print substr($0,2); exit}')
+  [ -z "$cwd" ] && continue
+
+  enc=$(printf '%s' "$cwd" | sed 's:[/._]:-:g')
+  dir="$HOME/.claude/projects/$enc"
+  [ -d "$dir" ] || continue
+
+  # Pick the newest jsonl this PID hasn't claimed yet (handles multiple
+  # claudes in the same project dir).
+  picked=""
+  while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    case "$USED" in *$'\n'"$f"$'\n'*) continue ;; esac
+    picked=$f
+    break
+  done < <(ls -t "$dir"/*.jsonl 2>/dev/null)
+  [ -z "$picked" ] && continue
+  USED="${USED}${picked}"$'\n'
+
+  status=$(classify_file "$picked")
+  printf '%s\t%s\t%s\t%s\t%s\n' "$pid" "$ppid" "$cwd" "$picked" "$status"
+done
