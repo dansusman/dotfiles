@@ -14,6 +14,24 @@ startup_command = "ntb_new_worktree"
 preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_new_worktree"
 
 [[session]]
+name = "agent worktree"
+path = "~/Developer/notability"
+startup_command = "ntb_agent_worktree"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_agent_worktree"
+
+[[session]]
+name = "review pr"
+path = "~/Developer/notability"
+startup_command = "ntb_review_pr"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_review_pr"
+
+[[session]]
+name = "cleanup worktrees"
+path = "~/Developer/notability"
+startup_command = "ntb_cleanup_worktrees"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_cleanup_worktrees"
+
+[[session]]
 name = "pick worktree"
 path = "~/Developer/notability/"
 startup_command = "sesh connect $(git worktree list | awk '{print $1}' | gum filter --limit 1 --fuzzy --no-sort --placeholder 'Pick a worktree' --prompt='🌲') && exit"
@@ -25,7 +43,7 @@ path = "~/Developer/nb-gb"
 startup_command = "but"
 
 [[session]]
-name = "review prs"
+name = "gh dash"
 path = "~/Developer/notability/review"
 startup_command = "gh dash"
 

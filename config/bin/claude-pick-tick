@@ -36,5 +36,5 @@ case "$mode" in
   configs) sesh-list-status -c --icons ;;
   zoxide)  sesh-list-status -z --icons ;;
   find)    fd -H -d 2 -t d -E .Trash . ~ | sed 's/^/  /' ;;
-  *)       sesh-list-status --icons --hide-duplicates ;;
+  *)       sesh-list-status --icons ;;
 esac

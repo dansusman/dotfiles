@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Pick an open PR (gh-dash style), create a transient review worktree, and drop into it.
+set -Eeuo pipefail
+
+cd ~/Developer/notability/ || exit 1
+
+echo "📋 Fetching open PRs..."
+
+ME=$(awk '/^[[:space:]]+user:/{print $2; exit}' "${GH_CONFIG_DIR:-$HOME/.config/gh}/hosts.yml")
+REPO=$(git remote get-url origin | sed -E 's#(git@github\.com:|https://github\.com/)##; s#\.git$##')
+
+# Single graphql round-trip, scoped to the current repo, one search per bucket.
+PR_FIELDS='number title body isDraft reviewDecision additions deletions updatedAt author { login }
+  reviewRequests(first: 20) { nodes { requestedReviewer { __typename ... on User { login } ... on Team { slug } } } }'
+QUERY="
+query {
+  needsReview: search(query: \"repo:${REPO} is:pr is:open review-requested:@me sort:updated-asc\", type: ISSUE, first: 50) {
+    nodes { ... on PullRequest { ${PR_FIELDS} } }
+  }
+  mine: search(query: \"repo:${REPO} is:pr is:open author:@me sort:updated-asc\", type: ISSUE, first: 50) {
+    nodes { ... on PullRequest { ${PR_FIELDS} } }
+  }
+  involved: search(query: \"repo:${REPO} is:pr is:open involves:@me sort:updated-asc\", type: ISSUE, first: 50) {
+    nodes { ... on PullRequest { ${PR_FIELDS} } }
+  }
+}"
+
+DATA=$(gh api graphql -f query="$QUERY")
+
+JQ_FMT='
+def ago(t):
+  (now - (t|fromdateiso8601)) as $s
+  | if   $s < 60        then "\($s|floor)s"
+    elif $s < 3600      then "\(($s/60)|floor)m"
+    elif $s < 86400     then "\(($s/3600)|floor)h"
+    elif $s < 86400*7   then "\(($s/86400)|floor)d"
+    elif $s < 86400*30  then "\(($s/(86400*7))|floor)w"
+    else                     "\(($s/(86400*30))|floor)mo"
+    end;
+def sym:
+  if   . == "APPROVED"          then "✓"
+  elif . == "CHANGES_REQUESTED" then "✗"
+  elif . == "REVIEW_REQUIRED"   then "◷"
+  else                               "·"
+  end;
+.[] | [
+  "#\(.number)",
+  .title,
+  "@\(.author.login // "?")",
+  (
+    ([.reviewRequests.nodes[].requestedReviewer]) as $rs
+    | if   $rs | map(select(.__typename == "User") | .login) | index($me) then "👤"
+      elif $rs | map(select(.__typename == "Team")) | length > 0          then "👥"
+      else "  "
+      end
+  ),
+  (if .isDraft then "📝" else "  " end),
+  (if (.body // "") | test("(?ims)^###\\s*Dev\\s*QA\\b(?:(?!^###\\s).)*?\\b@?(?:" + $me + "|dan)\\b") then "🧪" else "  " end),
+  (.reviewDecision // "" | sym),
+  "+\(.additions)/-\(.deletions)",
+  ago(.updatedAt)
+] | @tsv'
+
+REVIEW_RAW=$(printf '%s' "$DATA"   | jq -r --arg me "$ME" ".data.needsReview.nodes | $JQ_FMT")
+MINE_RAW=$(printf '%s' "$DATA"     | jq -r --arg me "$ME" ".data.mine.nodes | $JQ_FMT")
+INVOLVED_RAW=$(printf '%s' "$DATA" | jq -r --arg me "$ME" '
+  (.data.needsReview.nodes + .data.mine.nodes | map(.number)) as $excl
+  | .data.involved.nodes
+  | map(select(.number as $n | $excl | index($n) | not))
+  '" | $JQ_FMT")
+
+count_lines() {
+  if [ -z "$1" ]; then echo 0; else printf '%s\n' "$1" | wc -l | tr -d ' '; fi
+}
+
+R=$(count_lines "$REVIEW_RAW")
+M=$(count_lines "$MINE_RAW")
+I=$(count_lines "$INVOLVED_RAW")
+
+SELECTED=""
+while [ -z "$SELECTED" ]; do
+  CHOICE=$(printf '%s\n%s\n%s\n' \
+    "Needs My Review ($R)" \
+    "My Pull Requests ($M)" \
+    "Involved ($I)" \
+    | gum choose --header "Which bucket? (esc to quit)")
+
+  case "$CHOICE" in
+    "Needs My Review"*)  RAW="$REVIEW_RAW"   ;;
+    "My Pull Requests"*) RAW="$MINE_RAW"     ;;
+    "Involved"*)         RAW="$INVOLVED_RAW" ;;
+    *) echo "❌ No bucket selected"; exit 1 ;;
+  esac
+
+  if [ -z "$RAW" ]; then
+    echo "📭 Nothing in '$CHOICE' — pick another bucket."
+    continue
+  fi
+
+  FORMATTED=$(printf '%s\n' "$RAW" | column -t -s $'\t')
+  LIST=$(printf '« back to buckets\n%s\n' "$FORMATTED")
+
+  SELECTED=$(printf '%s\n' "$LIST" | gum filter --no-sort \
+    --placeholder "Pick a PR — $CHOICE  (esc = back)" --prompt='🔍 ' --height 20 || true)
+
+  if [ -z "$SELECTED" ] || [[ "$SELECTED" == "« back to buckets"* ]]; then
+    SELECTED=""
+    continue
+  fi
+done
+
+PR_NUMBER=$(printf '%s' "$SELECTED" | awk '{print $1}' | tr -d '#')
+PR_META=$(gh pr view "$PR_NUMBER" --json headRefName,baseRefName)
+HEAD_REF=$(printf '%s' "$PR_META" | jq -r .headRefName)
+BASE_REF=$(printf '%s' "$PR_META" | jq -r .baseRefName)
+
+SLUG=$(echo "$HEAD_REF" | tr '/' '-' | tr -cd '[:alnum:]-')
+WORKTREE="review/pr-${PR_NUMBER}-${SLUG}"
+
+if [ -d "$WORKTREE" ]; then
+  echo "♻️  Worktree '$WORKTREE' already exists, reusing."
+else
+  echo "🌳 Creating review worktree '$WORKTREE' for PR #$PR_NUMBER ($HEAD_REF)"
+  LOCAL_BRANCH="pr/$PR_NUMBER/$SLUG"
+  git fetch origin "pull/$PR_NUMBER/head:$LOCAL_BRANCH"
+  git worktree add "$WORKTREE" "$LOCAL_BRANCH"
+fi
+
+cd "$WORKTREE" || exit 1
+
+git fetch origin "$BASE_REF" >/dev/null 2>&1 || true
+MERGE_BASE=$(git merge-base "origin/$BASE_REF" HEAD)
+
+SESSION="review-pr-$PR_NUMBER"
+tmux new-session -d -s "$SESSION" -c "$PWD" -n "code"  "$SHELL"
+tmux new-window  -t "$SESSION" -c "$PWD" -n "pr"      "GLAMOUR_STYLE=light gh pr view $PR_NUMBER; $SHELL"
+tmux new-window  -t "$SESSION" -c "$PWD" -n "hunk"    "hunk diff $MERGE_BASE --watch"
+tmux select-window -t "$SESSION:code"
+
+tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
+tmux kill-session -t "review pr" 2>/dev/null || true

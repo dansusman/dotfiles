@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Create a transient agent worktree with a purpose-driven one-word name,
+# launch `cs` (claude-safe) in window 1, and `hunk diff --watch` in window 2.
+set -Eeuo pipefail
+
+cd ~/Developer/notability/ || exit 1
+
+echo "🧠 What's this session for? (short phrase)"
+PURPOSE=$(gum input --placeholder "fix sticky note crash on iPad")
+
+if [ -z "$PURPOSE" ]; then
+  echo "❌ No purpose given"
+  exit 1
+fi
+
+echo "🤖 Naming session..."
+PROMPT="Give exactly ONE lowercase word (two only if absolutely necessary, joined by hyphen) that captures the essence of this dev session. Output just the word(s), no punctuation, no quotes, no explanation. Session purpose: ${PURPOSE}"
+RAW=""
+if RAW=$(claude -p "$PROMPT" 2>&1); then
+  NAME=$(echo "$RAW" | tr -d '\n' | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-' | sed 's/^-*//;s/-*$//')
+else
+  echo "⚠️  claude failed: $RAW"
+  NAME=""
+fi
+
+if [ -z "$NAME" ]; then
+  SLUG=$(echo "$PURPOSE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/^-*//;s/-*$//' | cut -c1-20)
+  NAME="${SLUG:-agent}"
+  echo "↩️  Falling back to '$NAME'"
+fi
+
+# Ensure NAME is unique against existing branches/worktrees; only suffix on conflict.
+BASE_NAME="$NAME"
+i=2
+while git show-ref --verify --quiet "refs/heads/susman/$NAME" \
+   || [ -e "susman/$NAME" ]; do
+  NAME="${BASE_NAME}-${i}"
+  i=$((i + 1))
+done
+
+BRANCH="susman/$NAME"
+WORKTREE="susman/$NAME"
+
+echo "🌳 Creating worktree '$WORKTREE' on branch '$BRANCH'"
+git fetch origin
+git worktree add "$WORKTREE" -b "$BRANCH" origin/staging
+
+cd "$WORKTREE" || exit 1
+
+# Build a tmux session for this worktree with two windows.
+# Use absolute paths since tmux runs commands via /bin/sh (no shell aliases like `cs`).
+SESSION="agent-$NAME"
+CLAUDE_BIN="$HOME/bin/claude-safe"
+HUNK_BIN="$(command -v hunk)"
+
+tmux new-session -d -s "$SESSION" -c "$PWD" -n "claude" \
+  "$CLAUDE_BIN; exec ${SHELL:-zsh}"
+tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
+  "$HUNK_BIN diff --watch; exec ${SHELL:-zsh}"
+tmux select-window -t "$SESSION:claude"
+
+# Tear down the launcher session and jump into the new one.
+tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
+tmux kill-session -t "agent worktree" 2>/dev/null || true

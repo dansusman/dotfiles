@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Tear down a single worktree: build artifacts, worktree remove, DerivedData,
+# branch delete. Optionally kill an associated tmux session first.
+#
+# Usage: ntb_cleanup_session_worktree <worktree-path> [session-name]
+#
+# Designed to be sourced (defines `ntb_cleanup_one_worktree`) or invoked.
+set -Eeuo pipefail
+
+DERIVED_DATA="$HOME/Library/Developer/Xcode/DerivedData"
+
+ntb_cleanup_one_worktree() {
+  local tree="$1"
+  local branch
+  branch=$(git -C "$tree" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+
+  echo "🧹 $tree"
+
+  for dir in build .build DerivedData node_modules; do
+    if [ -d "$tree/$dir" ]; then
+      echo "   ↳ rm -rf $dir"
+      rm -rf "$tree/$dir"
+    fi
+  done
+
+  echo "   ↳ git worktree remove --force"
+  git worktree remove --force "$tree" 2>/dev/null || rm -rf "$tree"
+
+  if [ -d "$DERIVED_DATA" ]; then
+    local abs
+    abs=$(cd "$(dirname "$tree")" 2>/dev/null && pwd)/$(basename "$tree") || abs="$tree"
+    while IFS= read -r dd; do
+      [ -z "$dd" ] && continue
+      local plist="$dd/info.plist"
+      if [ -f "$plist" ]; then
+        local wpath
+        wpath=$(/usr/libexec/PlistBuddy -c "Print :WorkspacePath" "$plist" 2>/dev/null || true)
+        if [[ "$wpath" == "$abs"* ]] || [[ "$wpath" == "$tree"* ]]; then
+          echo "   ↳ rm DerivedData: $(basename "$dd")"
+          rm -rf "$dd"
+        fi
+      fi
+    done < <(find "$DERIVED_DATA" -mindepth 1 -maxdepth 1 -type d)
+  fi
+
+  if [ -n "$branch" ] && [ "$branch" != "HEAD" ]; then
+    if git show-ref --verify --quiet "refs/heads/$branch"; then
+      echo "   ↳ git branch -D $branch"
+      git branch -D "$branch" 2>/dev/null || echo "   ⚠️  could not delete branch $branch"
+    fi
+  fi
+}
+
+# Run as script (not sourced).
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  TREE="${1:-}"
+  SESSION="${2:-}"
+
+  if [ -z "$TREE" ]; then
+    echo "usage: $(basename "$0") <worktree-path> [session-name]" >&2
+    exit 2
+  fi
+
+  cd ~/Developer/notability/ || exit 1
+
+  if ! git worktree list --porcelain | awk '/^worktree / {print $2}' | grep -Fxq "$TREE"; then
+    echo "❌ '$TREE' is not a registered worktree" >&2
+    exit 1
+  fi
+
+  if [[ "$TREE" == */.bare ]] || [ "$TREE" = "$(pwd)" ]; then
+    echo "❌ refusing to clean main/bare worktree: $TREE" >&2
+    exit 1
+  fi
+
+  if [ -n "$SESSION" ]; then
+    if tmux has-session -t "$SESSION" 2>/dev/null; then
+      echo "💀 tmux kill-session $SESSION"
+      tmux kill-session -t "$SESSION" || true
+    fi
+  fi
+
+  ntb_cleanup_one_worktree "$TREE"
+  echo "🌿 git worktree prune"
+  git worktree prune
+  echo "✅ Done"
+fi

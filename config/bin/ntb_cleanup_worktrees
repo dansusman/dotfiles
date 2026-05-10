@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Tear down worktrees, wipe Xcode DerivedData + build artifacts,
+# delete the local branch, and prune .bare refs.
+set -Eeuo pipefail
+
+cd ~/Developer/notability/ || exit 1
+
+# shellcheck source=/dev/null
+source "$(dirname "$0")/ntb_cleanup_session_worktree"
+
+# List all worktrees except the bare repo itself.
+TREES=$(git worktree list --porcelain | awk '/^worktree / {print $2}' | grep -v "/\.bare$" || true)
+
+if [ -z "$TREES" ]; then
+  echo "✅ No worktrees to clean"
+  exit 0
+fi
+
+SELECTED=$(echo "$TREES" | gum choose --no-limit --header "Select worktrees to remove (space toggles, enter confirms):")
+
+if [ -z "$SELECTED" ]; then
+  echo "❌ Nothing selected"
+  exit 0
+fi
+
+# Show summary + dirty warnings before doing anything destructive.
+echo ""
+echo "🧾 About to remove:"
+DIRTY_REPORT=""
+while IFS= read -r tree; do
+  [ -z "$tree" ] && continue
+  branch=$(git -C "$tree" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "?")
+  status=$(git -C "$tree" status --porcelain 2>/dev/null || true)
+  if [ -n "$status" ]; then
+    echo "  ⚠️  $tree  ($branch)  — DIRTY"
+    DIRTY_REPORT="${DIRTY_REPORT}\n--- $tree ($branch) ---\n${status}\n"
+  else
+    echo "  • $tree  ($branch)"
+  fi
+done <<< "$SELECTED"
+
+if [ -n "$DIRTY_REPORT" ]; then
+  echo ""
+  echo "⚠️  Some selected worktrees have uncommitted changes:"
+  printf "%b" "$DIRTY_REPORT"
+fi
+
+echo ""
+if ! gum confirm "Proceed with removal? This wipes DerivedData, build artifacts, and local branches."; then
+  echo "🛑 Cancelled"
+  exit 0
+fi
+
+while IFS= read -r tree; do
+  [ -z "$tree" ] && continue
+  echo ""
+  ntb_cleanup_one_worktree "$tree"
+done <<< "$SELECTED"
+
+echo ""
+echo "🌿 git worktree prune"
+git worktree prune
+
+echo "✅ Done"
