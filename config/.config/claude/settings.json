@@ -8,6 +8,17 @@
   },
   "model": "opus[1m]",
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/danielsusman/.config/claude/render-images-hook.sh"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
