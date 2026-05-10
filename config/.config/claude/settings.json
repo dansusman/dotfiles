@@ -84,5 +84,6 @@
   "skipDangerousModePermissionPrompt": true,
   "theme": "light-daltonized",
   "editorMode": "vim",
-  "preferredNotifChannel": "terminal_bell"
+  "preferredNotifChannel": "terminal_bell",
+  "tui": "fullscreen"
 }
