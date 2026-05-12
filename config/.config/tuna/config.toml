@@ -22,6 +22,12 @@ label = 'Open'
     url = 'tuna://run/text.open%2520~%252FDeveloper%252Fnb-gb%252Fios%252FNotability.xcodeproj/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
+    iconPath = '/Users/danielsusman/.local/share/WorktreeXC.app'
+    key = 'w'
+    label = 'Worktree XC'
+    url = 'tuna://run/path.%252FUsers%252Fdanielsusman%252F.local%252Fshare%252FWorktreeXC.app/Open'
+
+    [[comboMode.bindings.children]]
     iconPath = '/Applications/GitHub Copilot for Xcode.app'
     key = 'r'
     label = 'Submission PR'
@@ -139,6 +145,8 @@ custom = []
     carbonModifiers = 6912
 
 [settings]
+comboModeCheatsheetExpandGroups = true
+comboModeThemeStyle = 'cheatsheet'
 themeIdentifier = 'com.brnbw.tuna.themes.default'
 
 [[catalogSettings]]

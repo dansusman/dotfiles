@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Build WorktreeXC.app from WorktreeXC.swift into ~/.local/share.
+set -Eeuo pipefail
+
+SRC="$(cd "$(dirname "$0")" && pwd)/WorktreeXC.swift"
+APP="$HOME/.local/share/WorktreeXC.app"
+MACOS_DIR="$APP/Contents/MacOS"
+PLIST="$APP/Contents/Info.plist"
+
+rm -rf "$APP"
+mkdir -p "$MACOS_DIR"
+xcrun -sdk macosx swiftc -O -o "$MACOS_DIR/WorktreeXC" "$SRC"
+
+cat > "$PLIST" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key>
+  <string>WorktreeXC</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.dansusman.worktreexc</string>
+  <key>CFBundleName</key>
+  <string>WorktreeXC</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleVersion</key>
+  <string>1.0</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <key>LSMinimumSystemVersion</key>
+  <string>11.0</string>
+</dict>
+</plist>
+EOF
+
+# Re-register with LaunchServices so the new bundle replaces the old one.
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+  -f "$APP" 2>/dev/null || true
+
+echo "Built: $APP"

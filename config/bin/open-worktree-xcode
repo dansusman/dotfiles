@@ -1,0 +1,68 @@
+#!/bin/zsh
+# Pick a worktree of the notability repo and open its ios/Notability.xcodeproj.
+# Compatible with zsh (Tuna invokes via `zsh <path>`, so the shebang above
+# matches the actual interpreter).
+
+emulate -L zsh
+setopt err_return no_unset pipe_fail
+
+LOG="$HOME/.cache/open-worktree-xcode.log"
+mkdir -p "$(dirname "$LOG")"
+exec 2>>"$LOG"
+echo "--- $(date) PATH=$PATH PWD=$PWD ---" >&2
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+REPO="$HOME/Developer/notability"
+NBGB="$HOME/Developer/nb-gb/ios/Notability.xcodeproj"
+
+typeset -a LABELS PATHS
+if [[ -e "$NBGB" ]]; then
+  LABELS+=("nb-gb"); PATHS+=("$NBGB")
+fi
+
+if [[ -d "$REPO" ]]; then
+  while IFS= read -r wt; do
+    proj="$wt/ios/Notability.xcodeproj"
+    if [[ -e "$proj" ]]; then
+      LABELS+=("${wt#$REPO/}"); PATHS+=("$proj")
+    fi
+  done < <(git -C "$REPO" worktree list --porcelain 2>>"$LOG" | awk '/^worktree /{print substr($0,10)}')
+fi
+
+echo "found ${#LABELS[@]} candidates" >&2
+
+if (( ${#LABELS[@]} == 0 )); then
+  osascript -e 'display notification "No Notability.xcodeproj found" with title "Worktree XC"'
+  exit 1
+fi
+
+if (( ${#LABELS[@]} == 1 )); then
+  PICK="${LABELS[1]}"
+else
+  AS_LIST=""
+  for l in "${LABELS[@]}"; do
+    esc="${l//\\/\\\\}"; esc="${esc//\"/\\\"}"
+    AS_LIST+="${AS_LIST:+, }\"$esc\""
+  done
+  first="${LABELS[1]//\\/\\\\}"; first="${first//\"/\\\"}"
+  PICK=$(/usr/bin/osascript <<EOF
+tell me to activate
+delay 0.05
+set theChoice to choose from list {${AS_LIST}} with prompt "Open Xcode in which worktree?" default items {"${first}"} with title "Worktree XC"
+if theChoice is false then return ""
+return item 1 of theChoice
+EOF
+)
+  echo "picked='$PICK'" >&2
+fi
+
+[[ -z "$PICK" ]] && exit 0
+
+for i in {1..${#LABELS[@]}}; do
+  if [[ "${LABELS[$i]}" == "$PICK" ]]; then
+    echo "opening ${PATHS[$i]}" >&2
+    /usr/bin/open "${PATHS[$i]}"
+    exit 0
+  fi
+done
