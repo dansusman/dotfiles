@@ -10,6 +10,7 @@ All my config files for macOS.
     - `commit-helper`: config options for `generate-commit` script (Claude-powered conventional commit generator)
     - `karabiner`: configs for [Karabiner Elements](https://github.com/pqrs-org/Karabiner-Elements) with sublayering via [mxstbr](https://github.com/mxstbr/karabiner)
     - `pi`: settings, keybindings, skills, and extensions for [pi coding agent](https://github.com/mariozechner/pi-coding-agent)
+    - `agents/skills`: symlink to [`dansusman/skills`](https://github.com/dansusman/skills) (cloned at `~/skills`). Source of truth for agent skills consumed by Claude Code (`~/.claude/skills`), pi (`~/.agents/skills`), and Warp (`~/warp/.claude/skills`).
     - `sketchybar`: i3-inspired bottom bar for macOS via [sketchybar](https://github.com/FelixKratz/SketchyBar)
     - `skhd`: keybinds for controlling yabai windows via [skhd](https://github.com/koekeishiya/skhd) - OUTDATED, not in use
     - `yabai`: tiling window manager via [yabai](https://github.com/koekeishiya/yabai) - OUTDATED, not in use
@@ -41,6 +42,7 @@ All my config files for macOS.
 10. Run `ln -s ~/.dotfiles/git/.gitignore ~/.gitignore && git config --global core.excludesfile ~/.gitignore` to setup worktrees flow
 11. Run `ln -s ~/.dotfiles/config/.config/claude/settings.json ~/.claude/settings.json` to setup user settings for Claude Code
 12. The `install` script also sets up `~/.pi/agent` symlinks for pi coding agent (settings, skills, extensions, keybindings)
+13. Clone agent skills: `git clone git@github.com:dansusman/skills.git ~/skills`. The `config/.config/agents/skills` path in this repo is a symlink to `~/skills`, and downstream consumers (`~/.claude/skills`, `~/.agents/skills`, `~/warp/.claude/skills`) resolve through it.
 
 ### nvim as XCode replacement
 1. Ensure `sourcekit-lsp` and `xcodebuild.nvim` are installed in your nvim setup. Ensure `xcode-build-server` is on your machine (should've been installed in brew install script).
