@@ -4,7 +4,8 @@
     "deny": [
       "Bash(/Users/danielsusman/Applications/GitButler.app/Contents/MacOS/gitbutler-tauri log --json 2>/dev/null)",
       "Bash(head -50)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "opus[1m]",
   "hooks": {
@@ -80,6 +81,11 @@
       }
     }
   },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false
+  },
   "effortLevel": "medium",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
@@ -87,5 +93,6 @@
   "editorMode": "vim",
   "preferredNotifChannel": "terminal_bell",
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }

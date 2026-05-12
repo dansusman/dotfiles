@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Launch Claude with skip-permissions + verbose, but block tools that
-# affect remote state (push, PR creation/comments, etc.). Local edits,
-# builds, and reads are unrestricted.
+# Launch Claude with verbose output, relying on sandbox auto-allow for
+# friction-free local work. Remote-state tools (push, PR creation/comments,
+# etc.) are blocked via the deny list below. Sandbox escapes still prompt.
 
 DISALLOWED=(
   "Bash(git push:*)"
@@ -28,7 +28,6 @@ DISALLOWED=(
 )
 
 exec claude \
-  --dangerously-skip-permissions \
   --verbose \
   --disallowedTools "${DISALLOWED[@]}" \
   "$@"
