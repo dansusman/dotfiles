@@ -47,11 +47,11 @@
     "command": "bash ~/.config/claude/statusline.sh"
   },
   "enabledPlugins": {
-    "caveman@caveman": true,
+    "caveman@caveman": false,
     "clangd-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "improve-claude-md@skills": true,
-    "warp@claude-code-warp": true,
+    "improve-claude-md@skills": false,
+    "warp@claude-code-warp": false,
     "visual-explainer@visual-explainer-marketplace": true
   },
   "extraKnownMarketplaces": {
@@ -86,6 +86,6 @@
   "theme": "light-daltonized",
   "editorMode": "vim",
   "preferredNotifChannel": "terminal_bell",
-  "agentPushNotifEnabled": true,
-  "inputNeededNotifEnabled": true
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
 }
