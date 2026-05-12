@@ -81,9 +81,11 @@
     }
   },
   "effortLevel": "medium",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "light-daltonized",
   "editorMode": "vim",
   "preferredNotifChannel": "terminal_bell",
-  "tui": "fullscreen"
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }
