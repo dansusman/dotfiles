@@ -14,13 +14,19 @@ startup_command = "ntb_new_worktree"
 preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_new_worktree"
 
 [[session]]
-name = "agent worktree"
+name = "new agent"
 path = "~/Developer/notability"
 startup_command = "ntb_agent_worktree"
 preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_agent_worktree"
 
 [[session]]
-name = "review pr"
+name = "my pr"
+path = "~/Developer/notability"
+startup_command = "ntb_agent_worktree_from_pr"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_agent_worktree_from_pr"
+
+[[session]]
+name = "their pr"
 path = "~/Developer/notability"
 startup_command = "ntb_review_pr"
 preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_review_pr"

@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Pick one of my open PRs, create an agent worktree on its branch,
+# and launch `claude-safe` + `hunk diff --watch` in tmux.
+set -Eeuo pipefail
+
+cd ~/Developer/notability/ || exit 1
+
+echo "📋 Fetching my open PRs..."
+
+REPO=$(git remote get-url origin | sed -E 's#(git@github\.com:|https://github\.com/)##; s#\.git$##')
+
+PR_FIELDS='number title isDraft reviewDecision additions deletions updatedAt headRefName baseRefName'
+QUERY="
+query {
+  mine: search(query: \"repo:${REPO} is:pr is:open author:@me sort:updated-asc\", type: ISSUE, first: 50) {
+    nodes { ... on PullRequest { ${PR_FIELDS} } }
+  }
+}"
+
+DATA=$(gh api graphql -f query="$QUERY")
+
+JQ_FMT='
+def ago(t):
+  (now - (t|fromdateiso8601)) as $s
+  | if   $s < 60        then "\($s|floor)s"
+    elif $s < 3600      then "\(($s/60)|floor)m"
+    elif $s < 86400     then "\(($s/3600)|floor)h"
+    elif $s < 86400*7   then "\(($s/86400)|floor)d"
+    elif $s < 86400*30  then "\(($s/(86400*7))|floor)w"
+    else                     "\(($s/(86400*30))|floor)mo"
+    end;
+def sym:
+  if   . == "APPROVED"          then "✓"
+  elif . == "CHANGES_REQUESTED" then "✗"
+  elif . == "REVIEW_REQUIRED"   then "◷"
+  else                               "·"
+  end;
+.[] | [
+  "#\(.number)",
+  .title,
+  (if .isDraft then "📝" else "  " end),
+  (.reviewDecision // "" | sym),
+  "+\(.additions)/-\(.deletions)",
+  ago(.updatedAt)
+] | @tsv'
+
+RAW=$(printf '%s' "$DATA" | jq -r ".data.mine.nodes | $JQ_FMT")
+
+if [ -z "$RAW" ]; then
+  echo "📭 No open PRs authored by you."
+  exit 0
+fi
+
+FORMATTED=$(printf '%s\n' "$RAW" | column -t -s $'\t')
+SELECTED=$(printf '%s\n' "$FORMATTED" | gum filter --no-sort \
+  --placeholder "Pick one of your PRs" --prompt='🔍 ' --height 20 || true)
+
+if [ -z "$SELECTED" ]; then
+  echo "❌ No PR selected"
+  exit 1
+fi
+
+PR_NUMBER=$(printf '%s' "$SELECTED" | awk '{print $1}' | tr -d '#')
+PR_META=$(gh pr view "$PR_NUMBER" --json headRefName,baseRefName)
+HEAD_REF=$(printf '%s' "$PR_META" | jq -r .headRefName)
+BASE_REF=$(printf '%s' "$PR_META" | jq -r .baseRefName)
+
+SLUG=$(echo "$HEAD_REF" | tr '/' '-' | tr -cd '[:alnum:]-')
+WORKTREE="agent/pr-${PR_NUMBER}-${SLUG}"
+
+if [ -d "$WORKTREE" ]; then
+  echo "♻️  Worktree '$WORKTREE' already exists, reusing."
+else
+  echo "🌳 Creating agent worktree '$WORKTREE' for PR #$PR_NUMBER ($HEAD_REF)"
+  git fetch origin "$HEAD_REF"
+  if git show-ref --verify --quiet "refs/heads/$HEAD_REF"; then
+    git worktree add "$WORKTREE" "$HEAD_REF"
+  else
+    git worktree add "$WORKTREE" -b "$HEAD_REF" "origin/$HEAD_REF"
+  fi
+fi
+
+cd "$WORKTREE" || exit 1
+
+git fetch origin "$BASE_REF" >/dev/null 2>&1 || true
+MERGE_BASE=$(git merge-base "origin/$BASE_REF" HEAD 2>/dev/null || echo "")
+
+SESSION="agent-pr-$PR_NUMBER"
+CLAUDE_BIN="$HOME/bin/claude-safe"
+HUNK_BIN="$(command -v hunk)"
+
+tmux new-session -d -s "$SESSION" -c "$PWD" -n "claude" \
+  "$CLAUDE_BIN; exec ${SHELL:-zsh}"
+if [ -n "$MERGE_BASE" ]; then
+  tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
+    "$HUNK_BIN diff $MERGE_BASE --watch; exec ${SHELL:-zsh}"
+else
+  tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
+    "$HUNK_BIN diff --watch; exec ${SHELL:-zsh}"
+fi
+tmux select-window -t "$SESSION:claude"
+
+tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
+tmux kill-session -t "my pr" 2>/dev/null || true

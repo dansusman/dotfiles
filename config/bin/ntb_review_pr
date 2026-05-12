@@ -138,4 +138,4 @@ tmux new-window  -t "$SESSION" -c "$PWD" -n "hunk"    "hunk diff $MERGE_BASE --w
 tmux select-window -t "$SESSION:code"
 
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
-tmux kill-session -t "review pr" 2>/dev/null || true
+tmux kill-session -t "their pr" 2>/dev/null || true

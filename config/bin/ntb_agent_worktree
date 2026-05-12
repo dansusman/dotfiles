@@ -61,4 +61,4 @@ tmux select-window -t "$SESSION:claude"
 
 # Tear down the launcher session and jump into the new one.
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
-tmux kill-session -t "agent worktree" 2>/dev/null || true
+tmux kill-session -t "new agent" 2>/dev/null || true
