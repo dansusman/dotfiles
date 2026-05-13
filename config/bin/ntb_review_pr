@@ -110,9 +110,10 @@ while [ -z "$SELECTED" ]; do
 done
 
 PR_NUMBER=$(printf '%s' "$SELECTED" | awk '{print $1}' | tr -d '#')
-PR_META=$(gh pr view "$PR_NUMBER" --json headRefName,baseRefName)
+PR_META=$(gh pr view "$PR_NUMBER" --json headRefName,baseRefName,headRepositoryOwner,headRepository,isCrossRepository)
 HEAD_REF=$(printf '%s' "$PR_META" | jq -r .headRefName)
 BASE_REF=$(printf '%s' "$PR_META" | jq -r .baseRefName)
+IS_FORK=$(printf '%s' "$PR_META" | jq -r .isCrossRepository)
 
 SLUG=$(echo "$HEAD_REF" | tr '/' '-' | tr -cd '[:alnum:]-')
 WORKTREE="review/pr-${PR_NUMBER}-${SLUG}"
@@ -121,9 +122,18 @@ if [ -d "$WORKTREE" ]; then
   echo "♻️  Worktree '$WORKTREE' already exists, reusing."
 else
   echo "🌳 Creating review worktree '$WORKTREE' for PR #$PR_NUMBER ($HEAD_REF)"
-  LOCAL_BRANCH="pr/$PR_NUMBER/$SLUG"
-  git fetch origin "pull/$PR_NUMBER/head:$LOCAL_BRANCH"
-  git worktree add "$WORKTREE" "$LOCAL_BRANCH"
+  if [ "$IS_FORK" = "true" ]; then
+    LOCAL_BRANCH="pr/$PR_NUMBER/$SLUG"
+    git fetch origin "pull/$PR_NUMBER/head:$LOCAL_BRANCH"
+    git worktree add "$WORKTREE" "$LOCAL_BRANCH"
+  else
+    git fetch origin "$HEAD_REF"
+    if git show-ref --verify --quiet "refs/heads/$HEAD_REF"; then
+      git worktree add "$WORKTREE" "$HEAD_REF"
+    else
+      git worktree add --track -b "$HEAD_REF" "$WORKTREE" "origin/$HEAD_REF"
+    fi
+  fi
 fi
 
 cd "$WORKTREE" || exit 1
