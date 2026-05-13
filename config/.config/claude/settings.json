@@ -82,9 +82,10 @@
     }
   },
   "sandbox": {
-    "enabled": true,
+    "enabled": false,
     "autoAllowBashIfSandboxed": true,
-    "allowUnsandboxedCommands": false
+    "allowUnsandboxedCommands": false,
+    "enableWeakerNetworkIsolation": true
   },
   "effortLevel": "medium",
   "tui": "fullscreen",
