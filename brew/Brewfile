@@ -5,6 +5,7 @@ tap "freepicheep/tap"
 tap "homebrew/services"
 tap "koekeishiya/formulae"
 tap "menubar-apps/menubar-apps"
+tap "modem-dev/tap"
 tap "nikitabobko/tap"
 tap "stefanlogue/tools"
 tap "withgraphite/tap"
@@ -31,6 +32,8 @@ brew "fd"
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # Cross-platform file change monitor with multi-thread engine
 brew "fswatch"
 # GitHub command-line tool
@@ -57,6 +60,8 @@ brew "lazygit"
 brew "libimobiledevice"
 # Implementation of the file(1) command
 brew "libmagic"
+# Interactive Hunk-based git diff review tool
+brew "modem-dev/tap/hunk"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Small build system for use with gyp or CMake
@@ -69,6 +74,8 @@ brew "open-ocd"
 brew "pam-reattach"
 # Object-relational database system
 brew "postgresql@14", restart_service: :changed
+# Protocol buffers (Google's data interchange format)
+brew "protobuf"
 # Terminal slideshow tool
 brew "presenterm"
 # Interpreted, interactive, object-oriented programming language
@@ -103,6 +110,8 @@ brew "tpm"
 brew "tree"
 # Language for application scale JavaScript development
 brew "typescript"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Convert HTML to PDF
 brew "weasyprint"
 # Internet file retriever
@@ -178,6 +187,12 @@ cask "rocket"
 cask "spotify"
 # Minimal GUI for AI code agents
 cask "t3-code"
+# Menu bar OCR tool
+cask "trex"
+# Voice dictation tool
+cask "fluidvoice"
+# Command-line tool to install and switch between multiple versions of Xcode
+cask "xcodes"
 # Install and switch between multiple versions of Xcode
 cask "xcodes-app"
 cargo "wiki-tui"
