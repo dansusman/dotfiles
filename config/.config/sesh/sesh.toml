@@ -87,6 +87,10 @@ path = "~/.dotfiles/config/.config/sesh"
 startup_command = "nvim sesh.toml"
 preview_command = "bat --language=toml --style=snip --color=always ~/.dotfiles/config/.config/sesh"
 
+[[session]]
+name = "skills"
+path = "~/skills"
+
 # misc
 [[session]]
 name = "default"
