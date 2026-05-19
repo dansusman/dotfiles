@@ -4,8 +4,6 @@
 # etc.) are blocked via the deny list below. Sandbox escapes still prompt.
 
 DISALLOWED=(
-  "Bash(git push:*)"
-  "Bash(git push)"
   "Bash(but push:*)"
   "Bash(but push)"
   "Bash(but pr:*)"
