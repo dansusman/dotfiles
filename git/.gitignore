@@ -2,3 +2,4 @@
 buildServer.json
 .nvim/*
 .claude-trace/*
+.DS_Store
