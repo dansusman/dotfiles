@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Project per-PID Claude state onto live tmux panes.
+#
+# Output (TSV): one line per pane with at least one Claude instance,
+#   <pane_target>\t<status>\t<display_name>\t<cwd>
+#
+# pane_target: "session:window_idx.pane_idx" for tmux switch-client -t
+# display_name: "session_name / window_name"
+# status priority: running > waiting > interrupted > done > stale > none
+set -u
+
+CACHE="${CLAUDE_STATUS_CACHE:-/tmp/claude-status.cache}"
+
+[ ! -s "$CACHE" ] && exit 0
+
+# Priority map (lower = higher priority)
+declare -A PRI=([running]=0 [waiting]=1 [interrupted]=2 [done]=3 [stale]=4 [none]=9)
+
+# Build pid->ppid lookup from a single ps call
+declare -A ppid_of
+while read -r pid ppid; do
+  ppid_of["$pid"]="$ppid"
+done < <(ps -ax -o pid=,ppid= 2>/dev/null | awk '{print $1, $2}')
+
+# Build pane_pid -> target + display from a single tmux call
+declare -A pane_target pane_display
+while IFS=$'\t' read -r pane_pid session win_name win_idx pane_idx; do
+  [ -z "$pane_pid" ] && continue
+  pane_target["$pane_pid"]="${session}:${win_idx}.${pane_idx}"
+  pane_display["$pane_pid"]="${session} / ${win_name}"
+done < <(tmux list-panes -a \
+  -F '#{pane_pid}\t#{session_name}\t#{window_name}\t#{window_index}\t#{pane_index}' \
+  2>/dev/null)
+
+[ ${#pane_target[@]} -eq 0 ] && exit 0
+
+# For each Claude PID in cache, walk ancestry to find its owning pane
+declare -A best_status best_cwd best_pane_pid
+
+while IFS=$'\t' read -r pid _ cwd _ status; do
+  [ -z "$pid" ] && continue
+  [ -z "$status" ] || [ "$status" = "none" ] && continue
+
+  cur="$pid"
+  found_target=""
+  found_pane_pid=""
+  for _ in $(seq 20); do
+    if [ -n "${pane_target[$cur]:-}" ]; then
+      found_target="${pane_target[$cur]}"
+      found_pane_pid="$cur"
+      break
+    fi
+    next="${ppid_of[$cur]:-}"
+    [ -z "$next" ] || [ "$next" = "1" ] || [ "$next" = "$cur" ] && break
+    cur="$next"
+  done
+  [ -z "$found_target" ] && continue
+
+  # Keep highest-priority status for each pane
+  existing="${best_status[$found_target]:-none}"
+  if [ -z "${best_status[$found_target]:-}" ] \
+     || [ "${PRI[$status]:-9}" -lt "${PRI[$existing]:-9}" ]; then
+    best_status["$found_target"]="$status"
+    best_cwd["$found_target"]="$cwd"
+    best_pane_pid["$found_target"]="$found_pane_pid"
+  fi
+done < "$CACHE"
+
+# Emit results sorted by priority (running first)
+for target in "${!best_status[@]}"; do
+  pane_pid="${best_pane_pid[$target]}"
+  printf '%s\t%s\t%s\t%s\n' \
+    "$target" \
+    "${best_status[$target]}" \
+    "${pane_display[$pane_pid]:-$target}" \
+    "${best_cwd[$target]:-}"
+done | sort -t$'\t' -k2,2 -s

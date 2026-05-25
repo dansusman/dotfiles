@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Picker for tmux panes/windows with active Claude sessions.
+# Each row shows status glyph + session/window name + cwd.
+# Selecting a row switches the tmux client to that pane.
+#
+# Bound to prefix+C in .tmux.conf.
+set -u
+
+glyph() {
+  case $1 in
+    running)     printf '●' ;;
+    waiting)     printf '◐' ;;
+    interrupted) printf '⚠' ;;
+    done)        printf '✓' ;;
+    stale)       printf '✗' ;;
+    *)           printf ' ' ;;
+  esac
+}
+
+rows=$(
+  claude-pane-map | while IFS=$'\t' read -r target status name cwd; do
+    g=$(glyph "$status")
+    short="${cwd/#$HOME/\~}"
+    printf '%s\t%s  %-36s  %s\n' "$target" "$g" "$name" "$short"
+  done
+)
+
+if [ -z "$rows" ]; then
+  tmux display-message "No active Claude sessions"
+  exit 0
+fi
+
+selection=$(
+  printf '%s\n' "$rows" \
+  | fzf-tmux -p 80%,50% \
+      --no-border \
+      --ansi \
+      --list-border \
+      --delimiter $'\t' \
+      --with-nth 2 \
+      --prompt '  ' \
+      --no-sort \
+      --bind 'tab:down,btab:up' \
+      --bind 'ctrl-b:abort' \
+      --color 'list-border:6,input-border:3,preview-border:4,current-bg:254,current-fg:-1,current-hl:5'
+) || true
+
+[ -z "${selection:-}" ] && exit 0
+
+target=$(printf '%s' "$selection" | cut -f1)
+tmux switch-client -t "$target"
