@@ -14,6 +14,9 @@ keybind = super+j=text:\x1b\x73
 # CMD+G = lazygit in new tmux window (Ctrl+A -> g)
 keybind = super+g=text:\x01\x67
 
+# CMD+SHIFT+A = show Claude session picker (Ctrl+A -> Shift+A)
+keybind = super+shift+a=text:\x01\x41
+
 # CMD+SHIFT+E = show tmux split with Claude Code
 keybind = super+shift+e=text:\x01\x45
 
