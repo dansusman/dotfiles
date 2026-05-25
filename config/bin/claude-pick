@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Picker for tmux panes/windows with active Claude sessions.
-# Each row shows status glyph + session/window name + cwd.
+# Row: <glyph> <task>  <project>  <branch-tip>
+# Right pane previews live tmux pane contents.
 # Selecting a row switches the tmux client to that pane.
 #
 # Bound to prefix+C in .tmux.conf.
@@ -17,11 +18,42 @@ glyph() {
   esac
 }
 
+# Pull a short task label from a Claude jsonl.
+# Order: explicit summary record → first non-command user prompt.
+task_label() {
+  local f=$1 s
+  [ -s "$f" ] || { printf ''; return; }
+  s=$(jq -r 'select(.type=="summary") | .summary' "$f" 2>/dev/null | head -n 1)
+  if [ -z "$s" ]; then
+    s=$(
+      jq -r '
+        select(.type=="user" and (.message.role=="user"))
+        | .message.content
+        | if type=="string" then . else (.[] | select(.type=="text") | .text) end
+      ' "$f" 2>/dev/null \
+      | grep -vE '^[[:space:]]*(<|\[|$)' \
+      | head -n 1
+    )
+  fi
+  s=${s//$'\n'/ }
+  printf '%s' "${s:0:75}"
+}
+
+branch_tip() {
+  local b
+  b=$(git -C "$1" rev-parse --abbrev-ref HEAD 2>/dev/null) || return
+  printf '%s' "${b##*/}"
+}
+
 rows=$(
-  claude-pane-map | while IFS=$'\t' read -r target status name cwd; do
+  claude-pane-map | while IFS=$'\t' read -r target status name cwd jsonl; do
     g=$(glyph "$status")
-    short="${cwd/#$HOME/\~}"
-    printf '%s\t%s  %-36s  %s\n' "$target" "$g" "$name" "$short"
+    proj=$(basename "$cwd")
+    br=$(branch_tip "$cwd")
+    task=$(task_label "$jsonl")
+    [ -z "$task" ] && task='—'
+    label=$(printf '%s  %-75s  %-18s  %s' "$g" "$task" "$proj" "$br")
+    printf '%s\t%s\n' "$target" "$label"
   done
 )
 
@@ -32,7 +64,7 @@ fi
 
 selection=$(
   printf '%s\n' "$rows" \
-  | fzf-tmux -p 80%,50% \
+  | fzf-tmux -p 90%,80% \
       --no-border \
       --ansi \
       --list-border \
@@ -42,6 +74,8 @@ selection=$(
       --no-sort \
       --bind 'tab:down,btab:up' \
       --bind 'ctrl-b:abort' \
+      --preview-window 'right:55%' \
+      --preview 'tmux capture-pane -ep -t {1}' \
       --color 'list-border:6,input-border:3,preview-border:4,current-bg:254,current-fg:-1,current-hl:5'
 ) || true
 
