@@ -37,7 +37,7 @@ teardown() {
     assert_success
     # Default frame index = 0 = ⠋
     assert_line --partial "⠋ * alpha"
-    assert_line --partial "  * beta"
+    assert_line --partial $'\xc2\xa0 * beta'
 }
 
 @test "spinner frame advances with CLAUDE_FRAME_FILE" {
@@ -66,8 +66,8 @@ EOF
     assert_line --partial "✓ * b"
     assert_line --partial "⚠ * c"
     assert_line --partial "✗ * d"
-    # idle => blank glyph (single space)
-    assert_line --partial "  * e"
+    # idle => NBSP glyph (non-collapsing filler so fzf field-splitting is stable)
+    assert_line --partial $'\xc2\xa0 * e'
 }
 
 @test "row with no map entry gets blank glyph" {
@@ -75,7 +75,7 @@ EOF
     : > "$MAP_FILE"
     run sesh-list-status --icons
     assert_success
-    assert_line --partial "  * ghost"
+    assert_line --partial $'\xc2\xa0 * ghost'
 }
 
 @test "ANSI escapes in sesh output don't break glyph mapping" {

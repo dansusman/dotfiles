@@ -42,7 +42,7 @@ sesh list "$@" | awk -v mapfile="$MAP_FILE" -v spin="$SPIN" '
     plain = $0
     gsub(/\033\[[0-9;]*[a-zA-Z]/, "", plain)
     sub(/^[^ \t]+[ \t]+/, "", plain)
-    glyph = (plain in status && status[plain] in g) ? g[status[plain]] : " "
+    glyph = (plain in status && status[plain] in g) ? g[status[plain]] : "\302\240"
     print glyph " " $0
   }
 '

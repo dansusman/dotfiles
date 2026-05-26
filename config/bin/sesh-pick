@@ -48,14 +48,14 @@ selection=$(
     --bind "ctrl-t:change-prompt(  )+execute-silent(echo tmux > '$STATE_FILE')+reload(sesh-list-status -t --icons)" \
     --bind "ctrl-g:change-prompt(⚙️  )+execute-silent(echo configs > '$STATE_FILE')+reload(sesh-list-status -c --icons)" \
     --bind "ctrl-x:change-prompt(📁  )+execute-silent(echo zoxide > '$STATE_FILE')+reload(sesh-list-status -z --icons)" \
-    --bind "ctrl-f:change-prompt(🔎  )+execute-silent(echo find > '$STATE_FILE')+reload(fd -H -d 2 -t d -E .Trash . ~ | sed 's/^/  /')" \
-    --bind "ctrl-d:execute(tmux kill-session -t {2..})+reload(sesh-list-status --icons)" \
-    --bind "ctrl-e:execute(s={2..}; p=\$(tmux display -p -t \"\$s\" '#{session_path}' 2>/dev/null); if [ -z \"\$p\" ]; then echo '❌ no session path for '\"\$s\"; sleep 1; else dirty=\$(git -C \"\$p\" status --porcelain 2>/dev/null); if [ -n \"\$dirty\" ]; then echo \"⚠️  DIRTY worktree \$p:\"; printf '%s\n' \"\$dirty\"; echo; fi; if gum confirm \"Cleanup worktree \$p (kills session \$s, deletes branch + DerivedData)?\"; then ntb_cleanup_session_worktree \"\$p\" \"\$s\"; sleep 1; else echo '🛑 cancelled'; sleep 1; fi; fi)+reload(sesh-list-status --icons)" \
+    --bind "ctrl-f:change-prompt(🔎  )+execute-silent(echo find > '$STATE_FILE')+reload(fd -H -d 2 -t d -E .Trash . ~ | sed $'s|^|\xc2\xa0 📁 |')" \
+    --bind "ctrl-d:execute(tmux kill-session -t {3..})+reload(sesh-list-status --icons)" \
+    --bind "ctrl-e:execute(s={3..}; p=\$(tmux display -p -t \"\$s\" '#{session_path}' 2>/dev/null); if [ -z \"\$p\" ]; then echo '❌ no session path for '\"\$s\"; sleep 1; else dirty=\$(git -C \"\$p\" status --porcelain 2>/dev/null); if [ -n \"\$dirty\" ]; then echo \"⚠️  DIRTY worktree \$p:\"; printf '%s\n' \"\$dirty\"; echo; fi; if gum confirm \"Cleanup worktree \$p (kills session \$s, deletes branch + DerivedData)?\"; then ntb_cleanup_session_worktree \"\$p\" \"\$s\"; sleep 1; else echo '🛑 cancelled'; sleep 1; fi; fi)+reload(sesh-list-status --icons)" \
     --preview-window 'right:70%' \
-    --preview 'sesh preview {2..}'
+    --preview 'sesh preview {3..}'
 ) || true
 
 [ -z "${selection:-}" ] && exit 0
 
-target=$(printf '%s' "$selection" | sed -E 's/^[^[:space:]]*[[:space:]]+//')
+target=$(printf '%s' "$selection" | sed -E 's/^[^[:space:]]*[[:space:]]+[^[:space:]]+[[:space:]]+//')
 exec sesh connect "$target"
