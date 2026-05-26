@@ -1,5 +1,5 @@
 theme = gruber-lighter
-font-family = Iosevka Term
+font-family = IosevkaTerm Nerd Font Mono
 font-size = 18
 
 # CMD+SHIFT+K = show sesh picker (Ctrl+A -> Shift+K)
