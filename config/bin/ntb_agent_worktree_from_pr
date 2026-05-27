@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pick one of my open PRs, create an agent worktree on its branch,
-# and launch `claude-safe` + `hunk diff --watch` in tmux.
+# and launch `claude-safe` in a tmux session.
 set -Eeuo pipefail
 
 cd ~/Developer/notability/ || exit 1
@@ -82,23 +82,11 @@ fi
 
 cd "$WORKTREE" || exit 1
 
-git fetch origin "$BASE_REF" >/dev/null 2>&1 || true
-MERGE_BASE=$(git merge-base "origin/$BASE_REF" HEAD 2>/dev/null || echo "")
-
 SESSION="agent-pr-$PR_NUMBER"
 CLAUDE_BIN="$HOME/bin/claude-safe"
-HUNK_BIN="$(command -v hunk)"
 
 tmux new-session -d -s "$SESSION" -c "$PWD" -n "claude" \
   "$CLAUDE_BIN; exec ${SHELL:-zsh}"
-if [ -n "$MERGE_BASE" ]; then
-  tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
-    "$HUNK_BIN diff $MERGE_BASE --watch; exec ${SHELL:-zsh}"
-else
-  tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
-    "$HUNK_BIN diff --watch; exec ${SHELL:-zsh}"
-fi
-tmux select-window -t "$SESSION:claude"
 
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
 tmux kill-session -t "my pr" 2>/dev/null || true

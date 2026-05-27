@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Create a transient agent worktree with a purpose-driven one-word name,
-# launch `cs` (claude-safe) in window 1, and `hunk diff --watch` in window 2.
+# Create a transient agent worktree with a purpose-driven one-word name
+# and launch `claude-safe` in a tmux session.
 set -Eeuo pipefail
 
 cd ~/Developer/notability/ || exit 1
@@ -51,13 +51,9 @@ cd "$WORKTREE" || exit 1
 # Use absolute paths since tmux runs commands via /bin/sh (no shell aliases like `cs`).
 SESSION="agent-$NAME"
 CLAUDE_BIN="$HOME/bin/claude-safe"
-HUNK_BIN="$(command -v hunk)"
 
 tmux new-session -d -s "$SESSION" -c "$PWD" -n "claude" \
   "$CLAUDE_BIN; exec ${SHELL:-zsh}"
-tmux new-window -t "$SESSION:" -c "$PWD" -n "hunk" \
-  "$HUNK_BIN diff --watch; exec ${SHELL:-zsh}"
-tmux select-window -t "$SESSION:claude"
 
 # Tear down the launcher session and jump into the new one.
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"

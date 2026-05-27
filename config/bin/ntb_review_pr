@@ -138,13 +138,9 @@ fi
 
 cd "$WORKTREE" || exit 1
 
-git fetch origin "$BASE_REF" >/dev/null 2>&1 || true
-MERGE_BASE=$(git merge-base "origin/$BASE_REF" HEAD)
-
 SESSION="review-pr-$PR_NUMBER"
 tmux new-session -d -s "$SESSION" -c "$PWD" -n "code"  "$SHELL"
 tmux new-window  -t "$SESSION" -c "$PWD" -n "pr"      "GLAMOUR_STYLE=light gh pr view $PR_NUMBER; $SHELL"
-tmux new-window  -t "$SESSION" -c "$PWD" -n "hunk"    "hunk diff $MERGE_BASE --watch"
 tmux select-window -t "$SESSION:code"
 
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
