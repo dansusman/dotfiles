@@ -39,6 +39,11 @@ label = 'Open'
     label = 'Firebase'
     url = 'tuna://run/url.https:%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli=1/Open%20URL'
 
+    [[comboMode.bindings.children]]
+    key = 'p'
+    label = 'PixelSnap'
+    url = 'tuna://run/TunaCore.AllApplicationsCatalog.PixelSnap%202/Open'
+
 [[comboMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
