@@ -65,9 +65,9 @@ short_path() {
 # ── git branch (with dirty marker) ──────────────────────────────────────────
 git_branch=""
 if [ -n "$cwd" ] && [ -d "$cwd" ]; then
-    git_branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
+    git_branch=$(git -C "$cwd" --no-optional-locks symbolic-ref --short HEAD 2>/dev/null || git -C "$cwd" --no-optional-locks rev-parse --short HEAD 2>/dev/null)
     if [ -n "$git_branch" ]; then
-        if [ -n "$(git -C "$cwd" status --porcelain 2>/dev/null | head -1)" ]; then
+        if [ -n "$(git -C "$cwd" --no-optional-locks status --porcelain 2>/dev/null | head -1)" ]; then
             git_branch="${git_branch}*"
         fi
     fi
