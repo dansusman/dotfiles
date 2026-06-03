@@ -262,6 +262,11 @@ label = 'Browse'
     url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F4ej3fbe4/Open%20URL'
 
     [[comboMode.bindings.children]]
+    key = 'p'
+    label = 'NB PRs'
+    url = 'tuna://run/url.https:%252F%252Fgithub.com%252FGinger-Labs%252FNotability%252Fpulls%252Fassigned%252Fdansusman/Open%20URL'
+
+    [[comboMode.bindings.children]]
     key = 'n'
     label = 'NB'
     url = 'tuna://run/url.https:%252F%252Fgithub.com%252FGinger-Labs%252FNotability/Open%20URL'
