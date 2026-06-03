@@ -8,6 +8,29 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "skillOverrides": {
+    "apply-react-conventions": "off",
+    "apply-redux-conventions": "off",
+    "apply-testing-library-conventions": "off",
+    "apply-vitest-conventions": "off",
+    "auto-android-qa": "off",
+    "build-notability-android": "off",
+    "create-plan": "off",
+    "fix-dependabot": "off",
+    "oncall": "off",
+    "run-qa-batch": "off",
+    "test-notability-android": "off",
+    "use-notability-android": "off",
+    "use-notability-web": "off",
+    "diagnose": "off",
+    "find-skills": "off",
+    "generate-beta-test-details": "off",
+    "generate-whats-new": "off",
+    "hunk-review": "off",
+    "plannotator-annotate": "off",
+    "plannotator-last": "off",
+    "plannotator-review": "off"
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -53,7 +76,7 @@
     "swift-lsp@claude-plugins-official": true,
     "improve-claude-md@skills": false,
     "warp@claude-code-warp": false,
-    "visual-explainer@visual-explainer-marketplace": true
+    "visual-explainer@visual-explainer-marketplace": false
   },
   "extraKnownMarketplaces": {
     "caveman": {
