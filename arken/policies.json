@@ -1,0 +1,42 @@
+{
+  "policies": {
+    "Cookies": {
+      "Allow": [
+    "http://anthropic.com",
+    "http://app.graphite.com",
+    "http://apple.com",
+    "http://appstoreconnect.apple.com",
+    "http://circleci.com",
+    "http://claude.ai",
+    "http://figma.com",
+    "http://github.com",
+    "http://google.com",
+    "http://graphite.com",
+    "http://max.com",
+    "http://rippling.com",
+    "http://slack.com",
+    "http://staging.notability.com",
+    "http://twitch.tv",
+    "http://youtube.com",
+    "https://anthropic.com",
+    "https://app.graphite.com",
+    "https://apple.com",
+    "https://appstoreconnect.apple.com",
+    "https://circleci.com",
+    "https://claude.ai",
+    "https://dump-2r6.pages.dev",
+    "https://figma.com",
+    "https://github.com",
+    "https://google.com",
+    "https://graphite.com",
+    "https://max.com",
+    "https://notability.com",
+    "https://rippling.com",
+    "https://slack.com",
+    "https://staging.notability.com",
+    "https://twitch.tv",
+    "https://youtube.com"
+      ]
+    }
+  }
+}

@@ -18,6 +18,21 @@ It essentially boils down to the following steps, though.
 10. Search `_user.js.parrot`, if you see something like `SUCCESS: No no he's not dead, he's, he's restin'!`, your installation was successful
 11. Search `full-screen-api.macos-native-full-screen` and set to `false` (disable macOS fullscreening so spaces work better)
 
+## Cookie exceptions (clear-on-shutdown opt-outs)
+
+Arkenfox clears cookies + site storage on every shutdown. Per-site "Allow"
+exceptions (Manage Exceptions in the UI) live in the profile's binary
+`permissions.sqlite`, not in any pref file, so they don't survive a fresh
+profile. These two scripts capture and re-apply them declaratively via Firefox
+enterprise policies:
+
+1. `./gen-firefox-policies.sh > policies.json` — export current cookie "Allow"
+   exceptions from the live profile into `policies.json`. Re-run and commit
+   whenever you add exceptions in the UI.
+2. `./install-firefox-policies.sh` — symlink `policies.json` into Firefox Dev
+   Edition's `distribution/` dir (the daily driver). Pass `--all` to also link
+   stock Firefox. Restart Firefox; verify at `about:policies`.
+
 ## Extensions
 1. Firefox Multi-Account Container
 2. 1Password
