@@ -8,3 +8,5 @@ config/.config/claude/todo*
 config/.config/claude/projects*
 config/.config/carapace/
 .zcompdump_*
+/config/.config/configstore
+/config/.config/op
