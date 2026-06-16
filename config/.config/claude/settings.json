@@ -76,7 +76,8 @@
     "swift-lsp@claude-plugins-official": true,
     "improve-claude-md@skills": false,
     "warp@claude-code-warp": false,
-    "visual-explainer@visual-explainer-marketplace": false
+    "visual-explainer@visual-explainer-marketplace": false,
+    "bug-repro@gingerlabs-claude-plugins": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -101,6 +102,12 @@
       "source": {
         "source": "github",
         "repo": "nicobailon/visual-explainer"
+      }
+    },
+    "gingerlabs-claude-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/danielsusman/Developer/gingerlabs-claude-plugins"
       }
     }
   },
