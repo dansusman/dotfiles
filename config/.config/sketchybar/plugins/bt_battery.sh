@@ -3,10 +3,16 @@
 # Get battery level for Nothing Headphones using helper
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PERCENTAGE="$("$SCRIPT_DIR/bt_battery_helper" "Nothing Headphone" 2>/dev/null)"
+STATUS=$?
 
-# Check if headphones are connected and have battery info
-if [ "$PERCENTAGE" = "" ] || [ "$PERCENTAGE" = "0" ]; then
-  # Headphones not connected or no battery info, don't show anything
+# Exit 2: connected but macOS isn't reporting battery, show unknown marker
+if [ "$STATUS" = "2" ]; then
+  sketchybar --set "$NAME" icon="󰋋" label="?" drawing=on
+  exit 0
+fi
+
+# Any other non-success means not connected, don't show anything
+if [ "$STATUS" != "0" ] || [ "$PERCENTAGE" = "" ]; then
   sketchybar --set "$NAME" drawing=off
   exit 0
 fi

@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
                     return 0;
                 }
 
-                return 1; // No battery info
+                return 2; // Connected but no battery info
             }
         }
 
