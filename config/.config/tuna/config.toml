@@ -326,6 +326,12 @@ key = 'w'
 label = 'Open WireView'
 url = 'tuna://run/Tuna.Internal.RecentObjectsCatalog.WireView/Open'
 
+[[comboMode.bindings]]
+iconPath = 'truck.box.fill'
+key = 'd'
+label = 'dump'
+url = 'tuna://run/url.https:%252F%252Fdump-2r6.pages.dev%252F/Open%20URL'
+
 [hotkeys]
 custom = []
 
