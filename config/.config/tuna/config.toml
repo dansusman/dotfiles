@@ -224,7 +224,7 @@ label = 'Open'
     iconPath = 'fire.extinguisher'
     key = 'm'
     label = 'Firebase'
-    url = 'tuna://run/url.https:%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli=1/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli%253D1%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'p'
@@ -239,46 +239,46 @@ label = 'Browse'
     [[comboMode.bindings.children]]
     key = 'g'
     label = 'PRs'
-    url = 'tuna://run/url.https:%252F%252Fgithub.com%252Fpulls%252Freviews%253Fq=review-requested:@me%252520is:open/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252Fpulls%252Freviews%253Fq%253Dreview-requested%253A%2540me%252520is%253Aopen%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'c'
     label = 'Calendar'
-    url = 'tuna://run/url.https:%252F%252Fcalendar.google.com/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fcalendar.google.com%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'm'
     label = 'Collab Board'
-    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F3ze2ufam/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F3ze2ufam%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 's'
     label = 'Server Board (main)'
-    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F2k6dp94r/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F2k6dp94r%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 't'
     label = 'Server Board (current)'
-    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F4ej3fbe4/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F4ej3fbe4%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'p'
     label = 'NB PRs'
-    url = 'tuna://run/url.https:%252F%252Fgithub.com%252FGinger-Labs%252FNotability%252Fpulls%252Fassigned%252Fdansusman/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%252Fpulls%252Fassigned%252Fdansusman%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'n'
     label = 'NB'
-    url = 'tuna://run/url.https:%252F%252Fgithub.com%252FGinger-Labs%252FNotability/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'd'
     label = 'Data Loss Board'
-    url = 'tuna://run/url.https:%252F%252Ftinyurl.com%252F3ubzms92/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F3ubzms92%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
     key = 'b'
-    url = 'tuna://run/url.https:%252F%252Fgithub.com%252Forgs%252FGinger-Labs%252Fprojects%252F52%252Fviews%252F8/Open%20URL'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252Forgs%252FGinger-Labs%252Fprojects%252F52%252Fviews%252F8%2527/Run%20Text%20as%20Shell%20Command'
 
 [[comboMode.bindings]]
 key = 'i'
@@ -330,7 +330,7 @@ url = 'tuna://run/Tuna.Internal.RecentObjectsCatalog.WireView/Open'
 iconPath = 'truck.box.fill'
 key = 'd'
 label = 'dump'
-url = 'tuna://run/url.https:%252F%252Fdump-2r6.pages.dev%252F/Open%20URL'
+url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fdump-2r6.pages.dev%252F%2527/Run%20Text%20as%20Shell%20Command'
 
 [hotkeys]
 custom = []

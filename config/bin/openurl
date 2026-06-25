@@ -1,0 +1,15 @@
+#!/bin/bash
+# Open URL(s) in Firefox Developer Edition.
+# Passes the URL as a launch argument instead of a LaunchServices Apple Event.
+# A cold-starting Firefox can drop the Apple Event (blank page on first launch);
+# the launch argument is parsed by Firefox itself, so it works cold or warm.
+
+firefox='/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'
+
+if [[ ! -x "$firefox" ]]; then
+    echo "Firefox Developer Edition not found at $firefox" >&2
+    exit 1
+fi
+
+"$firefox" "$@" >/dev/null 2>&1 &
+disown

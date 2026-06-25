@@ -1971,7 +1971,7 @@
                                     "key_code": "g",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://github.com/pulls/review-requested" }],
+                                "to": [{ "shell_command": "~/bin/openurl 'https://github.com/pulls/review-requested'" }],
                                 "type": "basic"
                             },
                             {
@@ -1987,7 +1987,7 @@
                                     "key_code": "c",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://calendar.google.com" }],
+                                "to": [{ "shell_command": "~/bin/openurl 'https://calendar.google.com'" }],
                                 "type": "basic"
                             },
                             {
@@ -2003,7 +2003,7 @@
                                     "key_code": "a",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://chat.openai.com" }],
+                                "to": [{ "shell_command": "~/bin/openurl 'https://chat.openai.com'" }],
                                 "type": "basic"
                             },
                             {
@@ -2019,7 +2019,7 @@
                                     "key_code": "m",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://tinyurl.com/3ze2ufam" }],
+                                "to": [{ "shell_command": "~/bin/openurl 'https://tinyurl.com/3ze2ufam'" }],
                                 "type": "basic"
                             },
                             {
@@ -2035,7 +2035,7 @@
                                     "key_code": "s",
                                     "modifiers": { "optional": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open https://tinyurl.com/2k6dp94r" }],
+                                "to": [{ "shell_command": "~/bin/openurl 'https://tinyurl.com/2k6dp94r'" }],
                                 "type": "basic"
                             }
                         ]
