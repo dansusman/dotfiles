@@ -77,7 +77,8 @@
     "improve-claude-md@skills": false,
     "warp@claude-code-warp": false,
     "visual-explainer@visual-explainer-marketplace": false,
-    "bug-repro@gingerlabs-claude-plugins": true
+    "bug-repro@gingerlabs-claude-plugins": true,
+    "zendesk-mcp@gingerlabs-claude-plugins": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -117,7 +118,7 @@
     "allowUnsandboxedCommands": false,
     "enableWeakerNetworkIsolation": true
   },
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "light-daltonized",
