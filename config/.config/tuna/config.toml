@@ -247,21 +247,6 @@ label = 'Browse'
     url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fcalendar.google.com%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
-    key = 'm'
-    label = 'Collab Board'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F3ze2ufam%2527/Run%20Text%20as%20Shell%20Command'
-
-    [[comboMode.bindings.children]]
-    key = 's'
-    label = 'Server Board (main)'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F2k6dp94r%2527/Run%20Text%20as%20Shell%20Command'
-
-    [[comboMode.bindings.children]]
-    key = 't'
-    label = 'Server Board (current)'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F4ej3fbe4%2527/Run%20Text%20as%20Shell%20Command'
-
-    [[comboMode.bindings.children]]
     key = 'p'
     label = 'NB PRs'
     url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%252Fpulls%252Fassigned%252Fdansusman%2527/Run%20Text%20as%20Shell%20Command'
@@ -272,13 +257,9 @@ label = 'Browse'
     url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%2527/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
-    key = 'd'
-    label = 'Data Loss Board'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Ftinyurl.com%252F3ubzms92%2527/Run%20Text%20as%20Shell%20Command'
-
-    [[comboMode.bindings.children]]
     key = 'b'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252Forgs%252FGinger-Labs%252Fprojects%252F52%252Fviews%252F8%2527/Run%20Text%20as%20Shell%20Command'
+    label = 'Linear Current Sprint'
+    url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Flinear.app%252Fnotability%252Fview%252Fmy-current-sprint-7b6b80d7a996'/Run%20Text%20as%20Shell%20Command"
 
 [[comboMode.bindings]]
 key = 'i'
