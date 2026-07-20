@@ -1,0 +1,3 @@
+#!/bin/bash
+clipboard_content=$(pbpaste)
+open "https://linear.app/notability/issue/$clipboard_content"

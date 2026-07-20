@@ -231,6 +231,21 @@ label = 'Open'
     label = 'PixelSnap'
     url = 'tuna://run/TunaCore.AllApplicationsCatalog.PixelSnap%202/Open'
 
+    [[comboMode.bindings.children]]
+    key = 'l'
+    label = 'Open Slack (pasteboard)'
+    url = 'tuna://run/text.source%2520~%252F.dotfiles%252Fzsh%252F.env%2520&&%2520zsh%2520~%252F.dotfiles%252Fconfig%252Fbin%252Fslack-convert%2520--pasteboard/Run%20Text%20as%20Shell%20Command'
+
+    [[comboMode.bindings.children]]
+    key = 'i'
+    label = 'Open Issue (pasteboard)'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-issue/Run%20Text%20as%20Shell%20Command'
+
+    [[comboMode.bindings.children]]
+    key = 'y'
+    label = 'Open Linear (pasteboard)'
+    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-linear/Run%20Text%20as%20Shell%20Command'
+
 [[comboMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
@@ -262,11 +277,6 @@ label = 'Browse'
     url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Flinear.app%252Fnotability%252Fview%252Fmy-current-sprint-7b6b80d7a996'/Run%20Text%20as%20Shell%20Command"
 
 [[comboMode.bindings]]
-key = 'i'
-label = 'Open Issue (pasteboard)'
-url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-issue/Run%20Text%20as%20Shell%20Command'
-
-[[comboMode.bindings]]
 key = 'a'
 label = 'Airdrop'
 url = 'tuna://run/text.zsh%2520~%252Fbin%252Fairdrop/Run%20Text%20as%20Shell%20Command'
@@ -275,11 +285,6 @@ url = 'tuna://run/text.zsh%2520~%252Fbin%252Fairdrop/Run%20Text%20as%20Shell%20C
 key = 's'
 label = 'Sleep'
 url = 'tuna://run/text.pmset%2520sleepnow/Run%20Text%20as%20Shell%20Command'
-
-[[comboMode.bindings]]
-key = 'l'
-label = 'Open Slack (pasteboard)'
-url = 'tuna://run/text.source%2520~%252F.dotfiles%252Fzsh%252F.env%2520&&%2520zsh%2520~%252F.dotfiles%252Fconfig%252Fbin%252Fslack-convert%2520--pasteboard/Run%20Text%20as%20Shell%20Command'
 
 [[comboMode.bindings]]
 iconPath = 'paperplane.fill'
