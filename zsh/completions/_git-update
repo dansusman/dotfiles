@@ -1,0 +1,13 @@
+#compdef git-update
+
+_git-update() {
+    local -a locals remotes
+    locals=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null)"})
+    remotes=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/remotes 2>/dev/null)"})
+    case $CURRENT in
+        2) _describe -t branches 'branch to switch to' locals -- remotes ;;
+        3) _describe -t branches 'upstream branch' remotes -- locals ;;
+    esac
+}
+
+_git-update "$@"

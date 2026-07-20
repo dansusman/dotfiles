@@ -89,7 +89,16 @@ ZSH_THEME="susman"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(xcode)
 
+fpath=(~/.dotfiles/zsh/completions $fpath)
+
 source $ZSH/oh-my-zsh.sh
+
+# offer git-stack commands in `git <TAB>` subcommand listing
+zstyle ':completion:*:*:git:*' user-commands \
+    stack:'stack tree + status + next commands' \
+    parent:'show/set stack parent' \
+    rbc:'rebase onto stack parent' \
+    rbu:'rebase onto latest origin/staging'
 
 # User configuration
 
@@ -187,6 +196,9 @@ export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 source <(carapace _carapace)
+# carapace takes over `git`, which breaks _git-* dispatch (git stack/parent/rbc) and
+# `!`-alias expansion (git sw); hand git back to zsh's native completion
+compdef _git git
 
 # trace claude conversation
 claudette() {
