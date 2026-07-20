@@ -30,3 +30,9 @@ When writing inline comments, default to explaining _what_ the code does, not _w
 
 When opening draft PRs for me, if there's a relevant stack of PRs, use the stack-footer skill.
 
+When pushing to open PR branches, ensure the description has not gone stale. If it has, notify me and suggest edits. Do not assume I want them automatically updated but give me the option to do so. If the PR description only needs a stack-footer change, feel free to apply it automatically.
+
+Do not create new worktrees for me, even if I ask for a new branch. Assume I want the branch in the same worktree or if unsure, ask me before continuing.
+
+Never use ObservableObject. Prefer Observable.
+
