@@ -10,3 +10,4 @@ config/.config/carapace/
 .zcompdump_*
 /config/.config/configstore
 /config/.config/op
+/config/.config/gcloud
