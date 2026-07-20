@@ -45,10 +45,16 @@
 	# ----------- REBASE -----------
 	# rebase with the tracking branch even if I have uncommitted changes
 	rb = !git-rebase
-	# fetch latest, rebase interactive
-	rbu = !git fetch && git rebase -i origin/staging --autosquash
+	# fetch latest, rebase interactive onto origin/staging (--update-refs: moves stacked branch refs too)
+	rbu = !git-stack rbu
 	# fetch latest, interactive rebase onto latest staging the given commit and anything after
 	rbou = "!f() { git fetch && git rebase -i --onto origin/staging HEAD~1; }; f"
+	# rebase current branch onto its (possibly moved) stack parent — no commit counting
+	rbc = !git-stack rbc
+	# show/set the stack parent of the current branch
+	parent = !git-stack parent
+	# stack tree + status + suggested next commands
+	stack = !git-stack
 	# ----------- CHECKOUT -----------
 	fs = !git fetch && git switch
 	sw = !git-update
@@ -150,3 +156,9 @@
 	aiModelProvider = anthropic
 	aiAnthropicKeyOption = bringYourOwn
 	aiAnthropicModelName = claude-sonnet-4-0
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
