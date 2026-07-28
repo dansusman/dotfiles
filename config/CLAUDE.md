@@ -36,3 +36,5 @@ Do not create new worktrees for me, even if I ask for a new branch. Assume I wan
 
 Never use ObservableObject. Prefer Observable.
 
+Always clean up inline comments and docstrings after completing your changes (end of your turn). Do not leave unnecessary comments throughout the diff. Only leave ones that are truly required to reduce confusion. The code should speak for itself.
+
