@@ -11,3 +11,4 @@ config/.config/carapace/
 /config/.config/configstore
 /config/.config/op
 /config/.config/gcloud
+/config/.config/1Password
