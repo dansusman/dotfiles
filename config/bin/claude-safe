@@ -27,7 +27,6 @@ DISALLOWED=(
 
 exec claude \
   --verbose \
-  # --remote-control \
   --permission-mode bypassPermissions \
   --disallowedTools "${DISALLOWED[@]}" \
   "$@"
