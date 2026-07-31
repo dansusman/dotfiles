@@ -12,3 +12,5 @@ config/.config/carapace/
 /config/.config/op
 /config/.config/gcloud
 /config/.config/1Password
+/config/.config/circleci
+/config/.config/homebrew
