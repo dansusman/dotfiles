@@ -71,34 +71,13 @@
     "command": "bash ~/.config/claude/statusline.sh"
   },
   "enabledPlugins": {
-    "caveman@caveman": false,
     "clangd-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
-    "improve-claude-md@skills": false,
-    "warp@claude-code-warp": false,
     "visual-explainer@visual-explainer-marketplace": false,
-    "bug-repro@gingerlabs-claude-plugins": true,
-    "zendesk-mcp@gingerlabs-claude-plugins": true
+    "zendesk-mcp@gingerlabs-claude-plugins": true,
+    "ios-release@gingerlabs-claude-plugins": true
   },
   "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
-    },
-    "skills": {
-      "source": {
-        "source": "github",
-        "repo": "humanlayer/skills"
-      }
-    },
-    "claude-code-warp": {
-      "source": {
-        "source": "github",
-        "repo": "warpdotdev/claude-code-warp"
-      }
-    },
     "visual-explainer-marketplace": {
       "source": {
         "source": "github",
