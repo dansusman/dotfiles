@@ -23,6 +23,7 @@ DISALLOWED=(
   "Bash(gh api --method DELETE:*)"
   "Bash(git push --force:*)"
   "Bash(git push --force-with-lease:*)"
+  "Bash(asc:*)"
 )
 
 exec claude \
