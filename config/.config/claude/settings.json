@@ -61,6 +61,21 @@
           {
             "type": "command",
             "command": "claude-notify-sound Stop"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/tmux-rename.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/tmux-rename.sh"
           }
         ]
       }
@@ -74,7 +89,7 @@
     "clangd-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "visual-explainer@visual-explainer-marketplace": false,
-    "zendesk-mcp@gingerlabs-claude-plugins": true,
+    "zendesk-mcp@gingerlabs-claude-plugins": false,
     "ios-release@gingerlabs-claude-plugins": true
   },
   "extraKnownMarketplaces": {
