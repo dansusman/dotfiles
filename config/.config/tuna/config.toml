@@ -215,12 +215,6 @@ label = 'Open'
     url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-submission-pr/Run%20Text%20as%20Shell%20Command'
 
     [[comboMode.bindings.children]]
-    iconPath = 'fire.extinguisher'
-    key = 'm'
-    label = 'Firebase'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli%253D1%2527/Run%20Text%20as%20Shell%20Command'
-
-    [[comboMode.bindings.children]]
     key = 'p'
     label = 'PixelSnap'
     url = 'tuna://run/TunaCore.AllApplicationsCatalog.PixelSnap%202/Open'
@@ -269,6 +263,17 @@ label = 'Browse'
     key = 'b'
     label = 'Linear Current Sprint'
     url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Flinear.app%252Fnotability%252Fview%252Fmy-current-sprint-7b6b80d7a996'/Run%20Text%20as%20Shell%20Command"
+
+    [[comboMode.bindings.children]]
+    iconPath = 'fire.extinguisher'
+    key = 'm'
+    label = 'Firebase'
+    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli%253D1%2527/Run%20Text%20as%20Shell%20Command'
+
+    [[comboMode.bindings.children]]
+    key = 'r'
+    label = 'Release Steps'
+    url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Fdocs.google.com%252Fdocument%252Fd%252F1uucINR1bJX4uPuiZBhQ2oVIzgzSqpPGTODzqTl24ZTs%252Fedit%253Fusp=sharing'/Run%20Text%20as%20Shell%20Command"
 
 [[comboMode.bindings]]
 key = 'a'
