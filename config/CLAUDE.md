@@ -28,3 +28,4 @@
 - Opening draft PRs with a relevant stack: use the stack-footer skill.
 - Pushing to an open PR branch: check whether the description has gone stale. If so, notify me and suggest edits rather than applying them. Stack-footer-only changes are fine to apply automatically.
 - Never create new worktrees, even if I ask for a new branch. Assume the branch goes in the same worktree, or ask if unsure.
+- Never respond to PR comment threads on my behalf.
