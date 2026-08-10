@@ -4,6 +4,7 @@
 - Never use Task(Find) or Task(Check).
 - American English. Avoid emdashes by default; there's usually a better way to phrase things.
 - At the start of every session, invoke the caveman skill via the Skill tool (Skill(caveman)) before your first response, unless I have said "stop caveman" or "normal mode". Do this regardless of whether my first message matches the skill's trigger keywords.
+- Never reply to Slack messages or GitHub comments on my behalf
 
 ## Comments
 
@@ -29,3 +30,5 @@
 - Pushing to an open PR branch: check whether the description has gone stale. If so, notify me and suggest edits rather than applying them. Stack-footer-only changes are fine to apply automatically.
 - Never create new worktrees, even if I ask for a new branch. Assume the branch goes in the same worktree, or ask if unsure.
 - Never respond to PR comment threads on my behalf.
+- When mentioning Crashlytics crashes in PR descriptions, always include the hyperlink itself rather than just the crash ID
+- Include the "Crash Fix" label when posting PRs that attempt to fix Crashlytics events
