@@ -1,321 +1,357 @@
-schemaVersion = 1
-
 [catalogs]
+searchPriorities = []
 sortOrders = []
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'Tuna.EffectsCatalog'
-    mode = 'none'
-    selectedItemKeys = []
+    catalogIdentifier = 'tuna.effects'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
 
     [[catalogs.globalScopes]]
-    catalogIdentifier = 'TunaEmoji.EmojiCatalog'
-    mode = 'some'
-    selectedItemKeys = [
-        'almost equal to',
-        'angle',
-        'approximately equal to',
-        'arrow pointing rightwards then curving downwards',
-        'arrow pointing rightwards then curving upwards',
-        'ballot box',
-        'ballot box with check',
-        'ballot box with x',
-        'ballot x',
-        'beamed eighth notes',
-        'beamed sixteenth notes',
-        'because',
-        'bitcoin sign',
-        'black centre white star',
-        'black diamond',
-        'black down pointing triangle',
-        'black four pointed star',
-        'black left pointing triangle',
-        'black right pointing triangle',
-        'black star',
-        'black telephone',
-        'black up pointing triangle',
-        'bullet',
-        'bullseye',
-        'cent sign',
-        'circled plus',
-        'circled times',
-        'circled white star',
-        'clockwise open circle arrow',
-        'contour integral',
-        'copyright sign',
-        'counterclockwise open circle arrow',
-        'cube root',
-        'currency sign',
-        'degree celsius',
-        'degree fahrenheit',
-        'degree sign',
-        'double dagger',
-        'double integral',
-        'double low 9 quotation mark',
-        'double prime',
-        'downwards arrow',
-        'downwards double arrow',
-        'downwards harpoon with barb rightwards',
-        'eighth note',
-        'element of',
-        'empty set',
-        'euro sign',
-        'fisheye',
-        'five eighths',
-        'fourth root',
-        'greater than or equal to',
-        'heavy eight teardrop spoked propeller asterisk',
-        'heavy outlined black star',
-        'hryvnia sign',
-        'identical to',
-        'increment',
-        'indian rupee sign',
-        'integral',
-        'interrobang',
-        'intersection',
-        'left double angle quote',
-        'left double quotation mark',
-        'left half black circle',
-        'left hook arrow',
-        'left right double arrow',
-        'left single angle quote',
-        'left single quotation mark',
-        'leftwards arrow',
-        'leftwards double arrow',
-        'leftwards harpoon with barb downwards',
-        'leftwards harpoon with barb upwards',
-        'leftwards two headed arrow',
-        'less than or equal to',
-        'logical and',
-        'logical or',
-        'lower right pencil',
-        'micro sign',
-        'music flat sign',
-        'music natural sign',
-        'music sharp sign',
-        'n ary product',
-        'n ary summation',
-        'nabla',
-        'north east arrow',
-        'north west arrow',
-        'not an element of',
-        'not equal to',
-        'not sign',
-        'numero sign',
-        'ohm sign',
-        'one eighth',
-        'one half',
-        'one quarter',
-        'one third',
-        'open centre black star',
-        'outlined black star',
-        'parallel to',
-        'partial differential',
-        'per mille sign',
-        'per ten thousand sign',
-        'pilcrow sign',
-        'pinwheel star',
-        'plus minus sign',
-        'pound sign',
-        'prime',
-        'proportional to',
-        'quarter note',
-        'reference mark',
-        'registered sign',
-        'right double angle quote',
-        'right double quotation mark',
-        'right half black circle',
-        'right hook arrow',
-        'right single angle quote',
-        'right single quotation mark',
-        'rightwards arrow',
-        'rightwards double arrow',
-        'rightwards harpoon with barb downwards',
-        'rightwards harpoon with barb upwards',
-        'rightwards two headed arrow',
-        'ruble sign',
-        'section sign',
-        'service mark',
-        'seven eighths',
-        'shadowed white star',
-        'single high reversed 9 quotation mark',
-        'sound recording copyright',
-        'south east arrow',
-        'south west arrow',
-        'square root',
-        'stress outlined white star',
-        'subscript equals',
-        'subscript minus',
-        'subscript plus',
-        'subset of',
-        'subset of or equal to',
-        'superscript eight',
-        'superscript five',
-        'superscript four',
-        'superscript nine',
-        'superscript one',
-        'superscript seven',
-        'superscript six',
-        'superscript three',
-        'superscript two',
-        'superscript zero',
-        'superset of',
-        'superset of or equal to',
-        'telephone location sign',
-        'therefore',
-        'three eighths',
-        'three quarters',
-        'trade mark sign',
-        'triangular bullet',
-        'triple prime',
-        'turkish lira sign',
-        'two thirds',
-        'union',
-        'up down double arrow',
-        'up tack',
-        'upwards arrow',
-        'upwards double arrow',
-        'upwards harpoon with barb rightwards',
-        'white bullet',
-        'white down pointing triangle',
-        'white four pointed star',
-        'white left pointing triangle',
-        'white right pointing triangle',
-        'white star',
-        'white up pointing triangle',
-        'won sign',
-        'yen sign'
-    ]
+    catalogIdentifier = 'tuna.emoji'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
 
 [[comboMode.bindings]]
 iconPath = 'figure.arms.open'
 key = 'o'
 label = 'Open'
 
-    [[comboMode.bindings.children]]
-    key = 'f'
-    label = 'Firefox'
-    url = 'tuna://run/path.%252FApplications%252FFirefox%2520Developer%2520Edition.app/Open'
+    [comboMode.bindings.destination]
+    type = 'group'
 
-    [[comboMode.bindings.children]]
-    key = 's'
-    label = 'Slack'
-    url = 'tuna://run/path.%252FApplications%252FSlack.app/Open'
+        [[comboMode.bindings.destination.bindings]]
+        key = 'f'
+        label = 'Firefox'
 
-    [[comboMode.bindings.children]]
-    iconPath = '/Users/danielsusman/.local/share/WorktreeXC.app'
-    key = 'w'
-    label = 'Worktree XC'
-    url = 'tuna://run/path.%252FUsers%252Fdanielsusman%252F.local%252Fshare%252FWorktreeXC.app/Open'
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
 
-    [[comboMode.bindings.children]]
-    iconPath = '/Applications/GitHub Copilot for Xcode.app'
-    key = 'r'
-    label = 'Submission PR'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-submission-pr/Run%20Text%20as%20Shell%20Command'
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'path:/Applications/Firefox Developer Edition.app' ]
+                type = 'savedCommand'
 
-    [[comboMode.bindings.children]]
-    key = 'p'
-    label = 'PixelSnap'
-    url = 'tuna://run/TunaCore.AllApplicationsCatalog.PixelSnap%202/Open'
+        [[comboMode.bindings.destination.bindings]]
+        key = 's'
+        label = 'Slack'
 
-    [[comboMode.bindings.children]]
-    key = 'l'
-    label = 'Open Slack (pasteboard)'
-    url = 'tuna://run/text.source%2520~%252F.dotfiles%252Fzsh%252F.env%2520&&%2520zsh%2520~%252F.dotfiles%252Fconfig%252Fbin%252Fslack-convert%2520--pasteboard/Run%20Text%20as%20Shell%20Command'
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
 
-    [[comboMode.bindings.children]]
-    key = 'i'
-    label = 'Open Issue (pasteboard)'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-issue/Run%20Text%20as%20Shell%20Command'
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'path:/Applications/Slack.app' ]
+                type = 'savedCommand'
 
-    [[comboMode.bindings.children]]
-    key = 'y'
-    label = 'Open Linear (pasteboard)'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Fopen-linear/Run%20Text%20as%20Shell%20Command'
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = '/Users/danielsusman/.local/share/WorktreeXC.app'
+        key = 'w'
+        label = 'Worktree XC'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'path:/Users/danielsusman/.local/share/WorktreeXC.app' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = '/Applications/GitHub Copilot for Xcode.app'
+        key = 'r'
+        label = 'Submission PR'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/open-submission-pr' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'p'
+        label = 'PixelSnap'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/open'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'path:/Applications/PixelSnap 2.app' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'l'
+        label = 'Open Slack (pasteboard)'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:source ~/.dotfiles/zsh/.env && zsh ~/.dotfiles/config/bin/slack-convert --pasteboard' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'i'
+        label = 'Open Issue (pasteboard)'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/open-issue' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'y'
+        label = 'Open Linear (pasteboard)'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/open-linear' ]
+                type = 'savedCommand'
 
 [[comboMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
 label = 'Browse'
 
-    [[comboMode.bindings.children]]
-    key = 'g'
-    label = 'PRs'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252Fpulls%252Freviews%253Fq%253Dreview-requested%253A%2540me%252520is%253Aopen%2527/Run%20Text%20as%20Shell%20Command'
+    [comboMode.bindings.destination]
+    type = 'group'
 
-    [[comboMode.bindings.children]]
-    key = 'c'
-    label = 'Calendar'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fcalendar.google.com%2527/Run%20Text%20as%20Shell%20Command'
+        [[comboMode.bindings.destination.bindings]]
+        key = 'g'
+        label = 'PRs'
 
-    [[comboMode.bindings.children]]
-    key = 'p'
-    label = 'NB PRs'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%252Fpulls%252Fassigned%252Fdansusman%2527/Run%20Text%20as%20Shell%20Command'
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
 
-    [[comboMode.bindings.children]]
-    key = 'n'
-    label = 'NB'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fgithub.com%252FGinger-Labs%252FNotability%2527/Run%20Text%20as%20Shell%20Command'
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:noglob ~/bin/openurl https://github.com/pulls/reviews?q=review-requested:@me%20is:open' ]
+                type = 'savedCommand'
 
-    [[comboMode.bindings.children]]
-    key = 'b'
-    label = 'Linear Current Sprint'
-    url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Flinear.app%252Fnotability%252Fview%252Fmy-current-sprint-7b6b80d7a996'/Run%20Text%20as%20Shell%20Command"
+        [[comboMode.bindings.destination.bindings]]
+        key = 'c'
+        label = 'Calendar'
 
-    [[comboMode.bindings.children]]
-    iconPath = 'fire.extinguisher'
-    key = 'm'
-    label = 'Firebase'
-    url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fconsole.firebase.google.com%252Fproject%252Fnotability-2475c%252Foverview%253Fpli%253D1%2527/Run%20Text%20as%20Shell%20Command'
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
 
-    [[comboMode.bindings.children]]
-    key = 'r'
-    label = 'Release Steps'
-    url = "tuna://run/text.~%252Fbin%252Fopenurl%2520'https:%252F%252Fdocs.google.com%252Fdocument%252Fd%252F1uucINR1bJX4uPuiZBhQ2oVIzgzSqpPGTODzqTl24ZTs%252Fedit%253Fusp=sharing'/Run%20Text%20as%20Shell%20Command"
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/openurl https://calendar.google.com' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'p'
+        label = 'NB PRs'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/openurl https://github.com/Ginger-Labs/Notability/pulls/assigned/dansusman' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'n'
+        label = 'NB'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/openurl https://github.com/Ginger-Labs/Notability' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'b'
+        label = 'Linear Current Sprint'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/openurl https://linear.app/notability/view/my-current-sprint-7b6b80d7a996' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = 'fire.extinguisher'
+        key = 'm'
+        label = 'Firebase'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:noglob ~/bin/openurl https://console.firebase.google.com/project/notability-2475c/overview?pli=1' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'r'
+        label = 'Release Steps'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [
+                    'text:noglob ~/bin/openurl https://docs.google.com/document/d/1uucINR1bJX4uPuiZBhQ2oVIzgzSqpPGTODzqTl24ZTs/edit?usp=sharing'
+                ]
+                type = 'savedCommand'
 
 [[comboMode.bindings]]
 key = 'a'
 label = 'Airdrop'
-url = 'tuna://run/text.zsh%2520~%252Fbin%252Fairdrop/Run%20Text%20as%20Shell%20Command'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+        behavior = 'run'
+        presentation = 'automatic'
+        subjectIdentifiers = [ 'text:zsh ~/bin/airdrop' ]
+        type = 'savedCommand'
 
 [[comboMode.bindings]]
 key = 's'
 label = 'Sleep'
-url = 'tuna://run/text.pmset%2520sleepnow/Run%20Text%20as%20Shell%20Command'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+        behavior = 'run'
+        presentation = 'automatic'
+        subjectIdentifiers = [ 'text:pmset sleepnow' ]
+        type = 'savedCommand'
 
 [[comboMode.bindings]]
 iconPath = 'paperplane.fill'
 key = 'u'
 label = 'Audio'
 
-    [[comboMode.bindings.children]]
-    key = 'h'
-    label = 'Headphones'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch%2520headphone/Run%20Text%20as%20Shell%20Command'
+    [comboMode.bindings.destination]
+    type = 'group'
 
-    [[comboMode.bindings.children]]
-    key = 'e'
-    label = 'External Audio'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch/Run%20Text%20as%20Shell%20Command'
+        [[comboMode.bindings.destination.bindings]]
+        key = 'h'
+        label = 'Headphones'
 
-    [[comboMode.bindings.children]]
-    key = 'i'
-    label = 'Input Device'
-    url = 'tuna://run/text.zsh%2520~%252Fbin%252Faudio-switch%2520-i/Run%20Text%20as%20Shell%20Command'
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/audio-switch headphone' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'e'
+        label = 'External Audio'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/audio-switch' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        key = 'i'
+        label = 'Input Device'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/audio-switch -i' ]
+                type = 'savedCommand'
 
 [[comboMode.bindings]]
 iconPath = '/Applications/WireView.app'
 key = 'w'
 label = 'Open WireView'
-url = 'tuna://run/Tuna.Internal.RecentObjectsCatalog.WireView/Open'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        actionIdentifier = 'tuna.common-actions/open'
+        behavior = 'run'
+        presentation = 'automatic'
+        subjectIdentifiers = [ 'path:/Applications/WireView.app' ]
+        type = 'savedCommand'
 
 [[comboMode.bindings]]
 iconPath = 'truck.box.fill'
 key = 'd'
 label = 'dump'
-url = 'tuna://run/text.~%252Fbin%252Fopenurl%2520%2527https%253A%252F%252Fdump-2r6.pages.dev%252F%2527/Run%20Text%20as%20Shell%20Command'
+
+    [comboMode.bindings.destination]
+    type = 'command'
+
+        [comboMode.bindings.destination.command]
+        actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+        behavior = 'run'
+        presentation = 'automatic'
+        subjectIdentifiers = [ 'text:~/bin/openurl https://dump-2r6.pages.dev/' ]
+        type = 'savedCommand'
 
 [hotkeys]
 custom = []
@@ -335,7 +371,6 @@ custom = []
 [settings]
 comboModeCheatsheetExpandGroups = true
 comboModeThemeStyle = 'cheatsheet'
-themeIdentifier = 'com.brnbw.tuna.themes.default'
 
 [[catalogSettings]]
 catalogIdentifier = 'com.brnbw.tuna.themes.default'

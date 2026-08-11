@@ -1,8 +1,11 @@
 #!/bin/bash
 # Open URL(s) in Firefox Developer Edition.
-# Passes the URL as a launch argument instead of a LaunchServices Apple Event.
-# A cold-starting Firefox can drop the Apple Event (blank page on first launch);
-# the launch argument is parsed by Firefox itself, so it works cold or warm.
+# Passes the URL as a binary argument instead of a LaunchServices Apple Event.
+# A cold-starting Firefox can drop the Apple Event (blank page on first launch).
+# Cold start launches the app detached via LaunchServices first, then hands the
+# URL to the running instance. The handoff runs in the foreground: launchers
+# like Tuna kill the command's process tree on exit, so a backgrounded handoff
+# dies before it delivers.
 
 firefox='/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'
 
@@ -11,5 +14,10 @@ if [[ ! -x "$firefox" ]]; then
     exit 1
 fi
 
-"$firefox" "$@" >/dev/null 2>&1 &
-disown
+if ! pgrep -qf "$firefox"; then
+    open -a "Firefox Developer Edition"
+    until pgrep -qf "$firefox"; do sleep 0.1; done
+    sleep 1
+fi
+
+"$firefox" "$@" >/dev/null 2>&1
