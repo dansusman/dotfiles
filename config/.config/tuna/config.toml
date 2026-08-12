@@ -136,6 +136,22 @@ label = 'Open'
                 subjectIdentifiers = [ 'text:zsh ~/bin/open-linear' ]
                 type = 'savedCommand'
 
+        [[comboMode.bindings.destination.bindings]]
+        key = 'o'
+        label = 'Open Xcode Organizer'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [
+                    "text:osascript -e 'tell application \"Xcode\" to activate' -e 'tell application \"System Events\" to keystroke \"o\" using {shift down, option down, command down}'"
+                ]
+                type = 'savedCommand'
+
 [[comboMode.bindings]]
 iconPath = 'trash.fill'
 key = 'b'
@@ -226,7 +242,9 @@ label = 'Browse'
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'automatic'
-                subjectIdentifiers = [ 'text:noglob ~/bin/openurl https://console.firebase.google.com/project/notability-2475c/overview?pli=1' ]
+                subjectIdentifiers = [
+                    'text:noglob ~/bin/openurl https://console.firebase.google.com/project/notability-2475c/overview?pli=1'
+                ]
                 type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
@@ -370,7 +388,10 @@ custom = []
 
 [settings]
 comboModeCheatsheetExpandGroups = true
-comboModeThemeStyle = 'cheatsheet'
+comboModeCheatsheetShowDetails = false
+comboModeCheatsheetShowIcons = false
+comboModeThemeStyle = 'breadcrumb'
+mainWindowAnimationsEnabled = false
 
 [[catalogSettings]]
 catalogIdentifier = 'com.brnbw.tuna.themes.default'
