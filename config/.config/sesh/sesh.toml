@@ -59,6 +59,12 @@ path = "~/Developer/notability/staging"
 startup_command = "git pull"
 
 [[session]]
+name = "release"
+path = "~/Developer/notability"
+startup_command = "ntb_release_worktree"
+preview_command = "bat --language=bash --style=snip --color=always ~/.dotfiles/config/bin/ntb_release_worktree"
+
+[[session]]
 name = "curious"
 path = "~/scratch"
 startup_command = "claude --dangerously-skip-permissions"
