@@ -1,0 +1,88 @@
+#!/bin/bash
+# Open URL(s) in Firefox Developer Edition on a given AeroSpace workspace.
+# Reuses a Firefox window already on that workspace, otherwise opens a new
+# window and moves it there.
+#
+# Firefox hands URLs to whichever of its windows was most recently active, so
+# aiming at a particular window means focusing that window first. Focusing it
+# also switches the visible workspace, which is the point: the tabs and your
+# attention land together.
+#
+# Like openurl, the handoff runs in the foreground. Launchers such as Tuna kill
+# the command's process tree on exit, so a backgrounded handoff dies before it
+# delivers.
+
+set -uo pipefail
+
+# Launchers (Tuna) run commands with a bare PATH that has no /opt/homebrew/bin,
+# so aerospace would silently not be found: every window lookup returns empty,
+# which reads as "no window on that workspace" and opens a redundant window.
+export PATH=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+readonly FIREFOX='/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'
+readonly APP_NAME='Firefox Developer Edition'
+readonly WINDOW_WAIT_TRIES=50
+
+if [[ $# -lt 2 ]]; then
+    echo "usage: openurl-workspace <workspace> <url>..." >&2
+    exit 1
+fi
+
+workspace=$1
+shift
+
+if [[ ! -x $FIREFOX ]]; then
+    echo "Firefox Developer Edition not found at $FIREFOX" >&2
+    exit 1
+fi
+
+firefox_window_ids() {
+    aerospace list-windows --all --format '%{window-id}|%{app-name}' 2>/dev/null |
+        awk -F'|' -v app="$APP_NAME" '$2 == app {print $1}' | sort
+}
+
+firefox_window_on_workspace() {
+    aerospace list-windows --workspace "$1" --format '%{window-id}|%{app-name}' 2>/dev/null |
+        awk -F'|' -v app="$APP_NAME" '$2 == app {print $1; exit}'
+}
+
+if ! pgrep -qf "$FIREFOX"; then
+    open -a "$APP_NAME"
+    until pgrep -qf "$FIREFOX"; do sleep 0.1; done
+    sleep 1
+fi
+
+target=$(firefox_window_on_workspace "$workspace")
+
+if [[ -z $target ]]; then
+    before=$(firefox_window_ids)
+    "$FIREFOX" --new-window "$1" >/dev/null 2>&1
+    shift
+
+    for _ in $(seq 1 $WINDOW_WAIT_TRIES); do
+        target=$(comm -13 <(printf '%s\n' "$before") <(firefox_window_ids) | head -1)
+        [[ -n $target ]] && break
+        sleep 0.1
+    done
+
+    if [[ -n $target ]]; then
+        aerospace move-node-to-workspace "$workspace" --window-id "$target" ||
+            echo "openurl-workspace: could not move window $target to $workspace" >&2
+    else
+        echo "openurl-workspace: new window never appeared in aerospace" >&2
+    fi
+fi
+
+if [[ -n $target ]]; then
+    aerospace focus --window-id "$target" ||
+        echo "openurl-workspace: could not focus window $target" >&2
+fi
+
+# One invocation per url, each as -new-tab. Handing Firefox several urls at once
+# makes it open a new window holding them all instead of adding tabs to the
+# focused window, which defeats aiming at a workspace in the first place.
+for url in "$@"; do
+    "$FIREFOX" -new-tab "$url" >/dev/null 2>&1
+done
+
+exit 0

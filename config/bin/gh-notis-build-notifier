@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# Build the notifier app that gh-notis posts its alerts through.
+#
+# Two things need a dedicated app bundle. The notification's left icon and sender
+# name come from the posting bundle and can't be overridden per notification
+# (-appIcon is accepted but ignored on current macOS). And notification style
+# (Alerts vs Banners) is per app, so posting through our own bundle lets GitHub
+# alerts be persistent without changing that for every other terminal-notifier
+# caller.
+#
+# The binary comes from Homebrew's terminal-notifier, which is native arm64.
+# node-notifier vendors an x86_64-only build that macOS now warns about.
+#
+# Re-run this after upgrading terminal-notifier. Then allow notifications for
+# "GitHub" and set its style to Alerts.
+set -euo pipefail
+
+readonly SOURCE_APP=/opt/homebrew/opt/terminal-notifier/terminal-notifier.app
+readonly TARGET_APP="$HOME/Library/Application Support/gh-notis/GitHub.app"
+readonly MARK_SVG="$HOME/bin/assets/github-mark.svg"
+readonly BUNDLE_ID=com.susman.gh-notis.notifier
+readonly ICON_SIZES=(16 32 128 256 512)
+
+[[ -d $SOURCE_APP ]] || { echo "brew install terminal-notifier" >&2; exit 1; }
+[[ -f $MARK_SVG ]] || { echo "missing $MARK_SVG" >&2; exit 1; }
+command -v rsvg-convert >/dev/null || { echo "brew install librsvg" >&2; exit 1; }
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+iconset="$work/GitHub.iconset"
+mkdir -p "$iconset"
+for size in "${ICON_SIZES[@]}"; do
+    rsvg-convert -w "$size" -h "$size" "$MARK_SVG" -o "$iconset/icon_${size}x${size}.png"
+    rsvg-convert -w $((size * 2)) -h $((size * 2)) "$MARK_SVG" -o "$iconset/icon_${size}x${size}@2x.png"
+done
+iconutil -c icns "$iconset" -o "$work/GitHub.icns"
+
+rm -rf "$TARGET_APP"
+mkdir -p "$(dirname "$TARGET_APP")"
+cp -R "$SOURCE_APP" "$TARGET_APP"
+
+cp "$work/GitHub.icns" "$TARGET_APP/Contents/Resources/GitHub.icns"
+rm -f "$TARGET_APP/Contents/Resources/Terminal.icns"
+plist="$TARGET_APP/Contents/Info.plist"
+plutil -replace CFBundleIdentifier -string "$BUNDLE_ID" "$plist"
+plutil -replace CFBundleName -string GitHub "$plist"
+plutil -replace CFBundleDisplayName -string GitHub "$plist"
+plutil -replace CFBundleIconFile -string GitHub "$plist"
+
+# Editing the bundle invalidates its signature, and macOS won't launch it (so no
+# notification is ever posted) until it's signed again. Ad-hoc is enough locally.
+codesign --force --deep --sign - "$TARGET_APP" 2>/dev/null
+
+# Notification Center resolves an app's icon through LaunchServices and caches
+# it. Without this the notification shows the generic application icon, however
+# valid the icns is.
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+    -f "$TARGET_APP"
+
+echo "built $TARGET_APP"
+"$TARGET_APP/Contents/MacOS/terminal-notifier" \
+    -title GitHub -message "Notifier installed. Set this app to Alerts in System Settings." \
+    -group gh-notis-install

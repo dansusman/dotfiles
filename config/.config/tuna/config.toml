@@ -371,6 +371,59 @@ label = 'dump'
         subjectIdentifiers = [ 'text:~/bin/openurl https://dump-2r6.pages.dev/' ]
         type = 'savedCommand'
 
+[[comboMode.bindings]]
+iconPath = 'bell.badge'
+key = 'g'
+label = 'GitHub notis'
+
+    [comboMode.bindings.destination]
+    type = 'group'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = 'tray.and.arrow.up'
+        key = 'o'
+        label = 'Open all + mark read'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/gh-notis open' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = 'checkmark.circle'
+        key = 'c'
+        label = 'Clear without opening'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/gh-notis clear' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = 'safari'
+        key = 'i'
+        label = 'Open inbox'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:~/bin/openurl https://github.com/notifications' ]
+                type = 'savedCommand'
+
 [hotkeys]
 custom = []
 

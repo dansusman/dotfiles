@@ -1,0 +1,396 @@
+#!/usr/bin/env bash
+# GitHub notification inbox without a browser tab open all day.
+#
+#   gh-notis open    open every thread in the inbox in the browser, then file it
+#   gh-notis clear   file every thread without opening anything
+#   gh-notis count   print the inbox size
+#   gh-notis watch   poll forever, one desktop notification per new thread
+#
+# Filing a thread means DELETE (mark done), not PATCH (mark read). Marking read
+# only drops the unread dot and leaves the thread sitting in the Inbox tab, so a
+# read-only workflow can never reach an empty inbox.
+#
+# The Inbox tab holds everything not done, and no API reports done state: the
+# list endpoint returns done threads mixed in with live ones, indistinguishable,
+# and neither GraphQL nor any filter exposes it. So the inbox is tracked locally
+# in a ledger of thread ids. See ledger_add for how it stays honest.
+set -euo pipefail
+
+# Launchers (Tuna) run commands with a bare PATH that has no /opt/homebrew/bin.
+export PATH=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin
+# sketchybar-msg refuses to run without USER, which a stripped environment lacks.
+export USER="${USER:-$(id -un)}"
+
+readonly GH=/opt/homebrew/bin/gh
+readonly LOG_FILE="$HOME/Library/Logs/gh-notis.log"
+readonly OSASCRIPT=/usr/bin/osascript
+readonly AFPLAY=/usr/bin/afplay
+# Notification persistence is a per-app setting, not a per-notification flag, so
+# the two styles have to come from two senders: new activity should sit on screen
+# until dismissed (System Settings calls that "Alerts"), while an action
+# confirmation should fade on its own ("Banners").
+#
+# Our own bundle (see gh-notis-build-notifier), so alerts carry a GitHub icon and
+# sender name, and so their Alerts-vs-Banners style is set independently of every
+# other terminal-notifier caller. It also supports click actions and grouping,
+# which osascript can't do.
+readonly ALERTER="$HOME/Library/Application Support/gh-notis/GitHub.app/Contents/MacOS/terminal-notifier"
+# A different chime from the one claude-notify-sound plays, so the two are
+# distinguishable without looking.
+readonly CHIME="$HOME/bin/assets/notify-grandfather.mp3"
+readonly OPENURL="$HOME/bin/openurl-workspace"
+readonly BROWSER_WORKSPACE=5
+readonly STATE_DIR="$HOME/.local/state/gh-notis"
+readonly SEEN_FILE="$STATE_DIR/seen"
+readonly INBOX_FILE="$STATE_DIR/inbox"
+readonly PENDING_DIR="$STATE_DIR/pending"
+readonly COUNT_FILE="$STATE_DIR/count"
+readonly SKETCHYBAR=/opt/homebrew/bin/sketchybar
+readonly SKETCHYBAR_EVENT=gh_notis_change
+readonly API=https://api.github.com
+# all=true, because a thread must join the ledger on any activity, not only
+# while it still reads as unread: activity is what puts it back in the Inbox
+# tab, and reading it elsewhere (phone, browser) doesn't file it.
+readonly RECENT_PATH='/notifications?all=true&per_page=50'
+readonly WATERMARK_FILE="$STATE_DIR/watermark"
+readonly FALLBACK_POLL_INTERVAL=60
+readonly SEEN_HISTORY=500
+
+# Thread rows as TSV: id, reason, repo, updated_at, title, web url.
+#
+# The web url is derived from subject.url by string rewrite rather than a
+# follow-up API call: subject.url is stable and the mapping is total for the
+# types that actually show up in an inbox. github.com redirects /issues/N to
+# /pull/N, so notifications that report a PR under the issues path still land
+# right.
+readonly THREAD_TSV_FILTER='
+  def web_url:
+    (.subject.url // "")
+    | if . == "" then ""
+      else sub("^https://api\\.github\\.com/repos/"; "https://github.com/")
+         | sub("/pulls/"; "/pull/")
+         | sub("/commits/"; "/commit/")
+         | sub("/releases/[0-9]+$"; "/releases")
+      end;
+  .[]
+  | [ .id,
+      .reason,
+      .repository.full_name,
+      .updated_at,
+      (.subject.title | gsub("[\t\n]"; " ")),
+      (web_url as $u
+       | if $u == "" then "https://github.com/" + .repository.full_name else $u end)
+    ]
+  | @tsv'
+
+# Hotkey runs have nowhere to print: a launcher discards stdout and stderr, so
+# every action leaves a line here instead. Without it a failed file-as-done is
+# indistinguishable from success.
+log() {
+    printf '%s %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >>"$LOG_FILE"
+}
+
+die() {
+    log "FATAL $*"
+    echo "gh-notis: $*" >&2
+    exit 1
+}
+
+token() {
+    "$GH" auth token 2>/dev/null || die "no GitHub token; run 'gh auth login'"
+}
+
+# Whether this sits on screen until dismissed or fades is the app's notification
+# style in System Settings, not something the caller can ask for. Set
+# terminal-notifier to "Alerts" there; nothing in this script can override it.
+notify_alert() {
+    local repo=$1 subject=$2 reason=$3 url=$4 group=$5
+
+    if [[ ! -x $ALERTER ]]; then
+        log "alerter missing at $ALERTER; using a transient notification"
+        notify_transient "$repo" "$subject" "$reason"
+        return
+    fi
+
+    "$ALERTER" -title "$repo" -subtitle "$reason" -message "$subject" \
+        -group "$group" -execute "$OPENURL $BROWSER_WORKSPACE '$url'" >/dev/null ||
+        log "alert failed: $repo / $subject"
+}
+
+# Fades on its own. Arguments arrive through argv rather than interpolated into
+# the AppleScript, so a title containing a quote can't break the script.
+notify_transient() {
+    local title=$1 message=$2 subtitle=${3:-}
+    "$OSASCRIPT" - "$message" "$title" "$subtitle" <<'APPLESCRIPT' >/dev/null \
+        || echo "gh-notis: notify failed: $title / $message" >&2
+on run argv
+    set theBody to item 1 of argv
+    set theTitle to item 2 of argv
+    set theSubtitle to item 3 of argv
+    if theSubtitle is "" then
+        display notification theBody with title theTitle
+    else
+        display notification theBody with title theTitle subtitle theSubtitle
+    end if
+end run
+APPLESCRIPT
+}
+
+# Backgrounded: the chime outlasts a poll cycle and the watcher shouldn't wait
+# on it. Fires once per batch of new activity, not once per thread.
+chime() {
+    [[ -f $CHIME ]] || return 0
+    "$AFPLAY" "$CHIME" >/dev/null 2>&1 &
+}
+
+# A thread keeps one file here from its first banner until the inbox is dealt
+# with, which is what stops a busy PR from banner-spamming: later activity bumps
+# the counter but stays silent.
+pending_key() {
+    printf '%s' "$(tr -c '[:alnum:]' '-' <<<"$1")"
+}
+
+forget_pending() {
+    rm -rf "$PENDING_DIR"
+}
+
+# Threads believed to be sitting in the Inbox tab: read or unread, just not
+# filed. GitHub won't tell us this — done state has no API — so we keep the
+# tally ourselves. A thread joins when it shows up unread and leaves when this
+# tool marks it done.
+#
+# The one way it drifts is marking something done in the browser: nothing
+# reports that back, so the entry lingers and the count reads high. `clear`
+# resyncs by emptying both the inbox and this file.
+ledger_add() {
+    [[ -n $1 ]] || return 0
+    mkdir -p "$STATE_DIR"
+    touch "$INBOX_FILE"
+    printf '%s\n' "$1" "$(cat "$INBOX_FILE")" | grep . | sort -u >"$INBOX_FILE.tmp"
+    mv "$INBOX_FILE.tmp" "$INBOX_FILE"
+}
+
+ledger_remove() {
+    [[ -n $1 ]] || return 0
+    [[ -f $INBOX_FILE ]] || return 0
+    grep -vxF -f <(printf '%s\n' "$1") "$INBOX_FILE" >"$INBOX_FILE.tmp" || true
+    mv "$INBOX_FILE.tmp" "$INBOX_FILE"
+}
+
+ledger_count() {
+    grep -c . "$INBOX_FILE" 2>/dev/null || echo 0
+}
+
+# The bar reads this count instead of querying GitHub itself, so the poller
+# stays the only thing talking to the API.
+publish_count() {
+    mkdir -p "$STATE_DIR"
+    echo "$1" >"$COUNT_FILE"
+    [[ -x $SKETCHYBAR ]] && "$SKETCHYBAR" --trigger "$SKETCHYBAR_EVENT" >/dev/null 2>&1 || true
+}
+
+rows_from() {
+    jq -r "$THREAD_TSV_FILTER"
+}
+
+mark_thread_done() {
+    local status
+    status=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE \
+        -H "Authorization: Bearer $(token)" \
+        -H "Accept: application/vnd.github+json" \
+        "$API/notifications/threads/$1" || echo 000)
+
+    case $status in
+        20*) log "done $1" ;;
+        *) log "DONE FAILED $1 (http $status)"; return 1 ;;
+    esac
+}
+
+# One id failing must not abandon the rest, so xargs runs them all and its exit
+# status only reports that something failed. Returns non-zero in that case so the
+# caller can say so out loud.
+mark_ids_done() {
+    [[ -n $1 ]] || return 0
+    if ! printf '%s\n' "$1" | xargs -P 4 -I {} "$0" _done {}; then
+        log "some threads could not be marked done"
+        return 1
+    fi
+}
+
+cmd_count() {
+    ledger_count
+}
+
+all_json() {
+    "$GH" api "notifications?all=true&per_page=50" --paginate --slurp 2>/dev/null | jq 'flatten'
+}
+
+# Opens the whole inbox, not just the unread part: a thread you read but never
+# filed is still work you haven't finished. The ledger names those; unread is
+# unioned in so a cold ledger still opens new activity.
+cmd_open() {
+    local ledger_json rows
+    touch "$INBOX_FILE"
+    ledger_json=$(jq -R -s 'split("\n") | map(select(length > 0))' "$INBOX_FILE")
+    rows=$(all_json \
+        | jq --argjson ledger "$ledger_json" '[.[] | select(.unread or (.id | IN($ledger[])))]' \
+        | rows_from)
+
+    if [[ -z $rows ]]; then
+        forget_pending
+        publish_count 0
+        notify_transient "GitHub" "Inbox already clear"
+        return
+    fi
+
+    local -a ids=() urls=()
+    local id reason repo updated title url
+    while IFS=$'\t' read -r id reason repo updated title url; do
+        ids+=("$id")
+        urls+=("$url")
+    done <<<"$rows"
+
+    # Dedupe: several notifications often point at one PR.
+    local -a unique_urls=()
+    while IFS= read -r url; do unique_urls+=("$url"); done < <(printf '%s\n' "${urls[@]}" | awk '!seen[$0]++')
+
+    log "open: ${#ids[@]} threads, ${#unique_urls[@]} urls -> workspace $BROWSER_WORKSPACE"
+    "$OPENURL" "$BROWSER_WORKSPACE" "${unique_urls[@]}" 2>>"$LOG_FILE" ||
+        log "opener exited $?"
+
+    if ! mark_ids_done "$(printf '%s\n' "${ids[@]}")"; then
+        notify_transient "GitHub" "Some threads stayed in the inbox" "filing failed, see gh-notis.log"
+    fi
+    ledger_remove "$(printf '%s\n' "${ids[@]}")"
+
+    # Opened threads are already seen; don't let the watcher re-announce them.
+    # No confirmation on success: the tabs and the bar dropping to zero already
+    # say it happened.
+    record_seen_rows "$rows"
+    forget_pending
+    publish_count "$(ledger_count)"
+}
+
+# Empties the Inbox tab, not just the unread ones. Done state is invisible to
+# the API, so this marks every thread done including those already done; the
+# repeat calls are harmless and it's the only way to guarantee an empty inbox.
+cmd_clear() {
+    local ids count
+    ids=$(all_json | jq -r '.[].id')
+    count=$(grep -c . <<<"$ids" || true)
+
+    if mark_ids_done "$ids"; then
+        # Worth saying out loud: clearing opens no tabs, so the count is the only
+        # sign of how much just got filed.
+        notify_transient "GitHub" "Inbox cleared" "$count threads marked done"
+    else
+        notify_transient "GitHub" "Inbox not fully cleared" "see gh-notis.log"
+    fi
+
+    : >"$INBOX_FILE"
+    forget_pending
+    publish_count 0
+}
+
+record_seen_rows() {
+    mkdir -p "$STATE_DIR"
+    touch "$SEEN_FILE"
+    awk -F'\t' 'NF > 1 {print $1 "@" $4}' <<<"$1" >>"$SEEN_FILE"
+    tail -n "$SEEN_HISTORY" "$SEEN_FILE" >"$SEEN_FILE.tmp" && mv "$SEEN_FILE.tmp" "$SEEN_FILE"
+}
+
+announce_new() {
+    local rows=$1
+    local id reason repo updated title url key row
+    local -a fresh=()
+
+    while IFS=$'\t' read -r id reason repo updated title url; do
+        [[ -z $id ]] && continue
+        key="$id@$updated"
+        grep -qxF "$key" "$SEEN_FILE" 2>/dev/null && continue
+        fresh+=("$id"$'\t'"$reason"$'\t'"$repo"$'\t'"$updated"$'\t'"$title"$'\t'"$url")
+    done <<<"$rows"
+
+    [[ ${#fresh[@]} -eq 0 ]] && return
+
+    mkdir -p "$PENDING_DIR"
+    local key count announced=0
+    for row in "${fresh[@]}"; do
+        IFS=$'\t' read -r id reason repo updated title url <<<"$row"
+        key=$(pending_key "$url")
+        count=$(( $(cat "$PENDING_DIR/$key" 2>/dev/null || echo 0) + 1 ))
+        echo "$count" >"$PENDING_DIR/$key"
+
+        if [[ $count -eq 1 ]]; then
+            notify_alert "$repo" "$title" "$reason" "$url" "$key"
+            log "alert $repo $title"
+            announced=1
+        fi
+    done
+
+    if [[ $announced -eq 1 ]]; then
+        chime
+    fi
+
+    record_seen_rows "$(printf '%s\n' "${fresh[@]}")"
+}
+
+# The endpoint answers with an ETag but no Last-Modified, so the conditional
+# request has to be If-None-Match. A 304 doesn't count against the rate limit,
+# which keeps a 60s poll affordable.
+cmd_watch() {
+    local etag="" priming="" headers body status interval rows watermark
+
+    # A cold watermark means every thread in the response looks new, which would
+    # both spam banners and inflate the ledger. First poll only sets the mark.
+    [[ -f $WATERMARK_FILE ]] || priming=1
+    watermark=$(cat "$WATERMARK_FILE" 2>/dev/null || echo "")
+
+    while :; do
+        headers=$(mktemp) body=$(mktemp)
+
+        status=$(curl -sS -o "$body" -D "$headers" -w '%{http_code}' \
+            -H "Authorization: Bearer $(token)" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            ${etag:+-H "If-None-Match: $etag"} \
+            "$API$RECENT_PATH" || echo 000)
+
+        # macOS awk is BWK awk, which has no IGNORECASE; header case varies, so
+        # lowercase the line before matching.
+        interval=$(awk 'tolower($0) ~ /^x-poll-interval:/ {gsub(/[^0-9]/,"",$2); print $2}' "$headers")
+        [[ $interval =~ ^[0-9]+$ ]] || interval=$FALLBACK_POLL_INTERVAL
+
+        if [[ $status == 200 ]]; then
+            etag=$(awk 'tolower($0) ~ /^etag:/ {sub(/^[^:]*: */,""); sub(/\r$/,""); print}' "$headers")
+
+            if [[ -n $priming ]]; then
+                priming=""
+            else
+                ledger_add "$(jq -r --arg mark "$watermark" \
+                    '.[] | select(.updated_at > $mark) | .id' <"$body")"
+                rows=$(jq --arg mark "$watermark" \
+                    '[.[] | select(.unread and .updated_at > $mark)]' <"$body" | rows_from)
+                [[ -n $rows ]] && announce_new "$rows"
+            fi
+
+            watermark=$(jq -r '[.[].updated_at] | max // ""' <"$body")
+            [[ -n $watermark ]] && echo "$watermark" >"$WATERMARK_FILE"
+            publish_count "$(ledger_count)"
+        fi
+
+        rm -f "$headers" "$body"
+        sleep "$interval"
+    done
+}
+
+case ${1:-} in
+    open) cmd_open ;;
+    clear) cmd_clear ;;
+    count) cmd_count ;;
+    watch) cmd_watch ;;
+    _done) mark_thread_done "$2" ;;
+    _alert) notify_alert "$2" "$3" "$4" "$5" "$6" ;;
+    _transient) notify_transient "$2" "$3" "${4:-}" ;;
+    *) die "usage: gh-notis {open|clear|count|watch}" ;;
+esac

@@ -94,5 +94,15 @@ sketchybar --add item clock right \
                      label.drawing=off           \
            --subscribe net wifi_change \
 
+# The gh-notis launch agent triggers gh_notis_change after each poll. The
+# update_freq is only a safety net for a trigger lost across a sketchybar
+# restart; the script just reads a file, so it costs nothing.
+sketchybar --add event gh_notis_change \
+           --add item gh_notis right \
+           --set gh_notis update_freq=300 \
+                          script="$PLUGIN_DIR/gh_notis.sh" \
+                          click_script='if [ "$BUTTON" = "right" ]; then ~/bin/gh-notis clear; else ~/bin/gh-notis open; fi' \
+           --subscribe gh_notis gh_notis_change
+
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
