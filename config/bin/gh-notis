@@ -2,7 +2,7 @@
 # GitHub notification inbox without a browser tab open all day.
 #
 #   gh-notis open    open every thread in the inbox in the browser, then file it
-#   gh-notis clear   file every thread without opening anything
+#   gh-notis clear   file every thread in the inbox without opening anything
 #   gh-notis count   print the inbox size
 #   gh-notis watch   poll forever, one desktop notification per new thread
 #
@@ -48,9 +48,9 @@ readonly COUNT_FILE="$STATE_DIR/count"
 readonly SKETCHYBAR=/opt/homebrew/bin/sketchybar
 readonly SKETCHYBAR_EVENT=gh_notis_change
 readonly API=https://api.github.com
-# all=true, because a thread must join the ledger on any activity, not only
-# while it still reads as unread: activity is what puts it back in the Inbox
-# tab, and reading it elsewhere (phone, browser) doesn't file it.
+# all=true so done threads keep contributing their updated_at to the watermark;
+# only unread ones join the ledger, since a thread's updated_at also bumps on
+# your own activity, which never needs attention.
 readonly RECENT_PATH='/notifications?all=true&per_page=50'
 readonly WATERMARK_FILE="$STATE_DIR/watermark"
 readonly FALLBACK_POLL_INTERVAL=60
@@ -225,16 +225,21 @@ all_json() {
     "$GH" api "notifications?all=true&per_page=50" --paginate --slurp 2>/dev/null | jq 'flatten'
 }
 
-# Opens the whole inbox, not just the unread part: a thread you read but never
-# filed is still work you haven't finished. The ledger names those; unread is
-# unioned in so a cold ledger still opens new activity.
-cmd_open() {
-    local ledger_json rows
+# The whole inbox, not just the unread part: a thread you read but never filed
+# is still work you haven't finished. The ledger names those; unread is unioned
+# in so a cold ledger still covers new activity.
+inbox_rows() {
+    local ledger_json
     touch "$INBOX_FILE"
     ledger_json=$(jq -R -s 'split("\n") | map(select(length > 0))' "$INBOX_FILE")
-    rows=$(all_json \
+    all_json \
         | jq --argjson ledger "$ledger_json" '[.[] | select(.unread or (.id | IN($ledger[])))]' \
-        | rows_from)
+        | rows_from
+}
+
+cmd_open() {
+    local rows
+    rows=$(inbox_rows)
 
     if [[ -z $rows ]]; then
         forget_pending
@@ -271,13 +276,20 @@ cmd_open() {
     publish_count "$(ledger_count)"
 }
 
-# Empties the Inbox tab, not just the unread ones. Done state is invisible to
-# the API, so this marks every thread done including those already done; the
-# repeat calls are harmless and it's the only way to guarantee an empty inbox.
+# Same selection as open, just no browser.
 cmd_clear() {
-    local ids count
-    ids=$(all_json | jq -r '.[].id')
-    count=$(grep -c . <<<"$ids" || true)
+    local rows ids count
+    rows=$(inbox_rows)
+
+    if [[ -z $rows ]]; then
+        forget_pending
+        publish_count 0
+        notify_transient "GitHub" "Inbox already clear"
+        return
+    fi
+
+    ids=$(cut -f1 <<<"$rows")
+    count=$(grep -c . <<<"$ids")
 
     if mark_ids_done "$ids"; then
         # Worth saying out loud: clearing opens no tabs, so the count is the only
@@ -286,10 +298,10 @@ cmd_clear() {
     else
         notify_transient "GitHub" "Inbox not fully cleared" "see gh-notis.log"
     fi
-
-    : >"$INBOX_FILE"
+    ledger_remove "$ids"
+    record_seen_rows "$rows"
     forget_pending
-    publish_count 0
+    publish_count "$(ledger_count)"
 }
 
 record_seen_rows() {
@@ -368,7 +380,7 @@ cmd_watch() {
                 priming=""
             else
                 ledger_add "$(jq -r --arg mark "$watermark" \
-                    '.[] | select(.updated_at > $mark) | .id' <"$body")"
+                    '.[] | select(.unread and .updated_at > $mark) | .id' <"$body")"
                 rows=$(jq --arg mark "$watermark" \
                     '[.[] | select(.unread and .updated_at > $mark)]' <"$body" | rows_from)
                 [[ -n $rows ]] && announce_new "$rows"
