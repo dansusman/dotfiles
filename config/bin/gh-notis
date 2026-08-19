@@ -48,9 +48,10 @@ readonly COUNT_FILE="$STATE_DIR/count"
 readonly SKETCHYBAR=/opt/homebrew/bin/sketchybar
 readonly SKETCHYBAR_EVENT=gh_notis_change
 readonly API=https://api.github.com
-# all=true so done threads keep contributing their updated_at to the watermark;
-# only unread ones join the ledger, since a thread's updated_at also bumps on
-# your own activity, which never needs attention.
+# all=true so done threads keep contributing their updated_at to the watermark.
+# Only unread ones join the ledger, and even those pass through
+# filter_worth_announcing first; see its comment for the resurrection problem
+# it solves.
 readonly RECENT_PATH='/notifications?all=true&per_page=50'
 readonly WATERMARK_FILE="$STATE_DIR/watermark"
 readonly FALLBACK_POLL_INTERVAL=60
@@ -191,6 +192,86 @@ publish_count() {
 
 rows_from() {
     jq -r "$THREAD_TSV_FILTER"
+}
+
+api_get() {
+    curl -sS \
+        -H "Authorization: Bearer $(token)" \
+        -H "Accept: application/vnd.github+json" \
+        "$1" 2>/dev/null || true
+}
+
+SELF_LOGIN=""
+self_login() {
+    [[ -n $SELF_LOGIN ]] || SELF_LOGIN=$("$GH" api user --jq .login 2>/dev/null || true)
+    printf '%s' "$SELF_LOGIN"
+}
+
+# The newest updated_at ever recorded for this thread id, empty if never seen.
+last_sighting() {
+    grep "^$1@" "$SEEN_FILE" 2>/dev/null | cut -d@ -f2 | sort | tail -1 || true
+}
+
+# The newest event on a thread that names a time and (usually) an actor, as
+# "time<TAB>actor": the latest comment or review, a merge, or a close. Pushes,
+# label and milestone churn, assignee changes, and edits leave nothing here.
+# A close without a merge reports no actor for pull requests, and anything
+# unfetchable reports nothing at all.
+thread_attribution() {
+    local comment_url subject_url type events=""
+    comment_url=$(jq -r '.subject.latest_comment_url // ""' <<<"$1")
+    subject_url=$(jq -r '.subject.url // ""' <<<"$1")
+    type=$(jq -r '.subject.type // ""' <<<"$1")
+
+    # With no comments yet, latest_comment_url is just the subject itself.
+    if [[ -n $comment_url && $comment_url != "$subject_url" ]]; then
+        events+=$(api_get "$comment_url" |
+            jq -r 'select(.user.login) | [(.submitted_at // .created_at // ""), .user.login] | @tsv')$'\n'
+    fi
+    if [[ -n $subject_url ]]; then
+        case $type in
+            PullRequest)
+                events+=$(api_get "$subject_url" | jq -r '
+                    ( select(.merged_at != null) | [.merged_at, (.merged_by.login // "")] ),
+                    ( select(.merged_at == null and .closed_at != null) | [.closed_at, ""] )
+                    | @tsv')$'\n' ;;
+            Issue)
+                events+=$(api_get "$subject_url" | jq -r '
+                    select(.closed_at != null)
+                    | [.closed_at, (.closed_by.login // "")] | @tsv')$'\n' ;;
+        esac
+    fi
+    grep . <<<"$events" | sort -r | head -1 || true
+}
+
+# A thread's first-ever notification is always real: GitHub never creates one
+# for your own activity or a bare push. But a thread marked done comes back
+# unread on ANY later activity — pushes, label and milestone churn, bot edits,
+# and your own review or merge of a just-filed thread included. So a
+# resurrection is announced only when a comment, review, merge, or close newer
+# than the last sighting names someone other than you; everything it can't
+# attribute stays silent. Silenced threads are still unread on GitHub, so
+# `open` sweeps them up either way.
+filter_worth_announcing() {
+    local line id sighting event etime eactor self
+    self=$(self_login)
+    while IFS= read -r line; do
+        [[ -z $line ]] && continue
+        id=$(jq -r '.id' <<<"$line")
+        sighting=$(last_sighting "$id")
+        if [[ -z $sighting ]]; then
+            printf '%s\n' "$line"
+            continue
+        fi
+        event=$(thread_attribution "$line")
+        etime=${event%%$'\t'*}
+        eactor=${event#*$'\t'}
+        if [[ -n $etime && $etime > $sighting && $eactor != "$self" ]]; then
+            printf '%s\n' "$line"
+        else
+            log "skip unattributed: $(jq -r '.subject.title' <<<"$line")"
+        fi
+    done
 }
 
 mark_thread_done() {
@@ -351,7 +432,7 @@ announce_new() {
 # request has to be If-None-Match. A 304 doesn't count against the rate limit,
 # which keeps a 60s poll affordable.
 cmd_watch() {
-    local etag="" priming="" headers body status interval rows watermark
+    local etag="" priming="" headers body status interval fresh rows watermark
 
     # A cold watermark means every thread in the response looks new, which would
     # both spam banners and inflate the ledger. First poll only sets the mark.
@@ -379,10 +460,10 @@ cmd_watch() {
             if [[ -n $priming ]]; then
                 priming=""
             else
-                ledger_add "$(jq -r --arg mark "$watermark" \
-                    '.[] | select(.unread and .updated_at > $mark) | .id' <"$body")"
-                rows=$(jq --arg mark "$watermark" \
-                    '[.[] | select(.unread and .updated_at > $mark)]' <"$body" | rows_from)
+                fresh=$(jq -c --arg mark "$watermark" \
+                    '.[] | select(.unread and .updated_at > $mark)' <"$body" | filter_worth_announcing)
+                ledger_add "$(jq -r '.id' <<<"$fresh")"
+                rows=$(jq -s '.' <<<"$fresh" | rows_from)
                 [[ -n $rows ]] && announce_new "$rows"
             fi
 
