@@ -2,6 +2,9 @@
 # Check out the newest submission PR branch into a worktree and drop into it.
 set -Eeuo pipefail
 
+BARE=false
+[ "${1:-}" = "--bare" ] && BARE=true
+
 cd ~/Developer/notability/ || exit 1
 
 echo "📋 Finding newest submission PR..."
@@ -46,9 +49,19 @@ fi
 cd "$WORKTREE" || exit 1
 
 SESSION="release-pr-$PR_NUMBER"
-tmux new-session -d -s "$SESSION" -c "$PWD" -n "code" "$SHELL" 2>/dev/null || true
-tmux new-window  -t "$SESSION" -c "$PWD" -n "pr" "GLAMOUR_STYLE=light gh pr view $PR_NUMBER; $SHELL" 2>/dev/null || true
-tmux select-window -t "$SESSION:code"
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+  tmux new-session -d -s "$SESSION" -c "$PWD" -n "code" "$SHELL"
+  if [ "$BARE" = false ]; then
+    tmux new-window -t "$SESSION" -c "$PWD" -n "claude"
+    tmux split-window -t "$SESSION:claude" -h -c "$PWD"
+    tmux split-window -t "$SESSION:claude" -h -c "$PWD"
+    tmux select-layout -t "$SESSION:claude" even-horizontal
+    tmux send-keys -t "$SESSION:claude.0" 'cs "/ios-release:generate-whats-new"' Enter
+    tmux send-keys -t "$SESSION:claude.1" 'cs "/ios-release:generate-beta-test-details"' Enter
+    tmux send-keys -t "$SESSION:claude.2" 'cs "/ios-release:support-callouts"' Enter
+  fi
+  tmux select-window -t "$SESSION:code"
+fi
 
 tmux switch-client -t "$SESSION" 2>/dev/null || sesh connect "$SESSION"
 tmux kill-session -t "release" 2>/dev/null || true
