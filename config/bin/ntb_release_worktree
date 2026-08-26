@@ -52,13 +52,12 @@ SESSION="release-pr-$PR_NUMBER"
 if ! tmux has-session -t "$SESSION" 2>/dev/null; then
   tmux new-session -d -s "$SESSION" -c "$PWD" -n "code" "$SHELL"
   if [ "$BARE" = false ]; then
-    tmux new-window -t "$SESSION" -c "$PWD" -n "claude"
-    tmux split-window -t "$SESSION:claude" -h -c "$PWD"
-    tmux split-window -t "$SESSION:claude" -h -c "$PWD"
-    tmux select-layout -t "$SESSION:claude" even-horizontal
-    tmux send-keys -t "$SESSION:claude.0" 'cs "/ios-release:generate-whats-new"' Enter
-    tmux send-keys -t "$SESSION:claude.1" 'cs "/ios-release:generate-beta-test-details"' Enter
-    tmux send-keys -t "$SESSION:claude.2" 'cs "/ios-release:support-callouts"' Enter
+    tmux new-window -t "$SESSION" -c "$PWD" -n "whats-new"
+    tmux new-window -t "$SESSION" -c "$PWD" -n "beta-details"
+    tmux new-window -t "$SESSION" -c "$PWD" -n "callouts"
+    tmux send-keys -t "$SESSION:whats-new" 'cs "/ios-release:generate-whats-new"' Enter
+    tmux send-keys -t "$SESSION:beta-details" 'cs "/ios-release:generate-beta-test-details"' Enter
+    tmux send-keys -t "$SESSION:callouts" 'cs "/ios-release:support-callouts"' Enter
   fi
   tmux select-window -t "$SESSION:code"
 fi
