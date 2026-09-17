@@ -3,6 +3,12 @@ searchPriorities = []
 sortOrders = []
 
     [[catalogs.globalScopes]]
+    catalogIdentifier = 'tuna.commands'
+
+        [catalogs.globalScopes.scope]
+        kind = 'none'
+
+    [[catalogs.globalScopes]]
     catalogIdentifier = 'tuna.effects'
 
         [catalogs.globalScopes.scope]
@@ -63,6 +69,21 @@ label = 'Open'
                 behavior = 'run'
                 presentation = 'automatic'
                 subjectIdentifiers = [ 'path:/Users/danielsusman/.local/share/WorktreeXC.app' ]
+                type = 'savedCommand'
+
+        [[comboMode.bindings.destination.bindings]]
+        iconPath = '/Applications/Xcode.app'
+        key = 'q'
+        label = 'Session XC'
+
+            [comboMode.bindings.destination.bindings.destination]
+            type = 'command'
+
+                [comboMode.bindings.destination.bindings.destination.command]
+                actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
+                behavior = 'run'
+                presentation = 'automatic'
+                subjectIdentifiers = [ 'text:zsh ~/bin/open-session-xcode' ]
                 type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]
@@ -190,7 +211,7 @@ label = 'Browse'
 
         [[comboMode.bindings.destination.bindings]]
         key = 'p'
-        label = 'NB PRs'
+        label = 'Open PRs'
 
             [comboMode.bindings.destination.bindings.destination]
             type = 'command'
@@ -199,7 +220,7 @@ label = 'Browse'
                 actionIdentifier = 'tuna.common-actions/run-text-as-shell-command'
                 behavior = 'run'
                 presentation = 'automatic'
-                subjectIdentifiers = [ 'text:~/bin/openurl https://github.com/Ginger-Labs/Notability/pulls/assigned/dansusman' ]
+                subjectIdentifiers = [ 'text:~/bin/openurl https://github.com/pulls/assigned' ]
                 type = 'savedCommand'
 
         [[comboMode.bindings.destination.bindings]]

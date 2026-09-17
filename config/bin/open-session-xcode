@@ -1,0 +1,32 @@
+#!/bin/zsh
+# Open ios/Notability.xcodeproj for the worktree of the most recently active tmux client.
+# Mirrors the `q` alias (close Xcode windows, then open the project) without a picker.
+
+emulate -L zsh
+setopt err_return no_unset pipe_fail
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+
+notify() { osascript -e "display notification \"$1\" with title \"Session XC\""; }
+
+cwd=$(tmux list-clients -F '#{client_activity} #{pane_current_path}' 2>/dev/null \
+  | sort -rn | head -1 | cut -d' ' -f2-)
+
+if [[ -z "$cwd" ]]; then
+  notify "No attached tmux client"
+  exit 1
+fi
+
+root=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null) || {
+  notify "Not a git worktree: $cwd"
+  exit 1
+}
+
+proj="$root/ios/Notability.xcodeproj"
+if [[ ! -e "$proj" ]]; then
+  notify "No Notability.xcodeproj in ${root:t}"
+  exit 1
+fi
+
+osascript -e 'tell application "Xcode" to close windows'
+/usr/bin/open "$proj"
