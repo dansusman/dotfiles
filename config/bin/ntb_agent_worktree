@@ -14,14 +14,7 @@ if [ -z "$PURPOSE" ]; then
 fi
 
 echo "🤖 Naming session..."
-PROMPT="Give exactly ONE lowercase word (two only if absolutely necessary, joined by hyphen) that captures the essence of this dev session. Output just the word(s), no punctuation, no quotes, no explanation. Session purpose: ${PURPOSE}"
-RAW=""
-if RAW=$(claude -p "$PROMPT" 2>&1); then
-  NAME=$(echo "$RAW" | tr -d '\n' | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-' | sed 's/^-*//;s/-*$//')
-else
-  echo "⚠️  claude failed: $RAW"
-  NAME=""
-fi
+NAME=""
 
 if [ -z "$NAME" ]; then
   SLUG=$(echo "$PURPOSE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/^-*//;s/-*$//' | cut -c1-20)
