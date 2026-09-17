@@ -5,6 +5,7 @@
 - American English. Avoid emdashes by default; there's usually a better way to phrase things.
 - At the start of every session, invoke the caveman skill via the Skill tool (Skill(caveman)) before your first response, unless I have said "stop caveman" or "normal mode". Do this regardless of whether my first message matches the skill's trigger keywords.
 - Never reply to Slack messages or GitHub comments on my behalf
+- When I ask a question _and_ request an action in the same prompt, answer the question _first_ then do the command. I want to make sure the answer doesn't get lost in the outputs.
 
 ## Comments
 
@@ -20,6 +21,7 @@
 - Avoid `lazy var`; prefer simple initialization in `init`. If that's not possible, ask permission first and explain why it's necessary.
 - Avoid the `+` operator for list concatenation.
 - Never build or test unless I ask.
+- Always look for existing unit test suites when adding new cases instead of adding a brand new one. Prefer adding new cases to existing suites over new specialized suites just for a few new cases.
 
 ## Git and PRs
 
