@@ -35,6 +35,6 @@ case "$mode" in
   tmux)    sesh-list-status -t --icons ;;
   configs) sesh-list-status -c --icons ;;
   zoxide)  sesh-list-status -z --icons ;;
-  find)    fd -H -d 2 -t d -E .Trash . ~ | sed 's/^/  /' ;;
+  find)    fd -H -d 2 -t d -E .Trash . ~ | sed $'s|^|\xc2\xa0 📁\t|' ;;
   *)       sesh-list-status --icons ;;
 esac

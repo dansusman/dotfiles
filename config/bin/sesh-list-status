@@ -1,21 +1,34 @@
 #!/usr/bin/env bash
-# Wrap `sesh list` and prepend a Claude status glyph to each row.
+# Wrap `sesh list` and emit tab-separated picker rows:
+#   <glyph> <icon>\t<name>\t<branch>
 #
 # Glyphs:  running -> animated spinner (frame from $CLAUDE_FRAME_FILE)
 #          waiting ◐ | done ✓ | interrupted ⚠ | stale ✗ | idle (space)
+# Branch:  current git branch of the tmux session's path, empty otherwise.
+#          Names of rows with a branch are padded so branches line up.
 set -u
 
 if [ "$#" -eq 0 ]; then
   set -- --icons
 fi
 
+TMP_MAP=""
+BRANCH_FILE="$(mktemp -t sesh-branches.XXXXXX)"
+trap 'rm -f "$TMP_MAP" "$BRANCH_FILE"' EXIT
+
 if [ -n "${CLAUDE_STATUS_MAP:-}" ] && [ -r "$CLAUDE_STATUS_MAP" ]; then
   MAP_FILE="$CLAUDE_STATUS_MAP"
 else
-  MAP_FILE="$(mktemp -t claude-status-map.XXXXXX)"
-  trap 'rm -f "$MAP_FILE"' EXIT
+  TMP_MAP="$(mktemp -t claude-status-map.XXXXXX)"
+  MAP_FILE="$TMP_MAP"
   claude-status-map > "$MAP_FILE" 2>/dev/null
 fi
+
+tmux list-sessions -F '#S	#{session_path}' 2>/dev/null |
+while IFS=$'\t' read -r name path; do
+  branch=$(git -C "$path" symbolic-ref --short -q HEAD 2>/dev/null) || continue
+  printf '%s\t%s\n' "$name" "$branch"
+done > "$BRANCH_FILE"
 
 frames=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
 frame_idx=0
@@ -25,24 +38,43 @@ if [ -n "${CLAUDE_FRAME_FILE:-}" ] && [ -r "$CLAUDE_FRAME_FILE" ]; then
 fi
 SPIN="${frames[$((frame_idx % ${#frames[@]}))]}"
 
-sesh list "$@" | awk -v mapfile="$MAP_FILE" -v spin="$SPIN" '
-  BEGIN {
-    while ((getline line < mapfile) > 0) {
+sesh list "$@" | awk -v mapfile="$MAP_FILE" -v branchfile="$BRANCH_FILE" -v spin="$SPIN" '
+  function load_tsv(file, into,   line, n) {
+    while ((getline line < file) > 0) {
       n = index(line, "\t")
-      if (n > 0) status[substr(line, 1, n-1)] = substr(line, n+1)
+      if (n > 0) into[substr(line, 1, n-1)] = substr(line, n+1)
     }
-    close(mapfile)
+    close(file)
+  }
+  BEGIN {
+    load_tsv(mapfile, status)
+    load_tsv(branchfile, branch)
     g["running"]     = spin
     g["waiting"]     = "◐"
     g["done"]        = "✓"
     g["interrupted"] = "⚠"
     g["stale"]       = "✗"
+    width = 0
   }
   {
-    plain = $0
-    gsub(/\033\[[0-9;]*[a-zA-Z]/, "", plain)
-    sub(/^[^ \t]+[ \t]+/, "", plain)
-    glyph = (plain in status && status[plain] in g) ? g[status[plain]] : "\302\240"
-    print glyph " " $0
+    icon = $0
+    sub(/[ \t].*$/, "", icon)
+    name = $0
+    gsub(/\033\[[0-9;]*[a-zA-Z]/, "", name)
+    sub(/^[^ \t]+[ \t]+/, "", name)
+    glyph = (name in status && status[name] in g) ? g[status[name]] : "\302\240"
+    prefix[NR] = glyph " " icon
+    names[NR] = name
+    branches[NR] = (name in branch) ? branch[name] : ""
+    if (branches[NR] != "" && length(name) > width) width = length(name)
+  }
+  END {
+    for (i = 1; i <= NR; i++) {
+      if (branches[i] == "") {
+        printf "%s\t%s\t\n", prefix[i], names[i]
+      } else {
+        printf "%s\t%-" width "s \t\033[2m%s\033[22m\n", prefix[i], names[i], branches[i]
+      }
+    }
   }
 '
