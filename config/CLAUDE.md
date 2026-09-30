@@ -34,3 +34,11 @@
 - Never respond to PR comment threads on my behalf.
 - When mentioning Crashlytics crashes in PR descriptions, always include the hyperlink itself rather than just the crash ID
 - Include the "Crash Fix" label when posting PRs that attempt to fix Crashlytics events
+
+### PR description layout (Notability create-pr skill)
+
+Use this body structure, in this order. It overrides some of the skill's default template. Reference: Ginger-Labs/Notability#62137.
+
+1. `### Human Description` followed by my words verbatim (fix typos only). Ask me for this if I haven't given it; it is not optional.
+2. `### LLM Slop` with the Claude-written summary inside `<details><summary>Click to reveal</summary>` (blank line after the summary and before `</details>`).
+
