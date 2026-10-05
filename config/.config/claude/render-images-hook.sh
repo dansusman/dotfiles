@@ -9,8 +9,10 @@ session_id=$(printf '%s' "$input" | /usr/bin/python3 -c 'import json,sys; print(
 
 [ -z "$session_id" ] && exit 0
 
-cache_dir="$HOME/.claude/image-cache/$session_id"
-[ -d "$cache_dir" ] || exit 0
+shopt -s nullglob
+cache_dirs=(/private/tmp/claude-"$(id -u)"/*/"$session_id"/images)
+[ ${#cache_dirs[@]} -gt 0 ] || exit 0
+cache_dir="${cache_dirs[0]}"
 
 state_dir="$HOME/.claude/cache/image-hook-state"
 mkdir -p "$state_dir"
@@ -21,7 +23,6 @@ touch "$seen_file"
 tty_dev="/dev/tty"
 [ -w "$tty_dev" ] || exit 0
 
-shopt -s nullglob
 new_imgs=()
 for img in "$cache_dir"/*.png "$cache_dir"/*.jpg "$cache_dir"/*.jpeg; do
   basename=$(basename "$img")
