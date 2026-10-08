@@ -42,3 +42,5 @@ Use this body structure, in this order. It overrides some of the skill's default
 1. `### Human Description` followed by my words verbatim (fix typos only). Ask me for this if I haven't given it; it is not optional.
 2. `### LLM Slop` with the Claude-written summary inside `<details><summary>Click to reveal</summary>` (blank line after the summary and before `</details>`).
 
+Always assign me to the draft PRs you open on my behalf. And look through GitHub labels and attach relevant ones.
+
