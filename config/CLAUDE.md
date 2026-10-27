@@ -22,6 +22,7 @@
 - Avoid the `+` operator for list concatenation.
 - Never build or test unless I ask.
 - Always look for existing unit test suites when adding new cases instead of adding a brand new one. Prefer adding new cases to existing suites over new specialized suites just for a few new cases.
+- Avoid adding new top level `enum` wrappers whenever possible. Reuse existing locations instead. Look for an existing spot in code to place the new methods. Only after failing, consider adding an `enum`.
 
 ## Git and PRs
 
@@ -34,6 +35,8 @@
 - Never respond to PR comment threads on my behalf.
 - When mentioning Crashlytics crashes in PR descriptions, always include the hyperlink itself rather than just the crash ID
 - Include the "Crash Fix" label when posting PRs that attempt to fix Crashlytics events
+- When moving code around, make note of any important git history (like PR numbers, commit messages, commit hashes) from the original implementation. Cite the original implementation for future reference. If indentation will change, like wrapping code in a `Task { ... }` block, this is also relevant.
+- Never commit implementation_notes.md, that is for local reference only.
 
 ### PR description layout (Notability create-pr skill)
 
@@ -41,6 +44,7 @@ Use this body structure, in this order. It overrides some of the skill's default
 
 1. `### Human Description` followed by my words verbatim (fix typos only). Ask me for this if I haven't given it; it is not optional.
 2. `### LLM Slop` with the Claude-written summary inside `<details><summary>Click to reveal</summary>` (blank line after the summary and before `</details>`).
+3. Include the "Refs #XYZ, or Fixes #XYZ" in the Human Description section not LLM Slop
 
 Always assign me to the draft PRs you open on my behalf. And look through GitHub labels and attach relevant ones.
 
