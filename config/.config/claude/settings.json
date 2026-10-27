@@ -7,7 +7,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable[1m]",
+  "model": "opus",
   "skillOverrides": {
     "apply-react-conventions": "off",
     "apply-redux-conventions": "off",
@@ -112,6 +112,7 @@
     "allowUnsandboxedCommands": false,
     "enableWeakerNetworkIsolation": true
   },
+  "feedbackDrafts": "off",
   "effortLevel": "medium",
   "tui": "fullscreen",
   "voice": {
