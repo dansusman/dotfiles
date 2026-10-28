@@ -42,6 +42,7 @@
     const DISPLAY_ORDER = ['code', 'tests', 'docs', 'generated'];
     const SQUARE_CLASSES = { addition: 'addition__3w3cWj', deletion: 'deletion__wmC-SA', neutral: 'neutral__T4nd7Z' };
     const BADGE_ID = 'gh-real-diffstat';
+    const SORT_TOGGLE_ID = 'gh-real-diffstat-sort';
     const FALLBACK_DELAY_MS = 10000;
 
     let currentBase = null;
@@ -186,11 +187,27 @@
         return row;
     }
 
-    function makeBadge(totals) {
-        const badge = document.createElement('span');
-        badge.id = BADGE_ID;
-        badge.className = 'd-flex flex-column flex-items-end';
-        badge.title = DISPLAY_ORDER
+    function styleSortToggle(button) {
+        button.className = sortEnabled ? 'f6 fgColor-accent text-bold' : 'f6 fgColor-muted';
+        button.textContent = sortEnabled ? 'sorted by size' : 'sort by size';
+        button.setAttribute('aria-pressed', String(sortEnabled));
+    }
+
+    function makeSortToggle() {
+        const button = document.createElement('button');
+        button.id = SORT_TOGGLE_ID;
+        button.type = 'button';
+        button.title = 'Sort files by lines changed, fewest first';
+        button.style.cssText = 'background: none; border: 0; padding: 0; cursor: pointer;';
+        button.addEventListener('click', toggleSort);
+        styleSortToggle(button);
+        return button;
+    }
+
+    function makeStats(totals) {
+        const stats = document.createElement('span');
+        stats.className = 'd-flex flex-column flex-items-end';
+        stats.title = DISPLAY_ORDER
             .filter(name => totals[name])
             .map(name => `${name}: +${fmt(totals[name].add)} -${fmt(totals[name].del)}`)
             .join('\n');
@@ -206,8 +223,17 @@
                 span('f6 fgColor-danger text-bold', `-${fmt(del)}`),
                 squares({ add, del }),
             );
-            badge.append(row);
+            stats.append(row);
         }
+        return stats;
+    }
+
+    function makeBadge(totals, showStats) {
+        const badge = document.createElement('span');
+        badge.id = BADGE_ID;
+        badge.className = 'd-flex flex-items-start gap-2';
+        badge.append(makeSortToggle());
+        if (showStats) badge.append(makeStats(totals));
         return badge;
     }
 
@@ -225,29 +251,29 @@
         document.body.append(badge);
     }
 
-    function placeBadge(totals, start) {
+    function placeBadge(totals, showStats, start) {
         if (document.getElementById(BADGE_ID)) return;
 
         const row = findDiffstatRow();
         if (row) {
-            const badge = makeBadge(totals);
+            const badge = makeBadge(totals, showStats);
             badge.style.cssText = 'position: absolute; right: 0; bottom: 100%; margin-bottom: 2px; white-space: nowrap;';
             row.style.position = 'relative';
             row.append(badge);
         } else if (Date.now() - start > FALLBACK_DELAY_MS) {
             console.warn('GitHub PR Real Diffstat: no "Lines changed:" label found, using corner badge');
-            placeFallback(makeBadge(totals));
+            placeFallback(makeBadge(totals, showStats));
         }
     }
 
-    function watch(totals, showBadge) {
+    function watch(totals, showStats) {
         const start = Date.now();
         let scheduled = false;
 
         function update() {
             scheduled = false;
             if (sortEnabled) applyFileOrder();
-            if (showBadge) placeBadge(totals, start);
+            placeBadge(totals, showStats, start);
         }
 
         update();
@@ -270,11 +296,9 @@
         linesByAnchor = new Map();
         if (!base) return;
 
-        console.info('GitHub PR Real Diffstat: fetching', base + '.diff');
         try {
             const files = parseDiff(await fetchDiff(base));
             const totals = bucketTotals(files);
-            console.info('GitHub PR Real Diffstat:', base, totals);
             if (base !== currentBase) return;
 
             const anchors = await mapLinesByAnchor(files);
@@ -288,12 +312,17 @@
         }
     }
 
-    GM_registerMenuCommand('Toggle sorting files by lines changed', () => {
+    function toggleSort() {
         sortEnabled = !sortEnabled;
         GM_setValue('sortFiles', sortEnabled);
         if (sortEnabled) applyFileOrder();
         else clearFileOrder();
-    });
+
+        const button = document.getElementById(SORT_TOGGLE_ID);
+        if (button) styleSortToggle(button);
+    }
+
+    GM_registerMenuCommand('Toggle sorting files by lines changed', toggleSort);
 
     run();
 
