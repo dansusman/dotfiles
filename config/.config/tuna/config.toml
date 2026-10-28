@@ -169,7 +169,7 @@ label = 'Open'
                 behavior = 'run'
                 presentation = 'automatic'
                 subjectIdentifiers = [
-                    "text:osascript -e 'tell application \"Xcode\" to activate' -e 'tell application \"System Events\" to keystroke \"o\" using {shift down, option down, command down}'"
+                    "text:osascript -e 'tell application id \"com.apple.dt.Xcode\" to activate' -e 'tell application \"System Events\" to keystroke \"o\" using {shift down, option down, command down}'"
                 ]
                 type = 'savedCommand'
 

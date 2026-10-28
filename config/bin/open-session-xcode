@@ -28,5 +28,5 @@ if [[ ! -e "$proj" ]]; then
   exit 1
 fi
 
-osascript -e 'tell application "Xcode" to close windows'
+osascript -e 'tell application id "com.apple.dt.Xcode" to close windows'
 /usr/bin/open "$proj"
