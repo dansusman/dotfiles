@@ -37,7 +37,7 @@
                 /\.(test|spec)\.[jt]sx?$/,
             ],
         },
-        { name: 'docs', patterns: [/^docs\//] },
+        { name: 'docs', patterns: [/(^|\/)docs\//] },
     ];
     const DISPLAY_ORDER = ['code', 'tests', 'docs', 'generated'];
     const SQUARE_CLASSES = { addition: 'addition__3w3cWj', deletion: 'deletion__wmC-SA', neutral: 'neutral__T4nd7Z' };
@@ -212,7 +212,7 @@
             .map(name => `${name}: +${fmt(totals[name].add)} -${fmt(totals[name].del)}`)
             .join('\n');
 
-        for (const name of ['code', 'tests']) {
+        for (const name of ['code', 'tests', 'docs']) {
             const { add, del } = totals[name] ?? { add: 0, del: 0 };
             if (name !== 'code' && !add && !del) continue;
             const row = document.createElement('div');
