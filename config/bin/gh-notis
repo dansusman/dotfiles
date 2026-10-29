@@ -55,6 +55,7 @@ readonly API=https://api.github.com
 readonly RECENT_PATH='/notifications?all=true&per_page=50'
 readonly WATERMARK_FILE="$STATE_DIR/watermark"
 readonly FALLBACK_POLL_INTERVAL=60
+readonly RECONCILE_INTERVAL=3600
 readonly SEEN_HISTORY=500
 
 # Thread rows as TSV: id, reason, repo, updated_at, title, web url.
@@ -160,9 +161,8 @@ forget_pending() {
 # tally ourselves. A thread joins when it shows up unread and leaves when this
 # tool marks it done.
 #
-# The one way it drifts is marking something done in the browser: nothing
-# reports that back, so the entry lingers and the count reads high. `clear`
-# resyncs by emptying both the inbox and this file.
+# Filing or reading a thread elsewhere (browser, phone app) reports nothing
+# back, so the entry lingers and the count reads high until reconcile drops it.
 ledger_add() {
     [[ -n $1 ]] || return 0
     mkdir -p "$STATE_DIR"
@@ -298,6 +298,32 @@ mark_ids_done() {
     fi
 }
 
+# Drops every ledger entry GitHub no longer shows as unread and withdraws its
+# alert. Done and read look identical from the API, so a thread read elsewhere
+# without being filed drops too.
+reconcile() {
+    local json stale url key
+    json=$("$GH" api 'notifications?all=true&per_page=50' --paginate --slurp 2>/dev/null) || return 0
+    touch "$INBOX_FILE"
+    stale=$(jq -r --rawfile ledger "$INBOX_FILE" '
+        flatten
+        | [.[] | select(.unread) | .id] as $unread
+        | $ledger | split("\n") | map(select(length > 0)) - $unread | .[]' <<<"$json")
+    [[ -n $stale ]] || return 0
+
+    while IFS= read -r url; do
+        key=$(pending_key "$url")
+        [[ -x $ALERTER ]] && "$ALERTER" -remove "$key" >/dev/null 2>&1
+        rm -f "$PENDING_DIR/$key"
+    done < <(jq --arg stale "$stale" '
+        ($stale | split("\n")) as $ids
+        | [flatten[] | select(.id | IN($ids[]))]' <<<"$json" | rows_from | cut -f6 | sort -u)
+
+    ledger_remove "$stale"
+    log "reconcile: dropped $(grep -c . <<<"$stale") threads handled elsewhere"
+    publish_count "$(ledger_count)"
+}
+
 cmd_count() {
     ledger_count
 }
@@ -428,11 +454,20 @@ announce_new() {
     record_seen_rows "$(printf '%s\n' "${fresh[@]}")"
 }
 
+# Background wakes during sleep (Power Nap, network keepalive) run without the
+# Graphics capability.
+system_fully_awake() {
+    /usr/bin/pmset -g systemstate | grep -q 'Capabilities are:.*Graphics'
+}
+
 # The endpoint answers with an ETag but no Last-Modified, so the conditional
 # request has to be If-None-Match. A 304 doesn't count against the rate limit,
 # which keeps a 60s poll affordable.
 cmd_watch() {
     local etag="" priming="" headers body status interval fresh rows watermark
+    # SECONDS tracks wall time, so the first poll after waking from sleep
+    # reconciles right away.
+    local next_reconcile=0
 
     # A cold watermark means every thread in the response looks new, which would
     # both spam banners and inflate the ledger. First poll only sets the mark.
@@ -440,6 +475,16 @@ cmd_watch() {
     watermark=$(cat "$WATERMARK_FILE" 2>/dev/null || echo "")
 
     while :; do
+        if ! system_fully_awake; then
+            sleep "$FALLBACK_POLL_INTERVAL"
+            continue
+        fi
+
+        if (( SECONDS >= next_reconcile )); then
+            reconcile
+            next_reconcile=$(( SECONDS + RECONCILE_INTERVAL ))
+        fi
+
         headers=$(mktemp) body=$(mktemp)
 
         status=$(curl -sS -o "$body" -D "$headers" -w '%{http_code}' \
