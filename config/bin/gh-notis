@@ -37,7 +37,7 @@ readonly AFPLAY=/usr/bin/afplay
 readonly ALERTER="$HOME/Library/Application Support/gh-notis/GitHub.app/Contents/MacOS/terminal-notifier"
 # A different chime from the one claude-notify-sound plays, so the two are
 # distinguishable without looking.
-readonly CHIME="$HOME/bin/assets/notify-grandfather.mp3"
+readonly CHIME="$HOME/bin/assets/chimes/notify-grandfather.mp3"
 readonly OPENURL="$HOME/bin/openurl-workspace"
 readonly BROWSER_WORKSPACE=5
 readonly STATE_DIR="$HOME/.local/state/gh-notis"

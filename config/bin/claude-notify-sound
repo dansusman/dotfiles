@@ -1,6 +1,5 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-SOUND="$SCRIPT_DIR/assets/notify.mp3"
 EVENT="${1:-Claude}"
 
 INPUT=$(cat)
@@ -9,6 +8,7 @@ SESSION_ID=$(printf '%s' "$INPUT" | jq -r '.session_id // empty')
 FLAG_DIR="${TMPDIR:-/tmp}/claude-notify"
 mkdir -p "$FLAG_DIR"
 FLAG_FILE="$FLAG_DIR/${SESSION_ID:-default}.flag"
+LAST_SOUND_FILE="$FLAG_DIR/last-sound"
 
 case "$EVENT" in
   Notification)
@@ -42,6 +42,9 @@ if is_focused; then
   exit 0
 fi
 
+LAST_SOUND=$(cat "$LAST_SOUND_FILE" 2>/dev/null)
+SOUND=$(ls "$SCRIPT_DIR"/assets/chimes/*.mp3 | grep -vxF "$LAST_SOUND" | sort -R | head -1)
+printf '%s' "$SOUND" > "$LAST_SOUND_FILE"
 afplay "$SOUND" &
 
 case "$EVENT" in
