@@ -55,6 +55,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [[ "$branch_name" =~ ^[0-9]+$ ]]; then
+    pr_number=$branch_name
+    branch_name=$(gh pr view "$pr_number" --json headRefName --jq .headRefName) || exit 1
+    echo "PR #$pr_number → $branch_name"
+    if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        git fetch origin "$branch_name" || exit 1
+    fi
+fi
+
 # Build the git switch command
 cmd="git switch "
 
