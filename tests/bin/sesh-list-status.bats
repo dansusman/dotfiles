@@ -30,6 +30,7 @@ SH
     TMUX_SESSIONS_FIXTURE="$(mktemp -t tmuxsess.XXXXXX)"
 
     export SESH_MOCK_OUTPUT MAP_FILE TMUX_SESSIONS_FIXTURE
+    export SESH_WORKTREE_REPO="$SHIM_DIR"
     export CLAUDE_STATUS_MAP="$MAP_FILE"
     export PATH="$SHIM_DIR:$REAL_BIN:$PATH"
 }
@@ -130,4 +131,36 @@ EOF
     rm -rf "$dir"
     assert_success
     assert_line --index 0 $'\xc2\xa0 *\talpha\t'
+}
+
+make_worktree_repo() {
+    local dir; dir="$(cd "$(mktemp -d -t wtrepo.XXXXXX)" && pwd -P)"
+    git -C "$dir" init -q -b main
+    git -C "$dir" -c user.name=t -c user.email=t@t commit -q --allow-empty -m init
+    git -C "$dir" worktree add -q -b feature/y "$dir/wt"
+    echo "$dir"
+}
+
+@test "default mode lists sessionless worktrees after tmux rows, replacing zoxide duplicates" {
+    : > "$MAP_FILE"
+    repo="$(make_worktree_repo)"
+    printf '* main\n* config\n* %s\n' "$repo/wt" > "$SESH_MOCK_OUTPUT"
+    add_session main "$repo"
+    SESH_WORKTREE_REPO="$repo" run sesh-list-status --icons
+    rm -rf "$repo"
+    assert_success
+    assert_equal "${#lines[@]}" 3
+    assert_line --index 0 --partial $'\tmain'
+    assert_line --index 1 $'\xc2\xa0 \033[32m\xee\x9c\xa5\033[39m\t'"$repo/wt"$' \t\033[2mfeature/y\033[22m'
+    assert_line --index 2 --partial $'\tconfig\t'
+}
+
+@test "non-default modes skip worktrees" {
+    : > "$SESH_MOCK_OUTPUT"
+    : > "$MAP_FILE"
+    repo="$(make_worktree_repo)"
+    SESH_WORKTREE_REPO="$repo" run sesh-list-status -t --icons
+    rm -rf "$repo"
+    assert_success
+    assert_output ""
 }

@@ -6,7 +6,11 @@
 #          waiting ◐ | done ✓ | interrupted ⚠ | stale ✗ | idle (space)
 # Branch:  current git branch of the tmux session's path, empty otherwise.
 #          Names of rows with a branch are padded so branches line up.
+# Default mode also lists worktrees of $SESH_WORKTREE_REPO that have no
+# tmux session yet, named by path so `sesh connect` opens them.
 set -u
+
+WORKTREE_REPO="${SESH_WORKTREE_REPO:-$HOME/Developer/notability}"
 
 if [ "$#" -eq 0 ]; then
   set -- --icons
@@ -14,7 +18,9 @@ fi
 
 TMP_MAP=""
 BRANCH_FILE="$(mktemp -t sesh-branches.XXXXXX)"
-trap 'rm -f "$TMP_MAP" "$BRANCH_FILE"' EXIT
+SESSION_FILE="$(mktemp -t sesh-sessions.XXXXXX)"
+WORKTREE_FILE="$(mktemp -t sesh-worktrees.XXXXXX)"
+trap 'rm -f "$TMP_MAP" "$BRANCH_FILE" "$SESSION_FILE" "$WORKTREE_FILE"' EXIT
 
 if [ -n "${CLAUDE_STATUS_MAP:-}" ] && [ -r "$CLAUDE_STATUS_MAP" ]; then
   MAP_FILE="$CLAUDE_STATUS_MAP"
@@ -24,11 +30,35 @@ else
   claude-status-map > "$MAP_FILE" 2>/dev/null
 fi
 
-tmux list-sessions -F '#S	#{session_path}' 2>/dev/null |
+tmux list-sessions -F '#S	#{session_path}' 2>/dev/null > "$SESSION_FILE"
+
 while IFS=$'\t' read -r name path; do
   branch=$(git -C "$path" symbolic-ref --short -q HEAD 2>/dev/null) || continue
   printf '%s\t%s\n' "$name" "$branch"
-done > "$BRANCH_FILE"
+done < "$SESSION_FILE" > "$BRANCH_FILE"
+
+if [ "$*" = "--icons" ]; then
+  git -C "$WORKTREE_REPO" worktree list --porcelain 2>/dev/null |
+  awk -v sessionfile="$SESSION_FILE" -v branchfile="$BRANCH_FILE" -v home="$HOME" '
+    BEGIN {
+      while ((getline line < sessionfile) > 0) { sub(/^[^\t]*\t/, "", line); open[line] = 1 }
+      close(sessionfile)
+    }
+    /^worktree / { path = substr($0, 10); branch = ""; bare = 0 }
+    /^bare$/ { bare = 1 }
+    /^branch / { branch = substr($0, 8); sub(/^refs\/heads\//, "", branch) }
+    /^$/ { emit() }
+    END { emit() }
+    function emit() {
+      if (path != "" && !bare && !(path in open)) {
+        if (index(path, home "/") == 1) path = "~" substr(path, length(home) + 1)
+        print path
+        if (branch != "") printf "%s\t%s\n", path, branch >> branchfile
+      }
+      path = ""
+    }
+  ' > "$WORKTREE_FILE"
+fi
 
 frames=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
 frame_idx=0
@@ -38,7 +68,7 @@ if [ -n "${CLAUDE_FRAME_FILE:-}" ] && [ -r "$CLAUDE_FRAME_FILE" ]; then
 fi
 SPIN="${frames[$((frame_idx % ${#frames[@]}))]}"
 
-sesh list "$@" | awk -v mapfile="$MAP_FILE" -v branchfile="$BRANCH_FILE" -v spin="$SPIN" '
+sesh list "$@" | awk -v mapfile="$MAP_FILE" -v branchfile="$BRANCH_FILE" -v sessionfile="$SESSION_FILE" -v worktreefile="$WORKTREE_FILE" -v spin="$SPIN" '
   function load_tsv(file, into,   line, n) {
     while ((getline line < file) > 0) {
       n = index(line, "\t")
@@ -46,9 +76,24 @@ sesh list "$@" | awk -v mapfile="$MAP_FILE" -v branchfile="$BRANCH_FILE" -v spin
     }
     close(file)
   }
+  function add_row(icon, name) {
+    n++
+    glyph = (name in status && status[name] in g) ? g[status[name]] : "\302\240"
+    prefix[n] = glyph " " icon
+    names[n] = name
+    branches[n] = (name in branch) ? branch[name] : ""
+    if (branches[n] != "" && length(name) > width) width = length(name)
+  }
+  function add_worktrees(   i) {
+    for (i = 1; i <= worktree_count; i++) add_row("\033[32m\356\234\245\033[39m", worktrees[i])
+    worktrees_added = 1
+  }
   BEGIN {
     load_tsv(mapfile, status)
     load_tsv(branchfile, branch)
+    load_tsv(sessionfile, sessions)
+    while ((getline line < worktreefile) > 0) { worktrees[++worktree_count] = line; is_worktree[line] = 1 }
+    close(worktreefile)
     g["running"]     = spin
     g["waiting"]     = "◐"
     g["done"]        = "✓"
@@ -62,14 +107,13 @@ sesh list "$@" | awk -v mapfile="$MAP_FILE" -v branchfile="$BRANCH_FILE" -v spin
     name = $0
     gsub(/\033\[[0-9;]*[a-zA-Z]/, "", name)
     sub(/^[^ \t]+[ \t]+/, "", name)
-    glyph = (name in status && status[name] in g) ? g[status[name]] : "\302\240"
-    prefix[NR] = glyph " " icon
-    names[NR] = name
-    branches[NR] = (name in branch) ? branch[name] : ""
-    if (branches[NR] != "" && length(name) > width) width = length(name)
+    if (name in is_worktree) next
+    if (!worktrees_added && !(name in sessions)) add_worktrees()
+    add_row(icon, name)
   }
   END {
-    for (i = 1; i <= NR; i++) {
+    if (!worktrees_added) add_worktrees()
+    for (i = 1; i <= n; i++) {
       if (branches[i] == "") {
         printf "%s\t%s\t\n", prefix[i], names[i]
       } else {
