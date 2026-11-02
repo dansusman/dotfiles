@@ -43,25 +43,10 @@
         ]
       }
     ],
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "claude-notify-sound Notification"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "claude-notify-sound Stop"
-          },
           {
             "type": "command",
             "command": "~/.claude/hooks/tmux-rename.sh"
