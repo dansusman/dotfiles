@@ -48,3 +48,4 @@ red() {
 }
 alias b="berry $1"
 alias bs="b staging"
+alias fr="git sw staging && gp"
