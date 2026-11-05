@@ -59,28 +59,22 @@ if [[ "$branch_name" =~ ^[0-9]+$ ]]; then
     pr_number=$branch_name
     branch_name=$(gh pr view "$pr_number" --json headRefName --jq .headRefName) || exit 1
     echo "PR #$pr_number → $branch_name"
-    if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
-        git fetch origin "$branch_name" || exit 1
-    fi
 fi
-
-# Build the git switch command
-cmd="git switch "
-
-if [ -n "$git_flag" ]; then
-    cmd+="$git_flag "
-fi
-
-cmd+="$branch_name "
 
 if [ -n "$upstream_branch_name" ]; then
-    cmd+="$upstream_branch_name "
-    cmd+="&& git pull origin $upstream_branch_name "
+    upstream_branch_name=${upstream_branch_name#origin/}
+    git fetch origin "$upstream_branch_name" || exit 1
+    git switch $git_flag "$branch_name" --no-track "origin/$upstream_branch_name" || exit 1
+else
+    if [ -z "$git_flag" ] && ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        git fetch origin "$branch_name" || exit 1
+    fi
+    git switch $git_flag "$branch_name" || exit 1
+    if git show-ref --verify --quiet "refs/remotes/origin/$branch_name" \
+        && ! git rev-parse --abbrev-ref --symbolic-full-name @{upstream} >/dev/null 2>&1; then
+        git branch --set-upstream-to="origin/$branch_name"
+    fi
 fi
-
-# Run the git switch command
-echo "Executing: $cmd"
-eval $cmd
 
 update_gitnum() {
     local new_value="$1"
